@@ -6,7 +6,6 @@
       steps:
         - run: echo "Working..."
         - uses: actions/checkout@v3
-        - run: npm ci
 
         - name: Install dependencies front-end
           run: cd front-end; npm ci
