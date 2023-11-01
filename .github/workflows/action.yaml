@@ -11,8 +11,5 @@
         - name: Install dependencies
           run: npm install
 
-        - name: Navigate to the sub-folder to test
-          run: cd front-end
-
-        - name: Run tests
-          run: npm test
+        - name: Run tests front-end
+          run: cd front-end; npm test
