@@ -8,5 +8,8 @@
         - uses: actions/checkout@v3
         - run: npm ci
 
+        - name: Install dependencies
+          run: npm install
+
         - name: Run tests
           run: npm test
