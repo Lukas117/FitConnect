@@ -8,8 +8,8 @@
         - uses: actions/checkout@v3
         - run: npm ci
 
-        - name: Install dependencies
-          run: npm install
+        - name: install playwright
+          run: cd front-end; npx playwright install
 
         - name: Run tests front-end
           run: cd front-end; npm test
