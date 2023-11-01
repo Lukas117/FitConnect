@@ -13,3 +13,6 @@
 
         - name: Run tests front-end
           run: cd front-end; npm test
+
+        - name: Install playwright
+          run: cd front-end; npx playwright install
