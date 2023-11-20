@@ -1,0 +1,22 @@
+{
+    "name": "ex1",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "type": "module",
+    "scripts": {
+      "dev": "nodemon app.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "cors": "^2.8.5",
+      "dotenv": "^16.0.2",
+      "express": "^4.17.1",
+      "morgan": "^1.10.0"
+    },
+    "devDependencies": {
+      "http-proxy-middleware": "^2.0.6",
+      "nodemon": "^3.0.1"
+    }
+  }

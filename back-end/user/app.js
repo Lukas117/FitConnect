@@ -1,20 +1,21 @@
 const express = require('express');
+const router = express.Router();
 const cors = require('cors');
 
 const app = express();
 const port = 3000;
 
-app.use(cors());
+router.use(cors());
 
-app.get('/users', function (request, response) {
-    res.send('Hello world');
+router.get('/users', function (request, response) {
+    response.send('Hello world');
 })
 
-app.get('/users/:id', function (request, response) {
+router.get('/users/:id', function (request, response) {
     const userId = request.params.id;
-    res.send('Hello world' + userId);
+    response.send('Hello world ' + userId);
 })
 
-app.listen(port, function () {
+router.listen(port, function () {
     console.log(`User microservice listening on port ${port}`);
 })
