@@ -1,7 +1,16 @@
 <script>
     import { onMount } from 'svelte';
+    import { userLocation } from '../stores';
+
+
+     // Subscribe to the userLocation store
+  userLocation.subscribe(value => {
+    console.log('User location changed:', value);
+  });
+
+
     let map;
-  
+
     onMount(() => {
       if (typeof window !== 'undefined') {
         // Leaflet code that depends on the DOM
