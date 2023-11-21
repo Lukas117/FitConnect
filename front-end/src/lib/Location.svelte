@@ -5,9 +5,9 @@ import { onMount } from "svelte";
 
 // options for geolocation api functioons
 const locationOptions = {
-    enableHighAccuracy: true,
-    timeout: 100,
-    maximumAge: 0,
+    enableHighAccuracy: false,
+    timeout: 500,
+    maximumAge: 5,
 };
 
 //updates position of the store
