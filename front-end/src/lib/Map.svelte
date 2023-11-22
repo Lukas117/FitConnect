@@ -4,18 +4,21 @@
 
     let map;
 
-    onMount(() => {
-      if (typeof window !== 'undefined') {
-        // Leaflet code that depends on the DOM
-        import('leaflet').then((L) => {
-          // map = L.map('mapContainer').setView([$userLocation.latitude, $userLocation.longitude], 17);
-          map = L.map('mapContainer').setView([$userLocation.latitude, $userLocation.longitude], 17);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-          }).addTo(map);
-        });
-      }
-    });
+    onMount(async () => {
+    if (typeof window !== 'undefined') {
+      const L = await import('leaflet');
+      await import('leaflet.locatecontrol');
+      await import('leaflet.locatecontrol/dist/L.Control.Locate.min.css');
+
+      map = L.map('mapContainer').setView([$userLocation.latitude, $userLocation.longitude], 17);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(map);
+
+      L.control.locate().addTo(map);
+    }
+  });
 
     userLocation.subscribe(value => {
     if (map) {
