@@ -3,28 +3,44 @@
     import { userLocation } from '../stores';
 
     let map;
+    let showError = false;
 
     onMount(async () => {
-    if (typeof window !== 'undefined') {
-      const L = await import('leaflet');
-      await import('leaflet.locatecontrol');
-      await import('leaflet.locatecontrol/dist/L.Control.Locate.min.css');
+      if (typeof window !== 'undefined') {
+        const L = await import('leaflet');
+        await import('leaflet.locatecontrol');
+        await import('leaflet.locatecontrol/dist/L.Control.Locate.min.css');
 
-      map = L.map('mapContainer').setView([$userLocation.latitude, $userLocation.longitude], 17);
+        if (Object.keys($userLocation).length === 0) {
+          showError = true;
+        }
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      }).addTo(map);
+        else {
+        map = L.map('mapContainer').setView([$userLocation.latitude, $userLocation.longitude], 17);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
 
-      L.control.locate().addTo(map);
-    }
-  });
+        const lc = L.control
+        .locate({
+          flyTo: true,
+            strings: {
+              title: "Show my location",
+            },
+            locateOptions: {
+              enableHighAccuracy: true
+            }
+          }).addTo(map);
+
+          lc.start();
+        
+        }
+      }
+    });
 
     userLocation.subscribe(value => {
     if (map) {
       console.log('User location changed:', value);
-    }
-  });
+      }
+    });
 
   //center the map button handling fucntiong
   function centerMap() {
@@ -44,6 +60,10 @@
   />
 
 </svelte:head>
-<div id="mapContainer" style="height: 400px; width: 50%" />
+<div id="mapContainer" style="height: 400px; width: 50%">
+  {#if showError}
+    <h1> Could not load map </h1>
+  {/if}
+</div>
 
 <button on:click={centerMap}>Center</button>

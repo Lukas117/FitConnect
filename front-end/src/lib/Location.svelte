@@ -12,7 +12,7 @@ const locationOptions = {
 
 //updates position of the store
 function positionUpdated(position){
-    // console.log('Position updated:', position.coords);
+    console.log('Position updated:', position.coords);
     const { latitude, longitude, accuracy } = position.coords;
     userLocation.set({latitude, longitude, accuracy});
 }
