@@ -9,7 +9,7 @@
         // Leaflet code that depends on the DOM
         import('leaflet').then((L) => {
           // map = L.map('mapContainer').setView([$userLocation.latitude, $userLocation.longitude], 17);
-          map = L.map('mapContainer').setView([50.3, 2], 17);
+          map = L.map('mapContainer').setView([$userLocation.latitude, $userLocation.longitude], 17);
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
           }).addTo(map);
@@ -19,7 +19,6 @@
 
     userLocation.subscribe(value => {
     if (map) {
-      map.panTo([value.latitude, value.longitude], map.getZoom());
       console.log('User location changed:', value);
     }
   });
@@ -28,7 +27,7 @@
   function centerMap() {
     console.log('button was pressed');
     if (map) {
-      map.panTo([$userLocation.latitude, $userLocation.longitude], map.getZoom());
+      map.flyTo([$userLocation.latitude, $userLocation.longitude], 16);
     }
   }
 
@@ -40,6 +39,7 @@
     integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
     crossorigin=""
   />
+
 </svelte:head>
 <div id="mapContainer" style="height: 400px; width: 50%" />
 

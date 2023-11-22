@@ -7,7 +7,7 @@ import { onMount } from "svelte";
 const locationOptions = {
     enableHighAccuracy: false,
     timeout: 500,
-    maximumAge: 5,
+    maximumAge: 500,
 };
 
 //updates position of the store
