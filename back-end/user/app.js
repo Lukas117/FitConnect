@@ -1,21 +1,22 @@
 const express = require('express');
-const router = express.Router();
-const cors = require('cors');
-
 const app = express();
-const port = 3000;
 
-router.use(cors());
+const dotenv = require('dotenv');
+dotenv.config();
+const env = process.env;
 
-router.get('/users', function (request, response) {
+const cors = require('cors');
+app.use(cors());
+
+app.get('/users', function (request, response) {
     response.send('Hello world');
 })
 
-router.get('/users/:id', function (request, response) {
+app.get('/users/:id', function (request, response) {
     const userId = request.params.id;
     response.send('Hello world ' + userId);
 })
 
-router.listen(port, function () {
-    console.log(`User microservice listening on port ${port}`);
+app.listen(env.PORT, function () {
+    console.log(`User microservice listening on port ${env.PORT}`);
 })
