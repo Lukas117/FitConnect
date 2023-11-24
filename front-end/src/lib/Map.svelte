@@ -1,40 +1,49 @@
 <script>
-    import { onMount } from 'svelte';
-    import { userLocation } from "../store.js";
-    // import { icon } from '../store.jsjs';
+  import { onMount } from 'svelte';
+  import { markerList, userLocation } from '../store';
 
-    let map;
-    let showError = false;
+  let map;
+  let showError = false;
+  let eventMarkersLayer;
 
-    onMount(async () => {
-      if (typeof window !== 'undefined') {
-        const L = await import('leaflet');
-        await import('leaflet.locatecontrol');
-        await import('leaflet.locatecontrol/dist/L.Control.Locate.min.css');
+  onMount(async () => {
+    if (typeof window !== 'undefined') {
+      const L = await import('leaflet');
+      await import('leaflet.locatecontrol');
+      await import('leaflet.locatecontrol/dist/L.Control.Locate.min.css');
 
-        if (Object.keys($userLocation).length === 0) {
-          showError = true;
-        }
-
-        else {
+      if (Object.keys($userLocation).length === 0) {
+        showError = true;
+      } else {
         map = L.map('mapContainer').setView([$userLocation.latitude, $userLocation.longitude], 17);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
 
-        // console.log(icon);
-        // const locationMarker = L.marker([$userLocation.latitude, $userLocation.longitude], { icon: icon });
-        // locationMarker.addTo(map);
-        
-        }
-      }
-    });
+        eventMarkersLayer = L.layerGroup().addTo(map);
+        updateMarkers();
 
-    userLocation.subscribe(value => {
+        const lc = L.control
+                .locate({
+                  flyTo: true,
+                  strings: {
+                    title: "Show my location",
+                  },
+                  locateOptions: {
+                    enableHighAccuracy: true
+                  }
+                }).addTo(map);
+
+        lc.start();
+      }
+    }
+  });
+
+  userLocation.subscribe(value => {
     if (map) {
       console.log('User location changed:', value);
-      }
-    });
+    }
+  });
 
-  //center the map button handling fucntiong
+  // center the map button handling function
   function centerMap() {
     console.log('button was pressed');
     if (map) {
@@ -42,52 +51,60 @@
     }
   }
 
-
-  function createLocationMarker() {
-    const options = {
-      radius: 10,
-      color: 'lightblue',
-      fillColor: 'blue',
-      fillOpacity: 0.8
+  // create new event
+  function createEvent() {
+    console.log('Create event button was pressed');
+    const newMarker = {
+      id: $markerList.length + 1,
+      lat: 51.4555 + Math.random() * 0.01,
+      lng: 3.56655 - Math.random() * 0.01,
+      title: `New Marker ${$markerList.length + 1}`,
+      content: `This is a new marker.`
     };
 
-    const r = options.radius;
-    const s = r;
-    const s2 = s * 2;
-    const svg =
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${s2}" height="${s2}" version="1.1" viewBox="-${s} -${s} ${s2} ${s2}">` +
-      '<circle r="' +
-      r +
-      '" style="' +
-      `stroke:${options.color};fill:${options.fillColor};fill-opacity:${options.fillOpacity};` +
-      '" />' +
-      '</svg>';
-
-    const locationIcon = L.divIcon({
-      className: "leaflet-control-locate-location",
-      html: svg,
-      iconSize: [s2, s2]
-    });
-
-    return L.marker(latlng, { icon: locationIcon });
+    // update the store by pushing the new marker
+    markerList.update(existingMarkers => [...existingMarkers, newMarker]);
   }
 
+  // function to update markers on the map
+  function updateMarkers() {
+    if (map) {
+      // clear existing markers
+      eventMarkersLayer.clearLayers();
 
+      // add markers from the store array
+      $markerList.forEach(markerData => {
+        const marker = L.marker([markerData.lat, markerData.lng]).addTo(map);
+        marker.bindPopup(`<b>${markerData.title}</b><br>${markerData.content}`);
+        eventMarkersLayer.addLayer(marker);
+      });
+    }
+  }
 
-  </script>
+  // subscribe to changes in the markerList store and update markers
+  markerList.subscribe(value => {
+    if (map) {
+      console.log('Marker added', value);
+      updateMarkers();
+    }
+  });
+
+</script>
+
 <svelte:head>
   <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-    crossorigin=""
+          rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+          integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+          crossorigin=""
   />
-
 </svelte:head>
-<div id="mapContainer" style="height: 600px; width: 100%">
+
+<div id="mapContainer" style="height: 400px; width: 50%">
   {#if showError}
     <h1> Could not load map </h1>
   {/if}
 </div>
 
 <button on:click={centerMap}>Center</button>
+<button on:click={createEvent}>Create event</button>
