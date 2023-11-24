@@ -1,24 +1,27 @@
 <!-- src/routes/Landing.svelte -->
 
-<script>
-	// You can add any logic or data if needed
-  </script>
-  
-  <main>
+<main>
 	<header>
 	  <h1>Welcome to FitConnection</h1>
 	</header>
   
 	<section>
 	  <p>
-		Explore the amazing features of our platform. Here the more you interact the more fun u will have.
+		Explore the amazing features of our platform. Here the more you interact, the more fun you will have.
 	  </p>
 	</section>
   
 	<section>
-	  <button>
-		Get Started
-	  </button>
+	  <a href="/user/login">
+		<button class="login-button">
+		  Log In
+		</button>
+	  </a>
+	  <a href="/user/register">
+		<button class="register-button">
+		  Register
+		</button>
+	  </a>
 	</section>
   </main>
   
@@ -48,7 +51,8 @@
 	  margin: 0 auto;
 	}
   
-	button {
+	.login-button,
+	.register-button {
 	  background-color: #3498db;
 	  color: white;
 	  padding: 15px 30px;
@@ -57,11 +61,15 @@
 	  border-radius: 50px;
 	  cursor: pointer;
 	  transition-duration: 0.4s;
-	  padding-bottom: 10px;
+	  margin-right: 10px;
+	  margin-bottom: 10px;
 	}
   
-	button:hover {
-	  background-color: #3498db;
+	.login-button:hover,
+	.register-button:hover {
+	  background-color: #2980b9;
 	}
   </style>
+  
+  
   
