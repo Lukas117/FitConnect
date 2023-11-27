@@ -14,7 +14,7 @@ const locationOptions = {
 function positionUpdated(position){
     console.log('Position updated:', position.coords);
     const { latitude, longitude, accuracy } = position.coords;
-    userLocation.set({latitude, longitude, accuracy});
+    userLocation.set({latitude, longitude, accuracy, loaded: true});
 }
 
 // calls the functions after the dom is loaded
