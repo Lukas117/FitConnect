@@ -1,6 +1,6 @@
 <script>
     
-import { userLocation } from "../stores";
+import { userLocation } from "../store.js";
 import { onMount } from "svelte";
 
 // options for geolocation api functioons
@@ -12,7 +12,7 @@ const locationOptions = {
 
 //updates position of the store
 function positionUpdated(position){
-    // console.log('Position updated:', position.coords);
+    console.log('Position updated:', position.coords);
     const { latitude, longitude, accuracy } = position.coords;
     userLocation.set({latitude, longitude, accuracy});
 }
@@ -21,7 +21,7 @@ function positionUpdated(position){
 onMount(() => {
     window.navigator.geolocation.getCurrentPosition(positionUpdated, null, locationOptions);
     // start watching for position changes
-    const watchId = window.navigator.geolocation.watchPosition(positionUpdated, null, locationOptions);
+    window.navigator.geolocation.watchPosition(positionUpdated, null, locationOptions);
 });
 
 </script>
