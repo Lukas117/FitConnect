@@ -1,12 +1,13 @@
 <script>
 	import { onMount } from 'svelte';
-	import { userLocation, size, icon } from '../store.js';
+	import { markerList, userLocation, size, icon } from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
 
 	let map;
 	let showError = false;
 	let showLoading = false;
 	let locationMarker;
+  let eventMarkersLayer;
 
 	onMount(async () => {
 		// wait for the library to be imported
@@ -26,6 +27,9 @@
 		};
 
 		userLocation.subscribe(handleUserLocationChange); // calls function everytime userLocation updates
+    
+    eventMarkersLayer = L.layerGroup().addTo(map);
+    updateMarkers();
 	});
 
 	// function for initializing the leaflet map
@@ -91,6 +95,44 @@
 		return L.marker(latlng, { icon: locationIcon });
 	}
 
+  // create new event
+  function createEvent() {
+    console.log('Create event button was pressed');
+    const newMarker = {
+      id: $markerList.length + 1,
+      lat: 51.4555 + Math.random() * 0.01,
+      lng: 3.56655 - Math.random() * 0.01,
+      title: `New Marker ${$markerList.length + 1}`,
+      content: `This is a new marker.`
+    };
+
+    // update the store by pushing the new marker
+    markerList.update(existingMarkers => [...existingMarkers, newMarker]);
+  }
+
+  // function to update markers on the map
+  function updateMarkers() {
+    if (map) {
+      // clear existing markers
+      eventMarkersLayer.clearLayers();
+
+      // add markers from the store array
+      $markerList.forEach(markerData => {
+        const marker = L.marker([markerData.lat, markerData.lng]).addTo(map);
+        marker.bindPopup(`<b>${markerData.title}</b><br>${markerData.content}`);
+        eventMarkersLayer.addLayer(marker);
+      });
+    }
+  }
+
+  // subscribe to changes in the markerList store and update markers
+  markerList.subscribe(value => {
+    if (map) {
+      console.log('Marker added', value);
+      updateMarkers();
+    }
+  });
+  
 </script>
 
 <div id="mapContainer" style="height: 600px; width: 100%">
@@ -103,3 +145,4 @@
 </div>
 
 <button on:click={centerMap}>Center</button>
+<button on:click={createEvent}>Create event</button>
