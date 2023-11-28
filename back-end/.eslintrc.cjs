@@ -1,46 +1,29 @@
 module.exports = {
 	root: true,
-	extends: ['eslint:recommended', 'plugin:svelte/recommended', 'prettier'],
-	parserOptions: {
-		sourceType: 'module',
-		ecmaVersion: 2020,
-		extraFileExtensions: ['.svelte']
-	},
 	env: {
-		browser: true,
-		es2017: true,
 		node: true
 	},
-	plugins: ['import', 'security', 'svelte'],
+	extends: [
+		'eslint:recommended',
+		'plugin:prettier/recommended',
+		'plugin:node/recommended'
+	],
+	parserOptions: {
+		ecmaVersion: 2021
+	},
 	rules: {
-		//Indentation and Formatting
-		indent: ['error', 'tab'],
-		'max-len': ['error', { code: 80 }],
-
-		// svelte
-		'svelte/no-dupe-style-properties': 'error',
-		'svelte/no-dupe-else-if-blocks': 'error',
-		'svelte/no-store-async': 'error',
-		'svelte/require-each-key': 'error',
-		'svelte/no-unused-svelte-ignore': 'error',
-		'svelte/no-unused-class-name': 'error',
-		'svelte/require-stores-init': 'error',
-		'svelte/valid-each-key': 'error',
-
-		// 4. JavaScript
-		'no-var': 'error',
-		'consistent-return': 'error',
-		'no-unused-vars': 'error',
-
-		// Some other rules
-		'no-console': 'warn',
-		'consistent-this': ['error', 'self'],
-
-		// Security rules
-		'security/detect-non-literal-regexp': 'error',
-		'security/detect-unsafe-regex': 'error',
-		'security/detect-buffer-noassert': 'error',
-		'svelte/no-target-blank': 'error',
-		'svelte/no-at-html-tags': 'error'
+		strict: ['error', 'global'],
+		'array-bracket-spacing': ['error', 'never'],
+		'object-curly-spacing': ['error', 'always'],
+		camelcase: ['error', { properties: 'never' }],
+		indent: ['error', 2],
+		quotes: ['error', 'single'],
+		semi: ['error', 'always'],
+		'arrow-spacing': ['error', { before: true, after: true }],
+		eqeqeq: ['error', 'always'],
+		radix: ['error', 'always'],
+		curly: ['error', 'all'],
+		'default-case': 'error',
+		'eol-last': ['error', 'always']
 	}
 };

@@ -13,7 +13,7 @@
     };
   </script>
   
-  <main>
+  <main>npm install --save-dev prettier eslint eslint-plugin-prettier eslint-config-prettier
     <h1>Login</h1>
   
     <form on:submit|preventDefault={handleLogin}>
