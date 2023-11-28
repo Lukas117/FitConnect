@@ -9,6 +9,7 @@
 	let locationMarker;
 
 	onMount(async () => {
+		// wait for the library to be imported
 		const L = await import('leaflet');
 		await import('leaflet.locatecontrol');
 		await import('leaflet.locatecontrol/dist/L.Control.Locate.min.css');
@@ -24,9 +25,10 @@
 			statusTimeout();
 		};
 
-		userLocation.subscribe(handleUserLocationChange);
+		userLocation.subscribe(handleUserLocationChange); // calls function everytime userLocation updates
 	});
 
+	// function for initializing the leaflet map
 	function initializeMap(L, latlng) {
 		map = L.map('mapContainer').setView(latlng, 17);
 		L.tileLayer(
@@ -36,9 +38,9 @@
 
 	// Updates the location marker position on the map
 	function updateLocationMarker(latlng) {
-		if (map && locationMarker) {
+		if (map && locationMarker) { // if the map and the marker is initialized
 			locationMarker.setLatLng(latlng);
-		} else if (map) {
+		} else if (map) { // if the map is initialized but the marker isnt
 			locationMarker = createLocationMarker(L, latlng);
 			locationMarker.addTo(map);
 		}
@@ -58,29 +60,31 @@
 			if (!$userLocation.loaded) {
 				handleMapStatus('timeout'); // set the status message to couldnt load map
 			}
-			handleMapStatus($userLocation.loaded); // map loaded
+			handleMapStatus($userLocation.loaded); // set status to loaded or failed
 		}, 5000);
 	}
 
 	// Handles the status messages of the map based on the $userlocation.loaded
 	function handleMapStatus(status) {
-		if (status.loaded == true) {
+		if (status.loaded == true) { // successfully loaded
 			showLoading = false;
 			showError = false;
 		}
-		if (status.loaded == false) {
+		if (status.loaded == false) { // still loading
 			showLoading = true;
 		}
-		if (status == 'timeout') {
+		if (status == 'timeout') { // failed to load
 			showError = true;
 			showLoading = false;
 		}
 	}
 
+	// initializes the marker on the map based on the users location
 	function createLocationMarker(L, latlng) {
 		const locationIcon = L.divIcon({
 			className: 'leaflet-control-locate-location',
-			html: $icon.svg,
+			// uses store $icon and $size variables from iconUtility.js
+			html: $icon.svg, 
 			iconSize: [$size.s2, $size.s2]
 		});
 
