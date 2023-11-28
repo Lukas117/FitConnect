@@ -1,4 +1,5 @@
 module.exports = {
+	type: 'module',
 	root: true,
 	env: {
 		node: true
