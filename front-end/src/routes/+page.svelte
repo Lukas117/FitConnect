@@ -1,24 +1,28 @@
-<!-- src/routes/Landing.svelte -->
 
-<main>
-	<header>
-	  <h1>Welcome to FitConnection</h1>
+<script>
+
+  </script>
+  
+  <main class="flex flex-col items-center justify-center text-center h-screen bg-gradient-to-b from-secondary to-background">
+	<header class="mb-8">
+	  <h1 class="text-4xl font-bold text-text">Welcome to FitConnection</h1>
 	</header>
   
-	<section>
-	  <p>
-		Explore the amazing features of our platform. Here the more you interact, the more fun you will have.
+	<section class="max-w-2xl mx-auto">
+	  <p class="text-lg text-text">
+		Discover the incredible features of our platform. The more you engage, the more enjoyable your experience will be.
 	  </p>
 	</section>
   
-	<section>
+	<section class="mt-8">
 	  <a href="/user/login">
-		<button class="login-button">
+		<button class="cta-button bg-primary text-white px-8 py-3 text-lg rounded-full hover:bg-accent transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-primary mr-4">
 		  Log In
 		</button>
 	  </a>
+  
 	  <a href="/user/register">
-		<button class="register-button">
+		<button class="cta-button bg-accent text-white px-8 py-3 text-lg rounded-full hover:bg-primary transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-accent">
 		  Register
 		</button>
 	  </a>
@@ -29,49 +33,3 @@
   </p>
   
   </main>
-  
-  <style>
-	main {
-	  display: flex;
-	  flex-direction: column;
-	  align-items: center;
-	  justify-content: center;
-	  text-align: center;
-	  height: 100vh;
-	}
-  
-	header {
-	  margin-bottom: 24px;
-	}
-  
-	h1 {
-	  font-size: 2.5em;
-	  color: #333;
-	}
-  
-	p {
-	  font-size: 1.2em;
-	  color: #555;
-	  max-width: 600px;
-	  margin: 0 auto;
-	}
-  
-	.login-button,
-	.register-button {
-	  background-color: #3498db;
-	  color: white;
-	  padding: 15px 30px;
-	  font-size: 1.2em;
-	  border: none;
-	  border-radius: 50px;
-	  cursor: pointer;
-	  transition-duration: 0.4s;
-	  margin-right: 10px;
-	  margin-bottom: 10px;
-	}
-  
-	.login-button:hover,
-	.register-button:hover {
-	  background-color: #2980b9;
-	}
-  </style>
