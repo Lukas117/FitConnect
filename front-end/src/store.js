@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
 export const userLocation = writable({
 	latitude: null,
@@ -12,10 +12,22 @@ export const size = writable({
 });
 
 export const icon = writable({
-	svg: ``,
+	svg: ``
 });
 
 export const markerList = writable([
-    { id: 1, lat: 51.4555, lng: 3.56655, title: "Marker 1", content: "This is marker 1" },
-    { id: 2, lat: 51.4565, lng: 3.56665, title: "Marker 2", content: "This is marker 2" }
+	{
+		id: 1,
+		lat: 51.4555,
+		lng: 3.56655,
+		title: 'Marker 1',
+		content: 'This is marker 1'
+	},
+	{
+		id: 2,
+		lat: 51.4565,
+		lng: 3.56665,
+		title: 'Marker 2',
+		content: 'This is marker 2'
+	}
 ]);

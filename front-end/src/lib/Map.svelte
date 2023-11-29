@@ -2,12 +2,13 @@
 	import { onMount } from 'svelte';
 	import { markerList, userLocation, size, icon } from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
+	import Navigation from './Navigation.svelte';
 
 	let map;
 	let showError = false;
 	let showLoading = false;
 	let locationMarker;
-  let eventMarkersLayer;
+	let eventMarkersLayer;
 
 	onMount(async () => {
 		// wait for the library to be imported
@@ -22,14 +23,15 @@
 			if (value.loaded && !map) {
 				initializeMap(L, [value.latitude, value.longitude]);
 			}
-			updateLocationMarker([value.latitude, value.longitude]);
+			updateUserLocationMarker([value.latitude, value.longitude]);
 			statusTimeout();
+			if (map) {
+				eventMarkersLayer = L.layerGroup().addTo(map);
+				updateMarkers();
+			}
 		};
 
 		userLocation.subscribe(handleUserLocationChange); // calls function everytime userLocation updates
-    
-    eventMarkersLayer = L.layerGroup().addTo(map);
-    updateMarkers();
 	});
 
 	// function for initializing the leaflet map
@@ -40,12 +42,14 @@
 		).addTo(map);
 	}
 
-	// Updates the location marker position on the map
-	function updateLocationMarker(latlng) {
-		if (map && locationMarker) { // if the map and the marker is initialized
+	// Updates the user location marker position on the map
+	function updateUserLocationMarker(latlng) {
+		if (map && locationMarker) {
+			// if the map and the marker is initialized
 			locationMarker.setLatLng(latlng);
-		} else if (map) { // if the map is initialized but the marker isnt
-			locationMarker = createLocationMarker(L, latlng);
+		} else if (map) {
+			// if the map is initialized but the marker isnt
+			locationMarker = createUserLocationMarker(L, latlng);
 			locationMarker.addTo(map);
 		}
 	}
@@ -70,79 +74,98 @@
 
 	// Handles the status messages of the map based on the $userlocation.loaded
 	function handleMapStatus(status) {
-		if (status.loaded == true) { // successfully loaded
+		if (status.loaded == true) {
+			// successfully loaded
 			showLoading = false;
 			showError = false;
 		}
-		if (status.loaded == false) { // still loading
+		if (status.loaded == false) {
+			// still loading
 			showLoading = true;
 		}
-		if (status == 'timeout') { // failed to load
+		if (status == 'timeout') {
+			// failed to load
 			showError = true;
 			showLoading = false;
 		}
 	}
 
 	// initializes the marker on the map based on the users location
-	function createLocationMarker(L, latlng) {
+	function createUserLocationMarker(L, latlng) {
 		const locationIcon = L.divIcon({
 			className: 'leaflet-control-locate-location',
 			// uses store $icon and $size variables from iconUtility.js
-			html: $icon.svg, 
+			html: $icon.svg,
 			iconSize: [$size.s2, $size.s2]
 		});
 
 		return L.marker(latlng, { icon: locationIcon });
 	}
 
-  // create new event
-  function createEvent() {
-    console.log('Create event button was pressed');
-    const newMarker = {
-      id: $markerList.length + 1,
-      lat: 51.4555 + Math.random() * 0.01,
-      lng: 3.56655 - Math.random() * 0.01,
-      title: `New Marker ${$markerList.length + 1}`,
-      content: `This is a new marker.`
-    };
+	// create new event
+	function createEvent() {
+		const newMarker = {
+			id: $markerList.length + 1,
+			lat: 51.4555 + Math.random() * 0.01,
+			lng: 3.56655 - Math.random() * 0.01,
+			title: `New Marker ${$markerList.length + 1}`,
+			content: `This is a new marker.`
+		};
 
-    // update the store by pushing the new marker
-    markerList.update(existingMarkers => [...existingMarkers, newMarker]);
-  }
+		// update the store by pushing the new marker
+		markerList.update((existingMarkers) => [...existingMarkers, newMarker]);
+	}
 
-  // function to update markers on the map
-  function updateMarkers() {
-    if (map) {
-      // clear existing markers
-      eventMarkersLayer.clearLayers();
+	// function to update markers on the map
+	function updateMarkers() {
+		if (map) {
+			// clear existing markers
+			eventMarkersLayer.clearLayers();
 
-      // add markers from the store array
-      $markerList.forEach(markerData => {
-        const marker = L.marker([markerData.lat, markerData.lng]).addTo(map);
-        marker.bindPopup(`<b>${markerData.title}</b><br>${markerData.content}`);
-        eventMarkersLayer.addLayer(marker);
-      });
-    }
-  }
+			// add markers from the store array
+			$markerList.forEach((markerData) => {
+				const marker = L.marker([markerData.lat, markerData.lng]).addTo(map);
+				marker.bindPopup(`<b>${markerData.title}</b><br>${markerData.content}`);
+				eventMarkersLayer.addLayer(marker);
+			});
+		}
+	}
 
-  // subscribe to changes in the markerList store and update markers
-  markerList.subscribe(value => {
-    if (map) {
-      console.log('Marker added', value);
-      updateMarkers();
-    }
-  });
-  
+	// subscribe to changes in the markerList store and update markers
+	markerList.subscribe((value) => {
+		if (map) {
+			updateMarkers();
+		}
+	});
 </script>
 
-<div id="mapContainer" style="height: 600px; width: 100%">
-	{#if showError}
-		<h1>Could not load map</h1>
-	{/if}
-	{#if showLoading}
-		<h1>Loading Map...</h1>
-	{/if}
+<div class="relative bg-background" style="height: 600px; width: 100% z-0">
+	<div id="mapContainer" class="h-full w-full">
+		{#if showError}
+			<h1>Could not load map</h1>
+		{/if}
+		{#if showLoading}
+			<h1>Loading Map...</h1>
+		{/if}
+	</div>
+
+	<!-- Center button on top of the map -->
+	<button
+		on:click={centerMap}
+		class="absolute bottom-3 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none"
+		style="z-index: 1000"
+	>
+		<!-- Adjust the max-w and height (h) values to make the image smaller -->
+		<Navigation />
+	</button>
 </div>
 
-<button on:click={centerMap}>Center</button>
-<button on:click={createEvent}>Create event</button>
+<!-- Create event button below the map -->
+<section class="mt-4 flex items-center justify-center">
+	<button
+		on:click={createEvent}
+		class="cta-button bg-primary text-text px-8 py-3 text-lg rounded-full hover:bg-accent transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-accent"
+	>
+		Create Event
+	</button>
+</section>
