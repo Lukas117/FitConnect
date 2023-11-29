@@ -5,8 +5,7 @@ const config = {
 		port: 4173
 	},
 	testDir: 'tests',
-	testMatch: /(.+\.)?(test|spec)\.[jt]s/,
-	verbose: true
+	testMatch: /(.+\.)?(test|spec)\.[jt]s/
 };
 
 export default config;
