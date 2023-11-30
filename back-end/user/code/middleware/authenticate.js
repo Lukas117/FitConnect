@@ -1,4 +1,4 @@
-export const authenticate = (req, res, next) => {
+function authenticate(req, res, next) {
     const authToken = req.headers.authorization;
 
     if (authToken && authToken === process.env.AUTH_TOKEN) {
@@ -11,3 +11,5 @@ export const authenticate = (req, res, next) => {
         });
     }
 }
+
+module.exports = authenticate;

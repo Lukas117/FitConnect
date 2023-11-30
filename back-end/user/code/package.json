@@ -2,9 +2,10 @@
 	"name": "user",
 	"version": "1.0.0",
 	"description": "",
-	"main": "app.js",
+	"main": "start.js",
 	"scripts": {
-		"dev": "nodemon app.js"
+		"dev": "nodemon start.js",
+		"dev win": "./node_modules/.bin/nodemon start.js"
 	},
 	"author": "group3",
 	"license": "ISC",
