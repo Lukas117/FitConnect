@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  appointments:
+    build:
+      context: ./appointments
+      dockerfile: Dockerfile
+    volumes:
+      - ./user/code:/usr/src/app
+    ports:
+      - "3010:3010"
+    networks:
+      - users
+    command: npm run dev
+
+  gateway:
+    build:
+      context: ./apigateway
+      dockerfile: Dockerfile
+    volumes:
+      - ./apigateway/code:/usr/src/app
+    ports:
+      - "3011:3011"
+    networks:
+      - users
+    command: npm run dev
+
+networks:
+  users:
+    driver: bridge
