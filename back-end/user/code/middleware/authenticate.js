@@ -1,4 +1,4 @@
-function authenticate(req, res, next) {
+export async function authenticate(req, res, next) {
     const authToken = req.headers.authorization;
 
     if (authToken && authToken === process.env.AUTH_TOKEN) {
@@ -12,4 +12,3 @@ function authenticate(req, res, next) {
     }
 }
 
-module.exports = authenticate;

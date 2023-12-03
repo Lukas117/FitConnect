@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "start.js",
+	"type": "module",
 	"scripts": {
 		"dev": "nodemon start.js",
 		"dev win": "./node_modules/.bin/nodemon start.js"

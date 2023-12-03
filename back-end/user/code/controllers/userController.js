@@ -1,48 +1,42 @@
-const generateUserId = () => {
-	// Logic to generate a unique user ID (you might want to use a library for this)
-	return Math.random().toString(36).substring(7);
-};
+import fs from 'fs';
+import userData from './user.json' assert { type: 'json' };
 
-const createUser = (req, res) => {
-	// Logic for creating a new user
-	// Extract user data from req.body
-	const { name, email, password } = req.body;
+export function createUser(req, res) {
+  // Logic for creating a new user
+  const { name, email, password } = req.body;
 
-	// Generate a new userId
-	const userId = generateUserId();
+  // Create a new user object
+  const newUser = {
+    name,
+    email,
+    password,
+  };
 
-	// Set other properties
-	const newUser = {
-		userId,
-		name,
-		email,
-		password,
-		createdAt: new Date().toISOString(),
-	};
+  // Save the new user to the user.json file
+  const userFilePath = './user.json';
 
-	// Return the newly created user
-	res.status(201).json(newUser);
-};
+  if (!Array.isArray(userData)) {
+    userData = [];
+  }
+  console.log(userData);
 
-const getUserById = (req, res) => {
+  userData.push(newUser);
+  fs.writeFileSync(userFilePath, JSON.stringify(userData, null, 2));
+
+  // Return the newly created user
+  res.status(201).json(newUser);
+}
+
+export const getUserById = (req, res) => {
 	// Logic for fetching a user by userId
-	const userId = req.params.id;
+	const userId = req.params.id;	
 
-	// Fetch user from the database or your data source (dummy data for now)
-	const user = getUserFromDatabase(userId);
-
+	// Find the user with the matching userId
+	const user = userData.users.find((user) => user.userId == userId);
+  
 	if (!user) {
-		return res.status(404).json({ error: 'User not found' });
+	  return res.status(404).json({ error: 'User not found' });
+	  
 	}
-
 	res.status(200).json(user);
-};
-
-// Dummy function for fetching a user from the database (replace with actual database logic)
-const getUserFromDatabase = (userId) => {
-	// For now, use dummyUsers array from dummyData.js for testing
-	const dummyUsers = require('../dummyData').dummyUsers;
-	return dummyUsers.find((user) => user.userId === userId);
-};
-
-module.exports = { createUser, getUserById };
+  };

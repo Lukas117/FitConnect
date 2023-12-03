@@ -1,10 +1,10 @@
-const express = require('express');
-const dotenv = require('dotenv');
+import express from 'express';
+import dotenv from 'dotenv';
 dotenv.config({ path: 'variables.env' });
-const indexRouter = require('./routes/userRoutes.js');
-const { ErrorHandler } = require('./middleware/errorHandler.js');
-const cors = require('cors');
-const { authenticate } = require('./middleware/authenticate.js');
+import indexRouter from './routes/userRoutes.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { authenticate } from './middleware/authenticate.js';
+import cors from 'cors';
 
 
 
@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 		next(err);
 	}
 });
-app.use(ErrorHandler);
+app.use(errorHandler);
 
 app.set('port', process.env.PORT || 3010);
 const server = app.listen(app.get('port'), () => {

@@ -1,4 +1,4 @@
-function errorHandler(err, req, res, next) {
+export async function errorHandler(err, req, res, next) {
   console.error('Middleware Error Handling:', err);
 
   const { statusCode, message } = err;
@@ -12,7 +12,3 @@ function errorHandler(err, req, res, next) {
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
   });
 }
-
-module.exports = {
-  ErrorHandler: errorHandler,
-};
