@@ -1,2 +1,2 @@
-FROM node:18.9.0
+FROM node:10.2.4
 RUN mkdir -p /usr/src/app
