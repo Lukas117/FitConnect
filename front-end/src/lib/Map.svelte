@@ -1,46 +1,148 @@
 <script>
-    import { onMount } from 'svelte';
-    import { userLocation } from '../stores';
+	import { onMount } from 'svelte';
+	import { markerList, userLocation, size, icon } from '../store.js';
+	import { setIconOptions } from './iconUtility.js';
 
-    let map;
+	let map;
+	let showError = false;
+	let showLoading = false;
+	let locationMarker;
+  let eventMarkersLayer;
 
-    onMount(() => {
-      if (typeof window !== 'undefined') {
-        // Leaflet code that depends on the DOM
-        import('leaflet').then((L) => {
-          // map = L.map('mapContainer').setView([$userLocation.latitude, $userLocation.longitude], 17);
-          map = L.map('mapContainer').setView([$userLocation.latitude, $userLocation.longitude], 17);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-          }).addTo(map);
-        });
-      }
-    });
+	onMount(async () => {
+		// wait for the library to be imported
+		const L = await import('leaflet');
+		await import('leaflet.locatecontrol');
+		await import('leaflet.locatecontrol/dist/L.Control.Locate.min.css');
 
-    userLocation.subscribe(value => {
+		setIconOptions();
+
+		const handleUserLocationChange = (value) => {
+			handleMapStatus(value);
+			if (value.loaded && !map) {
+				initializeMap(L, [value.latitude, value.longitude]);
+			}
+			updateLocationMarker([value.latitude, value.longitude]);
+			statusTimeout();
+		};
+
+		userLocation.subscribe(handleUserLocationChange); // calls function everytime userLocation updates
+    
+    eventMarkersLayer = L.layerGroup().addTo(map);
+    updateMarkers();
+	});
+
+	// function for initializing the leaflet map
+	function initializeMap(L, latlng) {
+		map = L.map('mapContainer').setView(latlng, 17);
+		L.tileLayer(
+			'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+		).addTo(map);
+	}
+
+	// Updates the location marker position on the map
+	function updateLocationMarker(latlng) {
+		if (map && locationMarker) { // if the map and the marker is initialized
+			locationMarker.setLatLng(latlng);
+		} else if (map) { // if the map is initialized but the marker isnt
+			locationMarker = createLocationMarker(L, latlng);
+			locationMarker.addTo(map);
+		}
+	}
+
+	// centers the map to $userlocation
+	function centerMap() {
+		if (map) {
+			map.flyTo([$userLocation.latitude, $userLocation.longitude], 16);
+		}
+	}
+
+	// controls the status message of the map and is dependent on $userlocation
+	// has a time out of 5 seconds
+	function statusTimeout() {
+		setTimeout(() => {
+			if (!$userLocation.loaded) {
+				handleMapStatus('timeout'); // set the status message to couldnt load map
+			}
+			handleMapStatus($userLocation.loaded); // set status to loaded or failed
+		}, 5000);
+	}
+
+	// Handles the status messages of the map based on the $userlocation.loaded
+	function handleMapStatus(status) {
+		if (status.loaded == true) { // successfully loaded
+			showLoading = false;
+			showError = false;
+		}
+		if (status.loaded == false) { // still loading
+			showLoading = true;
+		}
+		if (status == 'timeout') { // failed to load
+			showError = true;
+			showLoading = false;
+		}
+	}
+
+	// initializes the marker on the map based on the users location
+	function createLocationMarker(L, latlng) {
+		const locationIcon = L.divIcon({
+			className: 'leaflet-control-locate-location',
+			// uses store $icon and $size variables from iconUtility.js
+			html: $icon.svg, 
+			iconSize: [$size.s2, $size.s2]
+		});
+
+		return L.marker(latlng, { icon: locationIcon });
+	}
+
+  // create new event
+  function createEvent() {
+    console.log('Create event button was pressed');
+    const newMarker = {
+      id: $markerList.length + 1,
+      lat: 51.4555 + Math.random() * 0.01,
+      lng: 3.56655 - Math.random() * 0.01,
+      title: `New Marker ${$markerList.length + 1}`,
+      content: `This is a new marker.`
+    };
+
+    // update the store by pushing the new marker
+    markerList.update(existingMarkers => [...existingMarkers, newMarker]);
+  }
+
+  // function to update markers on the map
+  function updateMarkers() {
     if (map) {
-      console.log('User location changed:', value);
-    }
-  });
+      // clear existing markers
+      eventMarkersLayer.clearLayers();
 
-  //center the map button handling fucntiong
-  function centerMap() {
-    console.log('button was pressed');
-    if (map) {
-      map.flyTo([$userLocation.latitude, $userLocation.longitude], 16);
+      // add markers from the store array
+      $markerList.forEach(markerData => {
+        const marker = L.marker([markerData.lat, markerData.lng]).addTo(map);
+        marker.bindPopup(`<b>${markerData.title}</b><br>${markerData.content}`);
+        eventMarkersLayer.addLayer(marker);
+      });
     }
   }
 
-  </script>
-<svelte:head>
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-    crossorigin=""
-  />
+  // subscribe to changes in the markerList store and update markers
+  markerList.subscribe(value => {
+    if (map) {
+      console.log('Marker added', value);
+      updateMarkers();
+    }
+  });
+  
+</script>
 
-</svelte:head>
-<div id="mapContainer" style="height: 400px; width: 50%" />
+<div id="mapContainer" style="height: 600px; width: 100%">
+	{#if showError}
+		<h1>Could not load map</h1>
+	{/if}
+	{#if showLoading}
+		<h1>Loading Map...</h1>
+	{/if}
+</div>
 
 <button on:click={centerMap}>Center</button>
+<button on:click={createEvent}>Create event</button>
