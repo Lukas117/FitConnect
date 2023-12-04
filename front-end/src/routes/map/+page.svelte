@@ -4,8 +4,7 @@
 	import Location from '$lib/Location.svelte';
   
 </script>
-
-<main class="margin-0">
+<div class="w-full h-full bg-background">
 	<Map />
 	<Location />
-</main>
+</div>

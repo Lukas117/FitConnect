@@ -3,7 +3,7 @@
 
   </script>
   
-  <main class="flex flex-col items-center justify-center text-center h-screen bg-gradient-to-b from-secondary to-background">
+  <div class="flex flex-col items-center justify-center text-center h-screen bg-gradient-to-b from-secondary to-background">
 	<header class="mb-8">
 	  <h1 class="text-4xl font-bold text-text">Welcome to FitConnection</h1>
 	</header>
@@ -32,4 +32,4 @@
 	<a href="/map">Map site</a>
   </p>
   
-  </main>
+  </div>

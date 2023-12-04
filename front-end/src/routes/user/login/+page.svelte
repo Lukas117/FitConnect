@@ -11,7 +11,7 @@
   };
 </script>
 
-<main class="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-gray-100 to-gray-300">
+<div class="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-gray-100 to-gray-300">
   <h1 class="text-4xl font-bold text-gray-800 mb-8">Login</h1>
 
   <form on:submit|preventDefault={handleLogin} class="max-w-md w-full">
@@ -33,4 +33,4 @@
       Login
     </button>
   </form>
-</main>
+</div>
