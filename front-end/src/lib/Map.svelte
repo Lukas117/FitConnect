@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { markerList, userLocation, size, icon } from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
-	import basketballIcon from './MarkerIcon.js';
+	import { getPopupOptions, basketballIcon } from './MarkerIcon.js';
 	import Navigation from './Navigation.svelte';
 	import HostIcon from './HostIcon.svelte';
 
@@ -143,7 +143,7 @@
 			// add markers from the store array
 			$markerList.forEach((markerData) => {
 				const marker = L.marker([markerData.lat, markerData.lng], {icon: markerIcon}).addTo(map);
-				marker.bindPopup(popupContent);
+				marker.bindPopup(popupContent, getPopupOptions());
 				eventMarkersLayer.addLayer(marker);
 			});
 		}
@@ -179,7 +179,7 @@
 
 	<button
 		on:click={createEvent}
-		class="absolute bottom-3 left-2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-90 active:scale-100"
+		class="absolute bottom-3 left-2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
 		style="z-index: 1000"
 	>
 		<HostIcon />

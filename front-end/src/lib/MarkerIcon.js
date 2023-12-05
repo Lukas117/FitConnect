@@ -40,10 +40,16 @@ l-4 -33 37 6 c175 30 280 80 441 211 7 6 -148 229 -239 344 -119 149 -114 144
 
 const iconUrl = 'data:image/svg+xml;base64,' + btoa(svgIcon);
 
-export default function basketballIcon(L) {
+export function basketballIcon(L) {
 	return L.icon({
 		iconUrl: iconUrl,
 		iconSize: [80, 80], // Set the size of your SVG icon
 		iconAnchor: [40, 70] // Adjust the anchor point if needed
 	});
+}
+
+export function getPopupOptions() {
+	return {
+		offset: [0,-50]
+	};
 }
