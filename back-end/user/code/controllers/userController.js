@@ -1,37 +1,39 @@
 import fs from 'fs';
 import userData from './user.json' assert { type: 'json' };
+import bcrypt from 'bcrypt';
 
-export function createUser(req, res) {
-  // Logic for creating a new user
-  const { name, email, password } = req.body;
 
-  // Create a new user object
-  const newUser = {
-    name,
-    email,
-    password,
-  };
+export const createUser = async (req, res) => {
+  try {
+    const { username, password } = req.body;
 
-  // Save the new user to the user.json file
-  const userFilePath = './user.json';
+    const userData = JSON.parse(fs.readFileSync(userFilePath, 'utf8'));
+    const existingUser = userData.users.find((user) => user.username === username);
+    if (existingUser) {
+      res.status(400).json({ error: 'Username already exists' });
+      return;
+    }
 
-  if (!Array.isArray(userData)) {
-    userData = [];
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = {
+      username,
+      passwordHash: hashedPassword,
+    };
+
+    userData.users.push(newUser);
+
+    fs.writeFileSync(userFilePath, JSON.stringify(userData, null, 2));
+
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
   }
-  console.log(userData);
-
-  userData.push(newUser);
-  fs.writeFileSync(userFilePath, JSON.stringify(userData, null, 2));
-
-  // Return the newly created user
-  res.status(201).json(newUser);
-}
+};
 
 export const getUserById = (req, res) => {
-	// Logic for fetching a user by userId
 	const userId = req.params.id;	
 
-	// Find the user with the matching userId
 	const user = userData.users.find((user) => user.userId == userId);
   
 	if (!user) {
@@ -40,3 +42,26 @@ export const getUserById = (req, res) => {
 	}
 	res.status(200).json(user);
   };
+
+
+  export const login = async (req, res, next) => {
+    try {
+      const { username, password } = req.body;
+      const user = userData.users.find((user) => user.username == username);
+  
+      if (!user) {
+        return res.status(401).json({ error: 'Invalid user' });
+      }
+  
+      if (user.password == password) {
+
+        return res.status(200).json({ success: true, message: 'Login successful' });
+      } else {
+
+        return res.status(401).json({ error: 'Invalid pass' });
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
+  
