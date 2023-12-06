@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { markerList, userLocation, size, icon } from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
-	import { getPopupOptions, basketballIcon } from './MarkerIcon.js';
+	import { getPopupOptions, basketballIcon } from './markerIcon.js';
 	import Navigation from './Navigation.svelte';
 	import HostIcon from './HostIcon.svelte';
 
@@ -142,7 +142,9 @@
 
 			// add markers from the store array
 			$markerList.forEach((markerData) => {
-				const marker = L.marker([markerData.lat, markerData.lng], {icon: markerIcon}).addTo(map);
+				const marker = L.marker([markerData.lat, markerData.lng], {
+					icon: markerIcon
+				}).addTo(map);
 				marker.bindPopup(popupContent, getPopupOptions());
 				eventMarkersLayer.addLayer(marker);
 			});
@@ -157,7 +159,10 @@
 	});
 </script>
 
-<div class="relative bg-background" style="height: 95%; width: 100% z-0">
+<div
+	class="relative bg-background"
+	style="height: 95%; width: 100%; z-index: 0;"
+>
 	<div id="mapContainer" class="h-full w-full">
 		{#if showError}
 			<h1>Could not load map</h1>
