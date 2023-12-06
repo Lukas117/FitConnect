@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { markerList, userLocation, size, icon } from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
-	import { getPopupOptions, basketballIcon } from './MarkerIcon.js';
+	import { getPopupOptions, basketballIcon } from './markerIcon.js';
 	import Navigation from './Navigation.svelte';
 	import HostIcon from './HostIcon.svelte';
 
