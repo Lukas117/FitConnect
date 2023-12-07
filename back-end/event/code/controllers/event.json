@@ -1,0 +1,60 @@
+{
+	"meta": {
+		"version": "1.0",
+		"timestamp": "2022-02-28T10:00:00.000Z"
+	},
+	"events": [
+		{
+			"eventId": "1",
+			"eventName": "Basketball",
+			"date": "Ongoing",
+			"hostedName": "Sports Association",
+			"startDate": "2023-11-20T09:00:00Z",
+			"endDate": "",
+			"eventState": "inProgress",
+			"maximumPlayers": 10,
+			"hostId": "5",
+			"playerList": ["player1", "player2", "player3"],
+			"facilityId": "5678"
+		},
+        {
+			"eventId": "2",
+			"eventName": "Football",
+			"date": "Ongoing",
+			"hostedName": "Sports Association",
+			"startDate": "2023-11-20T09:00:00Z",
+			"endDate": "2023-11-20T10:00:00Z",
+			"eventState": "done",
+			"maximumPlayers": 10,
+			"hostId": "5",
+			"playerList": ["player1", "player2", "player3"],
+			"facilityId": "5678"
+		},
+        {
+			"eventId": "3",
+			"eventName": "Basketball",
+			"date": "Ongoing",
+			"hostedName": "Sports Association",
+			"startDate": "",
+			"endDate": "",
+			"eventState": "notStarted",
+			"maximumPlayers": 10,
+			"hostId": "5",
+			"playerList": ["player1", "player2", "player3"],
+			"facilityId": "5678"
+		},
+        {
+			"eventId": "4",
+			"eventName": "Basketball",
+			"date": "Ongoing",
+			"hostedName": "Sports Association",
+			"startDate": "2023-11-20T09:00:00Z",
+			"endDate": "",
+			"eventState": "In progress",
+			"maximumPlayers": 10,
+			"hostId": "5",
+			"playerList": ["player1", "player2", "player3"],
+			"facilityId": "5678"
+		}
+	]
+}
