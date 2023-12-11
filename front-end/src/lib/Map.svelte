@@ -3,7 +3,7 @@
 	import { markerList, userLocation, size, icon } from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
 	import { getPopupOptions, basketballIcon } from './MarkerIcon.js';
-	import Navigation from './Navigation.svelte';
+	import Navigation from './NavigationSVG.svelte';
 	import HostIcon from './HostIcon.svelte';
 
 	let map;
@@ -161,7 +161,7 @@
 
 <div
 	class="relative bg-background"
-	style="height: 95%; width: 100%; z-index: 0;"
+	style="height: 93%; width: 100%; z-index: 0;"
 >
 	<div id="mapContainer" class="h-full w-full">
 		{#if showError}

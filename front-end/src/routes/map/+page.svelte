@@ -2,6 +2,7 @@
 	import Map from '$lib/Map.svelte';
 	import Location from '$lib/Location.svelte';
 	import SideBar from '$lib/SideBar.svelte';
+	import NavBar from '$lib/NavBar/NavBar.svelte';
 </script>
 
 <div class="w-full h-full bg-background">
@@ -13,6 +14,9 @@
 	>
 		<SideBar />
 	</div>
+
+	<NavBar/>
+	
 	
 	<Location />
 </div>
