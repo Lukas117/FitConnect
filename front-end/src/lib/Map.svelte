@@ -5,6 +5,7 @@
 	import { getPopupOptions, basketballIcon } from './MarkerIcon.js';
 	import Navigation from './NavigationSVG.svelte';
 	import HostIcon from './HostIcon.svelte';
+	import Loading from './Loading.svelte';
 
 	let map;
 	let showError = false;
@@ -165,28 +166,34 @@
 >
 	<div id="mapContainer" class="h-full w-full">
 		{#if showError}
-			<h1>Could not load map</h1>
+			<div
+				class="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-bold animate-fade-in mb-2"
+			>
+				Could not load map
+			</div>
 		{/if}
 		{#if showLoading}
-			<h1>Loading Map...</h1>
+			<Loading />
 		{/if}
 	</div>
 
-	<!-- Center button on top of the map -->
-	<button
-		on:click={centerMap}
-		class="absolute bottom-3 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
-		style="z-index: 1000"
-	>
-		<!-- Adjust the max-w and height (h) values to make the image smaller -->
-		<Navigation />
-	</button>
+	{#if !showError && !showLoading}
+		<!-- Center button on top of the map -->
+		<button
+			on:click={centerMap}
+			class="absolute bottom-3 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
+			style="z-index: 1000"
+		>
+			<!-- Adjust the max-w and height (h) values to make the image smaller -->
+			<Navigation />
+		</button>
 
-	<button
-		on:click={createEvent}
-		class="absolute bottom-3 left-2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
-		style="z-index: 1000"
-	>
-		<HostIcon />
-	</button>
+		<button
+			on:click={createEvent}
+			class="absolute bottom-3 left-2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
+			style="z-index: 1000"
+		>
+			<HostIcon />
+		</button>
+	{/if}
 </div>
