@@ -22,6 +22,7 @@
 
 		setIconOptions();
 		markerIcon = basketballIcon(L);
+		await getEvents()
 
 		const handleUserLocationChange = (value) => {
 			handleMapStatus(value);
@@ -174,9 +175,34 @@
 				const marker = L.marker([markerData.lat, markerData.lng], {
 					icon: markerIcon
 				}).addTo(map);
-				marker.bindPopup(popupContent, getPopupOptions());
+				marker.bindPopup(`
+			<div class="text-center">
+				<h3 class="text-lg font-semibold">${markerData.title}</h3>
+				<p class="text-sm">${markerData.content}</p>
+				<button id="customButton" class="mt-2 bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800">
+					Join Match
+				</button>
+			</div>
+		`, getPopupOptions());
 				eventMarkersLayer.addLayer(marker);
 			});
+		}
+	}
+
+	async function getEvents() {
+		try {
+			const response = await fetch('http://localhost:3012/api/events', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+			const data = await response.json();
+			$markerList = data; // Update the events array with the retrieved data
+
+			console.log(data);
+		} catch (error) {
+			console.error('Error fetching events:', error);
 		}
 	}
 

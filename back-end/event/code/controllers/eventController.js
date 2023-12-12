@@ -1,48 +1,62 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import {createEventData, getEventData, getEventListData, updateEventData} from '../adapters/supabaseAdapter.js';
 
-
-// Get the directory name of the current module. This is necessary because __dirname is not available in ES modules.
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-// Read the event.json file. fs.readFileSync is used to read the file synchronously.
-const rawData = fs.readFileSync(path.resolve(__dirname, './event.json'));
-// Parse the JSON data into a JavaScript object. JSON.parse is used to convert the JSON data into an object that can be used in the JavaScript code.
-const data = JSON.parse(rawData);
-
-// get all events (might not be working)
-export function getAllEventsHandler() {
-  res.status(200).json(data.events);
-};
-
-// finds events by the id
-export const getEventById = (eventId) => {
-  return data.events.find((e) => e.eventId === eventId);
-};
-
-// handles get events by id /api/events/:eventid
-export const getEventByIdHandler = (req, res) => {
-  const eventId = req.params.eventId;
-  const event = getEventById(eventId);
-
-  if (event) {
-    res.json(event);
-  } else {
-    res.status(404).json({ error: 'Event not found' });
+// GET Events from database
+export async function getEventList(req, res, next) {
+  try {
+    const eventList = await getEventListData()
+    res.status(200).json(eventList);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// create event and write to event.json
-export const createEvent = (newEvent) => {
-  data.events.push(newEvent);
-  fs.writeFileSync(path.resolve(__dirname, './event.json'), JSON.stringify(data, null, 2), 'utf8');
-  return newEvent
-};
+// GET Event by id
+export async function getEventById(req, res, next) {
+  try {
+    const event = await getEventData(req.params.eventId)
+    if (event) {
+      res.status(200).json(event);
+    } else {
+      res.status(404).json({error: 'Event not found'});
+    }
+  } catch (err) {
+    next(err);
+  }
+}
 
-// hande the post request to create event
-export const createEventHandler = (req, res) => {
-  const newEvent = req.body;
-  const createdEvent = createEvent(newEvent);
-  res.status(201).json(createdEvent);
-};
+// CREATE Event
+export async function createEvent(req, res, next) {
+  try {
+    if (req !== null) {
+      const event = await createEventData(req)
+      if (event !== null) {
+        res.status(201).json(event);
+      } else {
+        res.status(404).json({error: 'Event could not be created'});
+      }
+    } else {
+      res.status(400).json({error: 'Event is null'});
+    }
+  } catch (err) {
+    next(err);
+  }
+}
+
+// UPDATE Event
+export async function updateEvent(req, res, next) {
+  try {
+    if (req !== null) {
+      const event = await updateEventData(req)
+      if (event !== null) {
+        res.status(201).json(event);
+      } else {
+        res.status(404).json({error: 'Event could not be updated'});
+      }
+    } else {
+      res.status(400).json({error: 'Event is null'});
+    }
+  } catch (err) {
+    next(err);
+  }
+}
 

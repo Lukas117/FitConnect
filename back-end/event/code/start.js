@@ -2,7 +2,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { router as eventRoutes } from './routes/eventRoutes.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import eventRoutes from "./routes/eventRoutes.js";
+
 
 // Initialize express application
 const app = express();
@@ -16,22 +18,25 @@ app.use(cors());
 // Use bodyParser middleware to parse JSON bodies
 app.use(bodyParser.json());
 
-// Use the eventRoutes for any requests to /api
-app.use('/api', eventRoutes);
+// support json encoded and url-encoded bodies, mainly used for post and update
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// handle 404 errors (might need to be in middleware)
+// Use the eventRoutes for any requests to /api
+app.use('/', eventRoutes);
+
+// Handle 404 errors (might need to be in middleware)
 app.use((req, res, next) => {
     try {
-        // Send a 404 Not Found response
-        res.status(404).send('404 Not Found');
+        //set header before response
+        res.status(404).send("Sorry can't find that!");
     } catch (err) {
-        // Log any errors that occur when sending the response
-        console.error('Error sending 404 response:', err);
         next(err);
     }
 });
+app.use(errorHandler);
 
 // Start the server and listen on the specified port
 app.listen(port, () => {
-    console.log(`🏀   Service is running on port ${port}`);
+    console.log(`🏀 Service is running on port ${port}`);
 });
