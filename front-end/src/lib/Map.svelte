@@ -131,7 +131,7 @@
 	}
 
 	//join event
-	function joinEvent(marker) {
+	function joinEvent() {
 		
 	}
 
@@ -269,160 +269,117 @@
   }
   </style>
 
-<div class="relative bg-background" style="height: 600px; width: 100% z-0">
-	<div id="mapContainer" class="h-full w-full">
-		{#if showError}
-			<h1>Could not load map</h1>
-		{/if}
-		{#if showLoading}
-			<h1>Loading Map...</h1>
-		{/if}
-	</div>
+<div class="relative bg-background h-screen md:h-96" style="width: 100%; z-index: 0;">
+    <div id="mapContainer" class="h-full w-full">
+        {#if showError}
+            <h1 class="text-lg md:text-xl">Could not load map</h1>
+        {/if}
+        {#if showLoading}
+            <h1 class="text-lg md:text-xl">Loading Map...</h1>
+        {/if}
+    </div>
 
-	<!-- Center button on top of the map -->
-	<button
-		on:click={centerMap}
-		class="absolute bottom-3 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none"
-		style="z-index: 1000"
-	>
-		<!-- Adjust the max-w and height (h) values to make the image smaller -->
-		<Navigation />
-	</button>
+    <!-- Center button on top of the map -->
+    <button
+        on:click={centerMap}
+        class="absolute bottom-3 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none"
+        style="z-index: 1000"
+    >
+        <!-- Adjust the max-w and height (h) values to make the image smaller -->
+        <Navigation />
+    </button>
 </div>
 
 <!-- Create event button below the map -->
 <section class="mt-4 flex items-center justify-center">
-	<button
-		on:click={createEvent}
-		class="cta-button bg-primary text-text px-8 py-3 text-lg rounded-full hover:bg-accent transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-accent"
-	>
-		Create Event
-	</button>
+    <button
+        on:click={createEvent}
+        class="cta-button bg-button text-text px-8 py-3 text-lg rounded-full hover:bg-accent transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-accent"
+    >
+        Create Event
+    </button>
 </section>
 
 {#if showModal}
-	
-  
-  <div class="fixed inset-0 z-50 flex items-center justify-center" style="z-index: 1000">
-  
+    <div class="fixed inset-0 z-50 flex items-center justify-center" style="z-index: 1000;">
+        <!-- Increase the size of the modal container -->
+        <div class="z-40 relative p-4 md:p-8 bg-white rounded-md">
+            <img alt="The project logo" src={logo} class="w-12 h-12 mb-2 md:w-16 md:h-16 md:mb-4" />
+            <h2 class="text-lg md:text-2xl font-bold mb-2 md:mb-4 ps-3">Name of Event</h2>
+            <form on:submit|preventDefault={saveEvent} class="space-y-2 md:space-y-4">
+                <h1 class="text-titles text-sm md:text-base ps-3">Invite our friends:</h1>
 
-  <!-- Increase the size of the modal container -->
-  <div class="z-40 relative p-8 bg-white rounded-md shadow-md">
-    <img alt="The project logo" src={logo} class="w-16 h-16 mb-4" />
-    <h2 class="text-2xl font-bold mb-4">Name of Event</h2>
-      <form on:submit|preventDefault={saveEvent} class="space-y-4">
-		
-        <h1 class="text-orange-700">Invite our friends:</h1>
-		<div class="bg-orange-200">
-			<div class="flex flex-col mb-4">
-          
-				<select id="friend" name="friend" class="p-2 border bg-orange-400 rounded">
-				  <option value="friend1">Friend 1</option>
-				  <option value="friend2">Friend 2</option>
-				  <option value="friend3">Friend 3</option>
-				  <option value="friend4">Friend 4</option>
-				  
-				</select>
-			  </div>
-			  <div class="flex flex-col mb-4">
-				  <select id="friend" name="friend" class="p-2 border bg-orange-400 rounded">
-					<option value="friend1">Friend 1</option>
-					<option value="friend2">Friend 2</option>
-					<option value="friend3">Friend 3</option>
-					<option value="friend4">Friend 4</option>
-					
-				  </select>
-			  </div>
-			  <div class="flex flex-col mb-4">
-				  
-				  <select id="friend" name="friend" class="p-2 border bg-orange-400 rounded">
-					<option value="friend1">Friend 1</option>
-					<option value="friend2">Friend 2</option>
-					<option value="friend3">Friend 3</option>
-					<option value="friend4">Friend 4</option>
-					
-				  </select>
-			  </div>
-		  
-			  <div class="flex flex-col mb-4">
-				  <select id="friend" name="friend" class="p-2 border bg-orange-400 rounded">
-						<option value="friend1">Friend 1</option>
-						<option value="friend2">Friend 2</option>
-						<option value="friend3">Friend 3</option>
-						<option value="friend4">Friend 4</option>
-				  </select>
-			  </div>
-			  <div class="flex flex-col mb-4">
-				  <select id="friend" name="friend" class="p-2 border bg-orange-400 rounded">
-						<option value="friend1">Friend 1</option>
-						<option value="friend2">Friend 2</option>
-						<option value="friend3">Friend 3</option>
-						<option value="friend4">Friend 4</option>
-				  </select>
-			  </div>
-		</div>
-		<div class="flex justify-between">
-			<div class="flex flex-col mb-4" style="width: 200px;"> <!-- Adjust width as needed -->
-				<div class="relative">
-					
-					<select id="friend" name="PICK THE PLACE" class="p-2 border bg-white-400 rounded">
-						<option value="FACILITY1">FACILITY1</option>
-						<option value="FACILITY2">FACILITY2</option>
-						<option value="FACILITY3">FACILITY3</option>
-						<option value="FACILITY4">FACILITY4</option>
-					</select>
-				</div>
-			</div>
-		
-			<div class="flex flex-col mb-4" style="width: 200px;"> <!-- Adjust width as needed -->
-				<div class="relative">
-					
-					<input type="date" id="birthday" required class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md" />
-				</div>
-			</div>
-		
-			<div class="dropdown pl-10" style="width: 200px;"> <!-- Adjust width as needed -->
-				<button on:click={() => openClockPicker()} class="bg-orange-400 text-white px-10 py-2 rounded hover:bg-black-600 pl-10 pr-10">
-					{selectedTime}
-				</button>
-				{#if showClockPicker}
-					<div class="dropdown-content">
-						<div class="flex justify-between">
-							<!-- Hours dropdown -->
-							<div class="flex flex-col">
-								{#each hours as hour (hour)}
-									<a on:click={() => selectedTime = `${hour}:${selectedTime.split(":")[1]}`}>{hour}</a>
-								{/each}
-							</div>
-							<!-- Minutes dropdown -->
-							<div class="flex flex-col">
-								{#each minutes as minute (minute)}
-									<a on:click={() => selectedTime = `${selectedTime.split(":")[0]}:${minute}`}>{minute}</a>
-								{/each}
-							</div>
-						</div>
-					</div>
-				{/if}
-			</div>
-		</div>
-		
-		<div class="flex justify-between items-center mb-4">
-			<!-- Cancel button on the left -->
-			<button type="button" on:click={closeModal} class="text-orange-500 hover:text-gray-700 px-4 py-2 rounded">Cancel</button>
-		
-			<!-- Save button in the middle -->
-			<button type="submit" class="bg-orange-700 text-white px-4 py-2 rounded hover:bg-blue-600">Save</button>
-		
-			<!-- Icon for definitions on the right -->
-			<div class="flex items-center">
-				<!-- Replace "YourIconComponent" with your actual icon component or SVG -->
-				<button type="button" on:click={closeModal} class="text-gray-500 hover:text-gray-700 px-4 py-2 rounded">Definitions</button>
-			</div>
-		</div>
+                <div class="flex flex-col items-center mb-2 md:mb-4">
+                    <button class="bg-titles text-text rounded-full px-10 hover:bg-accent transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-accent">
+                        Add friends
+                    </button>
+                </div>
 
-      </form>
+                <div class="flex flex-col items-center mb-2 md:mb-4" style="width: 100%;">
+                    <div class="flex items-center bg-titles rounded-full p-2">
+                        <p class="text-xs md:text-sm mr-2">Pick the facility:</p>
+                        <div class="relative">
+                            <select id="facility" name="facility" class="p-2 border bg-titles rounded text-white text-xs md:text-sm">
+                                <option value="FACILITY1">FACILITY1</option>
+                                <option value="FACILITY2">FACILITY2</option>
+                                <option value="FACILITY3">FACILITY3</option>
+                                <option value="FACILITY4">FACILITY4</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center mb-2 md:mb-4" style="width: 100%;">
+                    <div class="flex items-center bg-titles rounded-full p-2">
+                        <p class="text-xs md:text-sm mr-2">Pick the time:</p>
+                        <div class="dropdown"> <!-- Adjust width as needed -->
+                            <button on:click={() => openClockPicker()} class="bg-titles text-white px-6 py-2 rounded hover:bg-black-600 md:px-10 md:py-2 md:pl-10 md:pr-10 text-xs md:text-sm border">
+                                {selectedTime}
+                            </button>
+                            {#if showClockPicker}
+                                <div class="dropdown-content">
+                                    <div class="flex justify-between">
+                                        <!-- Hours dropdown -->
+                                        <div class="flex flex-col">
+                                            {#each hours as hour (hour)}
+                                                <a on:click={() => selectedTime = `${hour}:${selectedTime.split(":")[1]}`} class="text-xs md:text-sm">{hour}</a>
+                                            {/each}
+                                        </div>
+                                        <!-- Minutes dropdown -->
+                                        <div class="flex flex-col">
+                                            {#each minutes as minute (minute)}
+                                                <a on:click={() => selectedTime = `${selectedTime.split(":")[0]}:${minute}`} class="text-xs md:text-sm">{minute}</a>
+                                            {/each}
+                                        </div>
+                                    </div>
+                                </div>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col mb-2 md:mb-4" style="width: 100%;">
+                    <div class="relative">
+                        <input type="date" id="birthday" required class="w-full px-3 py-2 mb-2 md:mb-4 border border-gray-300 rounded-md text-xs md:text-sm" />
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mb-2 md:mb-4">
+                    <!-- Cancel button on the left -->
+                    <button type="button" on:click={closeModal} class="text-titles hover:text-gray-700 px-2 md:px-4 py-1 md:py-2 rounded text-xs md:text-sm">Cancel</button>
+
+                    <!-- Save button in the middle -->
+                    <button type="submit" class="bg-button text-white px-2 md:px-4 py-1 md:py-2 rounded hover:bg-blue-600 text-xs md:text-sm">Save</button>
+
+                    <!-- Icon for definitions on the right -->
+                    <div class="flex items-center">
+                        <!-- Replace "YourIconComponent" with your actual icon component or SVG -->
+                        <button type="button" on:click={closeModal} class="text-gray-500 hover:text-gray-700 px-2 md:px-4 py-1 md:py-2 rounded text-xs md:text-sm">Definitions</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 {/if}
 
 
