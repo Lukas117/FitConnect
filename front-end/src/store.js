@@ -1,5 +1,7 @@
 import { writable } from 'svelte/store';
 
+export const showJoinModal = writable(false);
+
 export const userLocation = writable({
 	latitude: null,
 	longitude: null,
