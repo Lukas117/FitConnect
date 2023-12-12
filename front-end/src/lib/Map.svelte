@@ -4,12 +4,18 @@
 	import { setIconOptions } from './iconUtility.js';
 	import Navigation from './Navigation.svelte';
 	import logo from '$lib/assets/logo.png';
+	import { getPopupOptions, basketballIcon } from './MarkerIcon.js';
+	import Navigation from './NavigationSVG.svelte';
+	import HostIcon from './HostIcon.svelte';
+	import Loading from './Loading.svelte';
 
 	let map;
 	let showError = false;
 	let showLoading = false;
 	let locationMarker;
 	let eventMarkersLayer;
+
+  
 	let showModal = false;
 	let newEvent = {
     lat: '',
@@ -37,6 +43,8 @@
     closeClockPicker();
   }
 
+	let popupContent = ``;
+	let markerIcon;
 
 	onMount(async () => {
 		// wait for the library to be imported
@@ -45,6 +53,7 @@
 		await import('leaflet.locatecontrol/dist/L.Control.Locate.min.css');
 
 		setIconOptions();
+		markerIcon = basketballIcon(L);
 
 		const handleUserLocationChange = (value) => {
 			handleMapStatus(value);
@@ -137,20 +146,33 @@
 
 	// create new event
 	function createEvent() {
-		const newMarker = {
-			id: $markerList.length + 1,
-			lat: 51.4555 + Math.random() * 0.01,
-			lng: 3.56655 - Math.random() * 0.01,
-			title: `New Marker ${$markerList.length + 1}`,
-			content: `This is a new marker.`
-		};
+		if (map) {
+			const newMarker = {
+				id: $markerList.length + 1,
+				lat: $userLocation.latitude + Math.random() * 0.001,
+				lng: $userLocation.longitude - Math.random() * 0.001,
+				status: 'notStarted',
+				title: `Joao's Event #${$markerList.length + 1}`,
+				content: 'Players: 4/5'
+			};
 
-		// update the store by pushing the new marker
-		markerList.update((existingMarkers) => [...existingMarkers, newMarker]);
+			popupContent = `
+			<div class="text-center">
+				<h3 class="text-lg font-semibold">${newMarker.title}</h3>
+				<p class="text-sm">${newMarker.content}</p>
+				<button id="customButton" class="mt-2 bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800">
+					Join Match
+				</button>
+			</div>
+		`;
 
-		// Show the modal
-		showModal = true;
-  }
+			// update the store by pushing the new marker
+			markerList.update((existingMarkers) => [...existingMarkers, newMarker]);
+      
+      // Show the modal
+      showModal = true;
+		}
+	}
 
  		// Close the modal
 	function closeModal() {
@@ -167,8 +189,6 @@
 	function saveEvent() {
     const { lat, lng, title, content } = newEvent;
 
-    
-
     const createdEvent = {
       id: $markerList.length + 1,
       lat: parseFloat(lat),
@@ -177,21 +197,10 @@
       content,
     };
 
-    // update the store by pushing the new marker
-    markerList.update((existingMarkers) => [...existingMarkers, createdEvent]);
-	console.log(createdEvent)
-
-	if (map) {
-    const marker = L.marker([createdEvent.lat, createdEvent.lng]).addTo(map);
-    marker.bindPopup(`<b>${createdEvent.title}</b><br>${createdEvent.content}`);
-    eventMarkersLayer.addLayer(marker);
-  }
 
     // Close the modal
     showModal = false;
   }
-
-
 
 	// function to update markers on the map
 	function updateMarkers() {
@@ -201,8 +210,10 @@
 
 			// add markers from the store array
 			$markerList.forEach((markerData) => {
-				const marker = L.marker([markerData.lat, markerData.lng]).addTo(map);
-				marker.bindPopup(`<b>${markerData.title}</b><br>${markerData.content}`);
+				const marker = L.marker([markerData.lat, markerData.lng], {
+					icon: markerIcon
+				}).addTo(map);
+				marker.bindPopup(popupContent, getPopupOptions());
 				eventMarkersLayer.addLayer(marker);
 			});
 		}
@@ -259,7 +270,7 @@
     display: block;
     color: #333;
   }
-
+  
   .dropdown-content a:hover {
     background-color: #f1f1f1;
   }
@@ -382,4 +393,40 @@
     </div>
 {/if}
 
+<div
+	class="relative bg-background"
+	style="height: 93%; width: 100%; z-index: 0;"
+>
+	<div id="mapContainer" class="h-full w-full">
+		{#if showError}
+			<div
+				class="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-bold animate-fade-in mb-2"
+			>
+				Could not load map
+			</div>
+		{/if}
+		{#if showLoading}
+			<Loading />
+		{/if}
+	</div>
 
+	{#if !showError && !showLoading}
+		<!-- Center button on top of the map -->
+		<button
+			on:click={centerMap}
+			class="absolute bottom-3 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
+			style="z-index: 1000"
+		>
+			<!-- Adjust the max-w and height (h) values to make the image smaller -->
+			<Navigation />
+		</button>
+
+		<button
+			on:click={createEvent}
+			class="absolute bottom-3 left-2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
+			style="z-index: 1000"
+		>
+			<HostIcon />
+		</button>
+	{/if}
+</div>
