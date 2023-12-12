@@ -5,7 +5,8 @@
 		userLocation,
 		size,
 		icon,
-		showJoinModal
+		showJoinModal,
+		showHostModal
 	} from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
 
@@ -14,6 +15,7 @@
 	import HostIcon from './HostIcon.svelte';
 	import Loading from './Loading.svelte';
 	import JoinEvent from './JoinEvent.svelte';
+	import HostModal from './Map/HostModal.svelte';
 
 	let map;
 	let showError = false;
@@ -163,6 +165,9 @@
 			});
 		}
 	}
+	function displayHostModal() {
+		$showHostModal = true;
+	}
 
 	// subscribe to changes in the markerList store and update markers
 	markerList.subscribe((value) => {
@@ -176,6 +181,7 @@
 	class="relative bg-background"
 	style="height: 93%; width: 100%; z-index: 0;"
 >
+	<HostModal/>
 	<div id="mapContainer" class="h-full w-full">
 		{#if showError}
 			<div
@@ -201,7 +207,7 @@
 		</button>
 
 		<button
-			on:click={createEvent}
+			on:click={displayHostModal}
 			class="absolute bottom-3 left-2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
 			style="z-index: 1000"
 		>

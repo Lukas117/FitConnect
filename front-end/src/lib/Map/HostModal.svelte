@@ -1,202 +1,122 @@
 <script>
 	import logo from '$lib/assets/logo.png';
-	import Timepicker from "svelty-picker";
+	import Timepicker from 'svelty-picker';
+	import EditIcon from './EditIcon.svelte';
+	import { showHostModal } from '../../store.js';
 
-	let showModal = false;
 	let newEvent;
-	let today = new Date();
-	let todayString = today.toISOString().slice(0, 10);
+	let todayDate = new Date().toISOString().slice(0, 10);
+
+	let todayHours = new Date();
+	let todayString = todayHours.toISOString().slice(0, 10);
+
+	let eventNameInput;
+
+	function focusEventNameInput() {
+		eventNameInput.focus();
+	}
 	// Close the modal
 	function closeModal() {
-		// Close the modal and reset input values
-		showModal = false;
-		newEvent = {
-			lat: '',
-			lng: '',
-			title: '',
-			content: ''
-		};
-	}
-
-	function saveEvent() {
-		const { lat, lng, title, content } = newEvent;
-
-		const createdEvent = {
-			id: 1 + 1,
-			lat: parseFloat(lat),
-			lng: parseFloat(lng),
-			title,
-			content
-		};
-	}
-
-	function displayModal() {
-		showModal = true;
-		console.log('xujne');
+		$showHostModal = false;
 	}
 </script>
 
-<div class="flex justify-center h-full w-full">
-	<button
-		on:click={displayModal}
-		class="text-2xl px-8 py-4 bg-blue-500 text-white rounded-lg"
-		>Display Modal</button
-	>
-</div>
-
-{#if showModal}
+{#if $showHostModal}
 	<div
 		class="fixed inset-0 z-50 flex items-center justify-center"
-		style="z-index: 1000;"
+		style="z-index: 1000"
 	>
-		<!-- Increase the size of the modal container -->
-		<div class="z-40 relative p-4 md:p-8 bg-white rounded-md">
+		<div class="relative p-8 bg-white rounded-md shadow-md">
 			<img
 				alt="The project logo"
 				src={logo}
 				class="w-12 h-12 mb-2 md:w-16 md:h-16 md:mb-4"
 			/>
-			<input
-				value="Name of Event"
-				class="text-lg md:text-2xl font-bold mb-2 md:mb-4 ps-3"
-			/>
-			<form on:submit|preventDefault={saveEvent} class="space-y-2 md:space-y-4">
-				<h1 class="text-titles text-sm md:text-base ps-3">Invite our friends:</h1>
+			<form class="space-y-4">
+				<div class="flex items-center">
+					<input
+						bind:this={eventNameInput}
+						value="Name of Event"
+						class="text-lg md:text-2xl font-bold w-3/5"
+					/>
+					<button id="edit" class="ml-2 opacity-50" on:click={focusEventNameInput}>
+						<EditIcon />
+					</button>
+				</div>
 
 				<div class="flex flex-col items-center mb-2 md:mb-4">
 					<button
 						class="bg-titles text-white rounded-full px-10 hover:bg-accent transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-accent"
 					>
-						Add friends
+						Invite friends
 					</button>
 				</div>
 
-				<div class="flex flex-col items-center mb-2 md:mb-4" style="width: 100%;">
-					<div class="flex items-center bg-titles rounded-full p-2">
-						<p class="text-xs text-white md:text-sm mr-2">Pick the time:</p>
-						<div class="relative">
-							<Timepicker 
-							mode="time"
-							format="hh:i"
-							value={todayString}
-							initialDate={today}
-							inputClasses="appearance-none bg-transparent border-none w-16 text-2xl font-bold text-white leading-tight focus:outline-none"/>
-						</div>
-					</div>
+				<!-- TIME PICKER -->
 
-					<div class="flex flex-col items-center mb-2 md:mb-4" style="width: 100%;">
-						<div class="flex items-center bg-titles rounded-full p-2">
-							<p class="text-xs text-white md:text-sm mr-2">Pick the facility:</p>
-							<div class="relative">
-								<select
-									id="facility"
-									name="facility"
-									class="p-2 border bg-titles rounded text-white text-xs md:text-sm"
-								>
-									<option value="FACILITY1">FACILITY1</option>
-									<option value="FACILITY2">FACILITY2</option>
-									<option value="FACILITY3">FACILITY3</option>
-									<option value="FACILITY4">FACILITY4</option>
-								</select>
+				<div class="flex flex-col items-center mb-2 md:mb-4">
+					<div
+						class="flex items-center bg-titles rounded-md p-2 w-4/5 justify-between"
+					>
+						<div class="flex items-center">
+							<p class="text-xs text-white md:text-sm mr-2">Time:</p>
+							<div class="relative ml-5">
+								<Timepicker
+									mode="time"
+									format="hh:i"
+									value={todayString}
+									initialDate={todayHours}
+									inputClasses="appearance-none bg-transparent border-none w-16 text-2xl font-bold text-white leading-tight focus:outline-none"
+								/>
 							</div>
 						</div>
 					</div>
+				</div>
 
-					<div class="flex flex-col items-center mb-2 md:mb-4" style="width: 100%;">
+				<div class="flex flex-col items-center mb-2 md:mb-4">
+					<div class="flex items-center bg-titles rounded-md p-2 w-4/5">
+						<p class="text-xs text-white md:text-sm mr-2">Facility:</p>
 						<div class="relative">
-							<input
-								type="date"
-								id="birthday"
-								required
-								class="w-full px-3 py-2 mb-2 md:mb-4 border border-gray-300 rounded-md text-xs md:text-sm"
-								value={today}
-							/>
-						</div>
-					</div>
-
-					<div class="flex justify-between items-center mb-2 md:mb-4">
-						<!-- Cancel button on the left -->
-						<button
-							type="button"
-							on:click={closeModal}
-							class="text-titles hover:text-gray-700 px-2 md:px-4 py-1 md:py-2 rounded text-xs md:text-sm"
-							>Cancel</button
-						>
-
-						<!-- Save button in the middle -->
-						<button
-							type="submit"
-							class="bg-button text-white px-2 md:px-4 py-1 md:py-2 rounded hover:bg-blue-600 text-xs md:text-sm"
-							>Save</button
-						>
-
-						<!-- Icon for definitions on the right -->
-						<div class="flex items-center">
-							<!-- Replace "YourIconComponent" with your actual icon component or SVG -->
-							<button
-								type="button"
-								on:click={closeModal}
-								class="text-gray-500 hover:text-gray-700 px-2 md:px-4 py-1 md:py-2 rounded text-xs md:text-sm"
-								>Definitions</button
+							<select
+								id="facility"
+								name="facility"
+								class="p-2 border bg-titles rounded text-white text-xs md:text-sm"
 							>
+								<option value="FACILITY1">FACILITY1</option>
+								<option value="FACILITY2">FACILITY2</option>
+								<option value="FACILITY3">FACILITY3</option>
+								<option value="FACILITY4">FACILITY4</option>
+							</select>
 						</div>
 					</div>
+				</div>
+
+				<div class="flex flex-col items-center mb-2 md:mb-4">
+					<div class="relative w-4/5">
+						<input
+							type="date"
+							id="birthday"
+							required
+							class="w-full px-3 py-2 mb-2 md:mb-4 border border-gray-300 rounded-md text-xs md:text-sm"
+							value={todayDate}
+						/>
+					</div>
+				</div>
+
+				<div class="flex justify-between items-center mb-2 md:mb-4">
+					<button
+						type="button"
+						on:click={closeModal}
+						class="text-titles hover:text-gray-700 px-2 md:px-4 py-1 md:py-2 rounded text-xs md:text-sm"
+						>Cancel</button
+					>
+					<button
+						type="submit"
+						class="bg-button text-white px-4 py-2 rounded hover:bg-primary text-xs md:text-sm"
+						>Save</button
+					>
 				</div>
 			</form>
 		</div>
 	</div>
 {/if}
-
-<style>
-	/* Add styles for the overlay */
-	.overlay {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.5);
-		z-index: 1000;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	/* Add styles for the modal */
-	.modal {
-		background-color: white;
-		padding: 20px;
-		box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-		border-radius: 10px; /* Adjust as needed */
-	}
-
-	.dropdown {
-		position: relative;
-		display: inline-block;
-	}
-
-	.dropdown-content {
-		display: none;
-		position: absolute;
-		max-height: 200px;
-		overflow-y: auto;
-		border: 1px solid #ccc;
-		background-color: #fff;
-		z-index: 1;
-	}
-
-	.dropdown-content a {
-		padding: 10px;
-		text-decoration: none;
-		display: block;
-		color: #333;
-	}
-
-	.dropdown-content a:hover {
-		background-color: #f1f1f1;
-	}
-
-	.dropdown:hover .dropdown-content {
-		display: block;
-	}
-</style>
