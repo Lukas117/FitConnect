@@ -23,6 +23,7 @@
 
 		setIconOptions();
 		markerIcon = basketballIcon(L);
+		await getEvents()
 
 		const handleUserLocationChange = (value) => {
 			handleMapStatus(value);
@@ -108,9 +109,38 @@
 		return L.marker(latlng, { icon: locationIcon });
 	}
 
+	async function sendEventRequest() {
+
+		const newEvent = {
+				eventId: '9',
+				eventName: 'Basketball',
+				hostedName: 'Joao\'s',
+				startDate: '2023-11-20T09:00:00Z',
+				endDate: '',
+				eventState: 'inProgress',
+				maximumPlayers: 10,
+				hostId: '5',
+				playerList: ['player1', 'player2', 'player3'],
+				facilityId: '5678'
+			};
+
+		const response = await fetch('http://localhost:3012/api/events', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+
+			body: JSON.stringify({ newEvent })
+		});
+		const data = await response.json();
+		console.log(data);
+	}
+
 	// create new event
 	function createEvent() {
 		if (map) {
+			sendEventRequest();
+
 			const newMarker = {
 				id: $markerList.length + 1,
 				lat: $userLocation.latitude + Math.random() * 0.001,
@@ -146,9 +176,34 @@
 				const marker = L.marker([markerData.lat, markerData.lng], {
 					icon: markerIcon
 				}).addTo(map);
-				marker.bindPopup(popupContent, getPopupOptions());
+				marker.bindPopup(`
+			<div class="text-center">
+				<h3 class="text-lg font-semibold">${markerData.title}</h3>
+				<p class="text-sm">${markerData.content}</p>
+				<button id="customButton" class="mt-2 bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800">
+					Join Match
+				</button>
+			</div>
+		`, getPopupOptions());
 				eventMarkersLayer.addLayer(marker);
 			});
+		}
+	}
+
+	async function getEvents() {
+		try {
+			const response = await fetch('http://localhost:3012/api/events', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+			const data = await response.json();
+			$markerList = data; // Update the events array with the retrieved data
+
+			console.log(data);
+		} catch (error) {
+			console.error('Error fetching events:', error);
 		}
 	}
 

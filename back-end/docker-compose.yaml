@@ -8,7 +8,7 @@ services:
     networks:
       - users
     ports:
-      - "3010:3010"
+      - '3010:3010'
     working_dir: /usr/src/app
     command: bash -c "npm install && npm run dev"
   gateway:
@@ -19,10 +19,24 @@ services:
     networks:
       - users
     ports:
-      - "3011:3011"
+      - '3011:3011'
+    working_dir: /usr/src/app
+    command: bash -c "npm install && npm run dev"
+  events:
+    container_name: events
+    build: ./event
+    volumes:
+      - ./event/code:/usr/src/app
+    networks:
+      - events
+    ports:
+      - '3012:3012'
     working_dir: /usr/src/app
     command: bash -c "npm install && npm run dev"
 
 networks:
   users:
+    driver: bridge
+    
+  events: 
     driver: bridge
