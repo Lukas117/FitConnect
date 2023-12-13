@@ -32,7 +32,7 @@
 	});
 </script>
 
-<h1 class="mt-4 ml-2 text-xl font-black text-gray-900 dark:text-white">
+<!-- <h1 class="mt-4 ml-2 text-xl font-black text-gray-900 dark:text-white">
 	User Location Info:
 </h1>
 
@@ -47,4 +47,4 @@
 <div class="mt-6 mb-4 ml-4">
 	<h2 class="text-xl font-bold text-gray-900/50 dark:text-white">Acurracy:</h2>
 	<h3 class="text-l font-bold text-gray-900 dark:text-white">{$userLocation.accuracy} meters</h3>
-</div>
+</div> -->

@@ -2,13 +2,18 @@
 	import { onMount } from 'svelte';
 	import { markerList, userLocation, size, icon } from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
-	import Navigation from './Navigation.svelte';
+	import { getPopupOptions, basketballIcon } from './MarkerIcon.js';
+	import Navigation from './NavigationSVG.svelte';
+	import HostIcon from './HostIcon.svelte';
+	import Loading from './Loading.svelte';
 
 	let map;
 	let showError = false;
 	let showLoading = false;
 	let locationMarker;
 	let eventMarkersLayer;
+	let popupContent = ``;
+	let markerIcon;
 
 	onMount(async () => {
 		// wait for the library to be imported
@@ -17,6 +22,8 @@
 		await import('leaflet.locatecontrol/dist/L.Control.Locate.min.css');
 
 		setIconOptions();
+		markerIcon = basketballIcon(L);
+		await getEvents()
 
 		const handleUserLocationChange = (value) => {
 			handleMapStatus(value);
@@ -102,18 +109,60 @@
 		return L.marker(latlng, { icon: locationIcon });
 	}
 
+	async function sendEventRequest() {
+
+		const newEvent = {
+				eventId: '9',
+				eventName: 'Basketball',
+				hostedName: 'Joao\'s',
+				startDate: '2023-11-20T09:00:00Z',
+				endDate: '',
+				eventState: 'inProgress',
+				maximumPlayers: 10,
+				hostId: '5',
+				playerList: ['player1', 'player2', 'player3'],
+				facilityId: '5678'
+			};
+
+		const response = await fetch('http://localhost:3012/api/events', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+
+			body: JSON.stringify({ newEvent })
+		});
+		const data = await response.json();
+		console.log(data);
+	}
+
 	// create new event
 	function createEvent() {
-		const newMarker = {
-			id: $markerList.length + 1,
-			lat: 51.4555 + Math.random() * 0.01,
-			lng: 3.56655 - Math.random() * 0.01,
-			title: `New Marker ${$markerList.length + 1}`,
-			content: `This is a new marker.`
-		};
+		if (map) {
+			sendEventRequest();
 
-		// update the store by pushing the new marker
-		markerList.update((existingMarkers) => [...existingMarkers, newMarker]);
+			const newMarker = {
+				id: $markerList.length + 1,
+				lat: $userLocation.latitude + Math.random() * 0.001,
+				lng: $userLocation.longitude - Math.random() * 0.001,
+				status: 'notStarted',
+				title: `Joao's Event #${$markerList.length + 1}`,
+				content: 'Players: 4/5'
+			};
+
+			popupContent = `
+			<div class="text-center">
+				<h3 class="text-lg font-semibold">${newMarker.title}</h3>
+				<p class="text-sm">${newMarker.content}</p>
+				<button id="customButton" class="mt-2 bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800">
+					Join Match
+				</button>
+			</div>
+		`;
+
+			// update the store by pushing the new marker
+			markerList.update((existingMarkers) => [...existingMarkers, newMarker]);
+		}
 	}
 
 	// function to update markers on the map
@@ -124,10 +173,37 @@
 
 			// add markers from the store array
 			$markerList.forEach((markerData) => {
-				const marker = L.marker([markerData.lat, markerData.lng]).addTo(map);
-				marker.bindPopup(`<b>${markerData.title}</b><br>${markerData.content}`);
+				const marker = L.marker([markerData.lat, markerData.lng], {
+					icon: markerIcon
+				}).addTo(map);
+				marker.bindPopup(`
+			<div class="text-center">
+				<h3 class="text-lg font-semibold">${markerData.title}</h3>
+				<p class="text-sm">${markerData.content}</p>
+				<button id="customButton" class="mt-2 bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800">
+					Join Match
+				</button>
+			</div>
+		`, getPopupOptions());
 				eventMarkersLayer.addLayer(marker);
 			});
+		}
+	}
+
+	async function getEvents() {
+		try {
+			const response = await fetch('http://localhost:3012/api/events', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+			const data = await response.json();
+			$markerList = data; // Update the events array with the retrieved data
+
+			console.log(data);
+		} catch (error) {
+			console.error('Error fetching events:', error);
 		}
 	}
 
@@ -139,33 +215,40 @@
 	});
 </script>
 
-<div class="relative bg-background" style="height: 600px; width: 100% z-0">
+<div
+	class="relative bg-background"
+	style="height: 93%; width: 100%; z-index: 0;"
+>
 	<div id="mapContainer" class="h-full w-full">
 		{#if showError}
-			<h1>Could not load map</h1>
+			<div
+				class="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-bold animate-fade-in mb-2"
+			>
+				Could not load map
+			</div>
 		{/if}
 		{#if showLoading}
-			<h1>Loading Map...</h1>
+			<Loading />
 		{/if}
 	</div>
 
-	<!-- Center button on top of the map -->
-	<button
-		on:click={centerMap}
-		class="absolute bottom-3 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none"
-		style="z-index: 1000"
-	>
-		<!-- Adjust the max-w and height (h) values to make the image smaller -->
-		<Navigation />
-	</button>
-</div>
+	{#if !showError && !showLoading}
+		<!-- Center button on top of the map -->
+		<button
+			on:click={centerMap}
+			class="absolute bottom-3 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
+			style="z-index: 1000"
+		>
+			<!-- Adjust the max-w and height (h) values to make the image smaller -->
+			<Navigation />
+		</button>
 
-<!-- Create event button below the map -->
-<section class="mt-4 flex items-center justify-center">
-	<button
-		on:click={createEvent}
-		class="cta-button bg-primary text-text px-8 py-3 text-lg rounded-full hover:bg-accent transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-accent"
-	>
-		Create Event
-	</button>
-</section>
+		<button
+			on:click={createEvent}
+			class="absolute bottom-3 left-2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
+			style="z-index: 1000"
+		>
+			<HostIcon />
+		</button>
+	{/if}
+</div>
