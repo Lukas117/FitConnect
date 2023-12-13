@@ -6,6 +6,3 @@
 	<slot />
 	<!-- here the page content of +page.svelte is loaded-->
 </main>
-
-<style> 
-</style>

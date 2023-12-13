@@ -1,11 +1,21 @@
 <script>
 	import { onMount } from 'svelte';
-	import { markerList, userLocation, size, icon } from '../store.js';
+	import {
+		markerList,
+		userLocation,
+		size,
+		icon,
+		showJoinModal,
+		showHostModal
+	} from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
+
 	import { getPopupOptions, basketballIcon } from './MarkerIcon.js';
-	import Navigation from './NavigationSVG.svelte';
+	import NavigationIcon from './NavigationSVG.svelte';
 	import HostIcon from './HostIcon.svelte';
 	import Loading from './Loading.svelte';
+	import JoinEvent from './JoinEvent.svelte';
+	import HostModal from './Map/HostModal.svelte';
 
 	let map;
 	let showError = false;
@@ -143,8 +153,8 @@
 
 			const newMarker = {
 				id: $markerList.length + 1,
-				lat: $userLocation.latitude + Math.random() * 0.001,
-				lng: $userLocation.longitude - Math.random() * 0.001,
+				lat: $userLocation.latitude + 0.000025,
+				lng: $userLocation.longitude,
 				status: 'notStarted',
 				title: `Joao's Event #${$markerList.length + 1}`,
 				content: 'Players: 4/5'
@@ -162,6 +172,9 @@
 
 			// update the store by pushing the new marker
 			markerList.update((existingMarkers) => [...existingMarkers, newMarker]);
+
+			// // Show the modal
+			// showModal = true;
 		}
 	}
 
@@ -186,8 +199,12 @@
 			</div>
 		`, getPopupOptions());
 				eventMarkersLayer.addLayer(marker);
+				
 			});
 		}
+	}
+	function displayHostModal() {
+		$showHostModal = true;
 	}
 
 	async function getEvents() {
@@ -219,6 +236,7 @@
 	class="relative bg-background"
 	style="height: 93%; width: 100%; z-index: 0;"
 >
+	<HostModal/>
 	<div id="mapContainer" class="h-full w-full">
 		{#if showError}
 			<div
@@ -240,11 +258,11 @@
 			style="z-index: 1000"
 		>
 			<!-- Adjust the max-w and height (h) values to make the image smaller -->
-			<Navigation />
+			<NavigationIcon />
 		</button>
 
 		<button
-			on:click={createEvent}
+			on:click={displayHostModal}
 			class="absolute bottom-3 left-2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
 			style="z-index: 1000"
 		>
@@ -252,3 +270,4 @@
 		</button>
 	{/if}
 </div>
+
