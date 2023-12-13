@@ -51,3 +51,6 @@ networks:
     
   events: 
     driver: bridge
+
+  facilities:
+    driver: bridge
