@@ -33,6 +33,17 @@ services:
       - '3012:3012'
     working_dir: /usr/src/app
     command: bash -c "npm install && npm run dev"
+  facilities:
+    container_name: facilities
+    build: ./facility
+    volumes:
+      - ./facility/code:/usr/src/app
+    networks:
+      - facilities
+    ports:
+      - '3013:3013'
+    working_dir: /usr/src/app
+    command: bash -c "npm install && npm run dev"
 
 networks:
   users:

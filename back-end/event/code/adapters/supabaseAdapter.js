@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
-import { createClient } from '@supabase/supabase-js';
-dotenv.config({ path: '.env' });
+import {createClient} from '@supabase/supabase-js';
+
+dotenv.config({path: '.env'});
 
 // The Supabase client
 const supabase = createClient(
@@ -13,17 +14,17 @@ const supabase = createClient(
  * @returns confirmation
  */
 export async function createEventData(req) {
-  const { response, error } = await supabase.from('Events')
-      .insert({
-        event_name: req.body.eventName,
-        start_date: req.body.startDate,
-        end_date: req.body.endDate,
-        event_state: req.body.eventState,
-        maximum_players: req.body.maximumPlayers,
-        host_id: req.body.hostId, //TODO: current user
-        player_list: req.body.playerList, // only host during creation
-        facility_id: req.body.facilityId
-      });
+  const {response, error} = await supabase.from('Events')
+    .insert({
+      event_name: req.body.eventName,
+      start_date: req.body.startDate,
+      end_date: req.body.endDate,
+      event_state: req.body.eventState,
+      maximum_players: req.body.maximumPlayers,
+      host_id: req.body.hostId, //TODO: current user
+      player_list: req.body.playerList, // only host during creation
+      facility_id: req.body.facilityId
+    });
   if (error) console.log('Query error', error);
   else return response;
 }
@@ -33,7 +34,7 @@ export async function createEventData(req) {
  * @returns an array of events
  */
 export async function getEventListData() {
-  const { data, error } = await supabase.from('Events').select('*');
+  const {data, error} = await supabase.from('Events').select('*');
   if (error) console.log('Query error', error);
   else return data;
 }
@@ -43,7 +44,7 @@ export async function getEventListData() {
  * @returns a specific event
  */
 export async function getEventData(eventId) {
-  const { data, error } = await supabase.from('Events').select('*').eq('event_id', eventId).single();
+  const {data, error} = await supabase.from('Events').select('*').eq('event_id', eventId).single();
   if (error) console.log('Query error', error);
   else return data;
 }
@@ -53,18 +54,32 @@ export async function getEventData(eventId) {
  * @returns confirmation
  */
 export async function updateEventData(req) {
-    const { response, error } = await supabase.from('Events')
-        .update({
-            event_name: req.body.eventName,
-            start_date: req.body.startDate,
-            end_date: req.body.endDate,
-            event_state: req.body.eventState,
-            maximum_players: req.body.maximumPlayers,
-            //host_id: req.body.hostId, // cannot change host?
-            player_list: req.body.playerList,
-            facility_id: req.body.facilityId
-        })
-        .eq('event_id', req.params.eventId);
-    if (error) console.log('Query error', error);
-    else return response;
+  const {response, error} = await supabase.from('Events')
+    .update({
+      event_name: req.body.eventName,
+      start_date: req.body.startDate,
+      end_date: req.body.endDate,
+      event_state: req.body.eventState,
+      maximum_players: req.body.maximumPlayers,
+      host_id: req.body.hostId, // cannot change host?
+      player_list: req.body.playerList,
+      facility_id: req.body.facilityId
+    })
+    .eq('event_id', req.params.eventId);
+  if (error) console.log('Query error', error);
+  else return response;
+}
+
+/**
+ * function to update a player list
+ * @returns confirmation
+ */
+export async function updateEventPlayerListData(req) {
+  const {response, error} = await supabase.from('Events')
+    .update({
+      player_list: req.body.playerList
+    })
+    .eq('event_id', req.params.eventId);
+  if (error) console.log('Query error', error);
+  else return response;
 }
