@@ -1,4 +1,10 @@
-import {createEventData, getEventData, getEventListData, updateEventData} from '../adapters/supabaseAdapter.js';
+import {
+  createEventData,
+  getEventData,
+  getEventListData,
+  updateEventData,
+  updateEventPlayerListData
+} from '../adapters/supabaseAdapter.js';
 
 // GET Events from database
 export async function getEventList(req, res, next) {
@@ -51,6 +57,24 @@ export async function updateEvent(req, res, next) {
         res.status(201).json(event);
       } else {
         res.status(404).json({error: 'Event could not be updated'});
+      }
+    } else {
+      res.status(400).json({error: 'Event is null'});
+    }
+  } catch (err) {
+    next(err);
+  }
+}
+
+// UPDATE Player list
+export async function updateEventPlayerList(req, res, next) {
+  try {
+    if (req !== null) {
+      const event = await updateEventPlayerListData(req)
+      if (event !== null) {
+        res.status(201).json(event);
+      } else {
+        res.status(404).json({error: 'Event player list could not be updated'});
       }
     } else {
       res.status(400).json({error: 'Event is null'});
