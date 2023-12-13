@@ -6,13 +6,15 @@
 
 	let newEvent;
 	let todayDate = new Date().toISOString().slice(0, 10);
+	let eventName = 'Name of Event';
 
 	let todayHours = new Date();
 	let todayString = todayHours.toISOString().slice(0, 10);
 
 	let eventNameInput;
 
-	function focusEventNameInput() {
+	function focusEventNameInput(event) {
+		event.preventDefault();
 		eventNameInput.focus();
 	}
 	// Close the modal
@@ -36,7 +38,8 @@
 				<div class="flex items-center">
 					<input
 						bind:this={eventNameInput}
-						value="Name of Event"
+						bind:value={eventName}
+						name="eventName"
 						class="text-lg md:text-2xl font-bold w-3/5"
 					/>
 					<button id="edit" class="ml-2 opacity-50" on:click={focusEventNameInput}>
