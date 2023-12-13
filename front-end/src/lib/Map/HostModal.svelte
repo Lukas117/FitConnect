@@ -83,7 +83,7 @@
 							<select
 								id="facility"
 								name="facility"
-								class="p-2 border bg-titles rounded text-white text-xs md:text-sm"
+								class="p-2 border bg-titles rounded text-white text-xs md:text-sm w-32"
 							>
 								<option value="FACILITY1">FACILITY1</option>
 								<option value="FACILITY2">FACILITY2</option>
@@ -98,7 +98,6 @@
 					<div class="relative w-4/5">
 						<input
 							type="date"
-							id="birthday"
 							required
 							class="w-full px-3 py-2 mb-2 md:mb-4 border border-gray-300 rounded-md text-xs md:text-sm"
 							value={todayDate}
