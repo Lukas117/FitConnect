@@ -27,9 +27,9 @@
 		</button>
 	  </a>
 	</section>
-  
+<!--   
   <p>
 	<a href="/map">Map site</a>
-  </p>
+  </p> -->
   
   </div>

@@ -1,18 +1,28 @@
 <script>
 	import { onMount } from 'svelte';
-	import { markerList, userLocation, size, icon } from '../store.js';
+	import { browser } from '$app/environment';
+	import {
+		markerList,
+		userLocation,
+		size,
+		icon,
+		showHostModal
+	} from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
+
 	import { getPopupOptions, basketballIcon } from './MarkerIcon.js';
-	import Navigation from './NavigationSVG.svelte';
+	import NavigationIcon from './NavigationSVG.svelte';
 	import HostIcon from './HostIcon.svelte';
 	import Loading from './Loading.svelte';
+	import HostModal from './Map/HostModal.svelte';
+	import JoinEventModal from './Map/JoinEventModal.svelte';
+	import getPopupContent from './Map/popupContent.js';
 
 	let map;
 	let showError = false;
 	let showLoading = false;
 	let locationMarker;
 	let eventMarkersLayer;
-	let popupContent = ``;
 	let markerIcon;
 
 	onMount(async () => {
@@ -136,29 +146,19 @@
 		console.log(data);
 	}
 
-	// create new event
-	function createEvent() {
-		if (map) {
-			sendEventRequest();
+  // create new event
+  function createEvent() {
+    if (map) {
+      sendEventRequest();
 
-			const newMarker = {
-				id: $markerList.length + 1,
-				lat: $userLocation.latitude + Math.random() * 0.001,
-				lng: $userLocation.longitude - Math.random() * 0.001,
-				status: 'notStarted',
-				title: `Joao's Event #${$markerList.length + 1}`,
-				content: 'Players: 4/5'
-			};
-
-			popupContent = `
-			<div class="text-center">
-				<h3 class="text-lg font-semibold">${newMarker.title}</h3>
-				<p class="text-sm">${newMarker.content}</p>
-				<button id="customButton" class="mt-2 bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800">
-					Join Match
-				</button>
-			</div>
-		`;
+      const newMarker = {
+        id: $markerList.length + 1,
+        lat: $userLocation.latitude + 0.000025,
+        lng: $userLocation.longitude,
+        status: 'notStarted',
+        title: `Joao's Event #${$markerList.length + 1}`,
+        content: 'Players: 4/5'
+      };
 
 			// update the store by pushing the new marker
 			markerList.update((existingMarkers) => [...existingMarkers, newMarker]);
@@ -173,39 +173,47 @@
 
 			// add markers from the store array
 			$markerList.forEach((markerData) => {
+
+
 				const marker = L.marker([markerData.lat, markerData.lng], {
 					icon: markerIcon
-				}).addTo(map);
-				marker.bindPopup(`
-			<div class="text-center">
-				<h3 class="text-lg font-semibold">${markerData.title}</h3>
-				<p class="text-sm">${markerData.content}</p>
-				<button id="customButton" class="mt-2 bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800">
-					Join Match
-				</button>
-			</div>
-		`, getPopupOptions());
+				}).bindPopup(getPopupContent("nothing"), getPopupOptions()).addTo(map);
+
+				eventMarkersLayer.addLayer(marker);
+
 				eventMarkersLayer.addLayer(marker);
 			});
 		}
 	}
-
-	async function getEvents() {
-		try {
-			const response = await fetch('http://localhost:3012/api/events', {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
-			const data = await response.json();
-			$markerList = data; // Update the events array with the retrieved data
-
-			console.log(data);
-		} catch (error) {
-			console.error('Error fetching events:', error);
-		}
+	function displayHostModal() {
+		$showHostModal = true;
 	}
+
+  async function getEvents() {
+    try {
+      const response = await fetch('http://localhost:3012/events', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
+
+      $markerList = Object.keys(data).map((key) => ({
+        title: data[key].event_name,
+        content: `${data[key].player_list.length} / ${data[key].maximum_players}`,
+        lat: 51.4555 + (data[key].event_id * 0.001),
+        lng: 3.56655 + (data[key].event_id * 0.001),
+        ...data[key] // You may want to include other properties from data[key] if needed
+      }));
+
+      // $markerList = data; // Update the events array with the retrieved data
+      console.log(data);
+
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  }
 
 	// subscribe to changes in the markerList store and update markers
 	markerList.subscribe((value) => {
@@ -219,6 +227,8 @@
 	class="relative bg-background"
 	style="height: 93%; width: 100%; z-index: 0;"
 >
+	<JoinEventModal />
+	<HostModal />
 	<div id="mapContainer" class="h-full w-full">
 		{#if showError}
 			<div
@@ -240,11 +250,11 @@
 			style="z-index: 1000"
 		>
 			<!-- Adjust the max-w and height (h) values to make the image smaller -->
-			<Navigation />
+			<NavigationIcon />
 		</button>
 
 		<button
-			on:click={createEvent}
+			on:click={displayHostModal}
 			class="absolute bottom-3 left-2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
 			style="z-index: 1000"
 		>
@@ -252,3 +262,4 @@
 		</button>
 	{/if}
 </div>
+

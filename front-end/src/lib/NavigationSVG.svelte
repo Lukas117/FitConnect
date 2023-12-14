@@ -7,7 +7,7 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 >
 	<title>navigation_fill</title>
-	<g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+	<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 		<g id="Map" transform="translate(-192.000000, -48.000000)">
 			<g id="navigation_fill" transform="translate(192.000000, 48.000000)">
 				<path
@@ -17,7 +17,6 @@
 				/>
 				<path
 					d="M19.7683,2.69254 C20.7236,2.34862 21.6477,3.27271 21.3038,4.22807 L15.2642,21.0048 C14.8888,22.0475 13.4215,22.0676 13.0176,21.0356 L10.1891,13.8072 L2.96072,10.9787 C1.9287,10.5749 1.94885,9.10754 2.99154,8.73217 L19.7683,2.69254 Z"
-					id="路径"
 					fill="#170c0d"
 				/>
 			</g>
