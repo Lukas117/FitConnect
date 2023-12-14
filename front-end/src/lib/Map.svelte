@@ -146,20 +146,19 @@
 		console.log(data);
 	}
 
-	// create new event
-	function createEvent() {
-		if (map) {
+  // create new event
+  function createEvent() {
+    if (map) {
+      sendEventRequest();
 
-			sendEventRequest();
-
-			 newMarker = {
-				id: $markerList.length + 1,
-				lat: $userLocation.latitude + 0.000025,
-				lng: $userLocation.longitude,
-				status: 'notStarted',
-				title: `Joao's Event #${$markerList.length + 1}`,
-				content: 'Players: 4/5'
-			};
+      const newMarker = {
+        id: $markerList.length + 1,
+        lat: $userLocation.latitude + 0.000025,
+        lng: $userLocation.longitude,
+        status: 'notStarted',
+        title: `Joao's Event #${$markerList.length + 1}`,
+        content: 'Players: 4/5'
+      };
 
 			// update the store by pushing the new marker
 			markerList.update((existingMarkers) => [...existingMarkers, newMarker]);
@@ -179,9 +178,9 @@
 				const marker = L.marker([markerData.lat, markerData.lng], {
 					icon: markerIcon
 				}).bindPopup(getPopupContent("nothing"), getPopupOptions()).addTo(map);
-				
+
 				eventMarkersLayer.addLayer(marker);
-				
+
 				eventMarkersLayer.addLayer(marker);
 			});
 		}
@@ -190,22 +189,31 @@
 		$showHostModal = true;
 	}
 
-	async function getEvents() {
-		try {
-			const response = await fetch('http://localhost:3012/api/events', {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
-			const data = await response.json();
-			$markerList = data; // Update the events array with the retrieved data
+  async function getEvents() {
+    try {
+      const response = await fetch('http://localhost:3012/events', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
 
-			console.log(data);
-		} catch (error) {
-			console.error('Error fetching events:', error);
-		}
-	}
+      $markerList = Object.keys(data).map((key) => ({
+        title: data[key].event_name,
+        content: `${data[key].player_list.length} / ${data[key].maximum_players}`,
+        lat: 51.4555 + (data[key].event_id * 0.001),
+        lng: 3.56655 + (data[key].event_id * 0.001),
+        ...data[key] // You may want to include other properties from data[key] if needed
+      }));
+
+      // $markerList = data; // Update the events array with the retrieved data
+      console.log(data);
+
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  }
 
 	// subscribe to changes in the markerList store and update markers
 	markerList.subscribe((value) => {
@@ -254,3 +262,4 @@
 		</button>
 	{/if}
 </div>
+
