@@ -1,11 +1,11 @@
 <script>
 	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 	import {
 		markerList,
 		userLocation,
 		size,
 		icon,
-		showJoinModal,
 		showHostModal
 	} from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
@@ -14,15 +14,15 @@
 	import NavigationIcon from './NavigationSVG.svelte';
 	import HostIcon from './HostIcon.svelte';
 	import Loading from './Loading.svelte';
-	import JoinEvent from './JoinEvent.svelte';
 	import HostModal from './Map/HostModal.svelte';
+	import JoinEventModal from './Map/JoinEventModal.svelte';
+	import getPopupContent from './Map/popupContent.js';
 
 	let map;
 	let showError = false;
 	let showLoading = false;
 	let locationMarker;
 	let eventMarkersLayer;
-	let popupContent = ``;
 	let markerIcon;
 
 	onMount(async () => {
@@ -149,9 +149,10 @@
 	// create new event
 	function createEvent() {
 		if (map) {
+
 			sendEventRequest();
 
-			const newMarker = {
+			 newMarker = {
 				id: $markerList.length + 1,
 				lat: $userLocation.latitude + 0.000025,
 				lng: $userLocation.longitude,
@@ -160,21 +161,8 @@
 				content: 'Players: 4/5'
 			};
 
-			popupContent = `
-			<div class="text-center">
-				<h3 class="text-lg font-semibold">${newMarker.title}</h3>
-				<p class="text-sm">${newMarker.content}</p>
-				<button id="customButton" class="mt-2 bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800">
-					Join Match
-				</button>
-			</div>
-		`;
-
 			// update the store by pushing the new marker
 			markerList.update((existingMarkers) => [...existingMarkers, newMarker]);
-
-			// // Show the modal
-			// showModal = true;
 		}
 	}
 
@@ -186,20 +174,15 @@
 
 			// add markers from the store array
 			$markerList.forEach((markerData) => {
+
+
 				const marker = L.marker([markerData.lat, markerData.lng], {
 					icon: markerIcon
-				}).addTo(map);
-				marker.bindPopup(`
-			<div class="text-center">
-				<h3 class="text-lg font-semibold">${markerData.title}</h3>
-				<p class="text-sm">${markerData.content}</p>
-				<button id="customButton" class="mt-2 bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800">
-					Join Match
-				</button>
-			</div>
-		`, getPopupOptions());
+				}).bindPopup(getPopupContent("nothing"), getPopupOptions()).addTo(map);
+				
 				eventMarkersLayer.addLayer(marker);
 				
+				eventMarkersLayer.addLayer(marker);
 			});
 		}
 	}
@@ -236,7 +219,8 @@
 	class="relative bg-background"
 	style="height: 93%; width: 100%; z-index: 0;"
 >
-	<HostModal/>
+	<JoinEventModal />
+	<HostModal />
 	<div id="mapContainer" class="h-full w-full">
 		{#if showError}
 			<div
@@ -270,4 +254,3 @@
 		</button>
 	{/if}
 </div>
-
