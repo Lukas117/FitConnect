@@ -2,7 +2,7 @@
   import logo from '$lib/assets/logo.png';
   import Timepicker from 'svelty-picker';
   import EditIcon from './EditIcon.svelte';
-  import {markerList, showHostModal, userLocation} from '../../store.js';
+  import { showHostModal, userLocation} from '../../store.js';
 
   let newEvent;
   let todayDate = new Date().toISOString().slice(0, 10);
