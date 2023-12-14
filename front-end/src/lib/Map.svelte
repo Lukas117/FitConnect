@@ -16,7 +16,6 @@
 	import Loading from './Loading.svelte';
 	import HostModal from './Map/HostModal.svelte';
 	import JoinEventModal from './Map/JoinEventModal.svelte';
-	// import PopupContent from './Map/PopupContent.svelte';
 	import getPopupContent from './Map/popupContent.js';
 
 	let map;
