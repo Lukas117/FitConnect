@@ -1,6 +1,5 @@
 import fs from 'fs';
 import userData from './user.json' assert { type: 'json' };
-import bcrypt from 'bcrypt';
 
 
 export const createUser = async (req, res) => {
@@ -14,7 +13,6 @@ export const createUser = async (req, res) => {
       return;
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = {
       username,
