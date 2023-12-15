@@ -1,5 +1,8 @@
 <script>
-   let username = '';
+	import { navigate } from "svelte-routing";
+
+  
+  let email = ''; // Change variable name from 'username' to 'email'
   let password = '';
 
   async function handleLogin() {
@@ -9,13 +12,17 @@
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }), 
       });
 
       if (response.ok) {
         // Handle successful login
         const data = await response.json();
         console.log(data);
+        if (data) {
+          navigate('/map');
+          location.reload();
+        }
       } else {
         // Handle login failure
         const errorData = await response.json();
@@ -30,10 +37,10 @@
 <div class="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-gray-100 to-gray-300">
   <h1 class="text-4xl font-bold text-gray-800 mb-8">Login</h1>
 
-  <form on:submit|preventDefault={handleLogin} class="max-w-md w-full">
+  <form on:submit={handleLogin} class="max-w-md w-full">
     <div class="mb-4">  
-      <label for="username" class="block text-gray-700 mb-1">Username:</label>
-      <input type="text" id="username" bind:value={username} required class="w-full px-3 py-2 border border-gray-300 rounded-md" />
+      <label for="email" class="block text-gray-700 mb-1">Email:</label>
+      <input type="email" id="email" bind:value={email} required class="w-full px-3 py-2 border border-gray-300 rounded-md" /> <!-- Change type to 'email' and id to 'email' -->
     </div>
 
     <div class="mb-4">
