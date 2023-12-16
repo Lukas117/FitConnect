@@ -28,6 +28,7 @@
 	let markerIcon;
 	let facilityData;
 	let intervalId;
+	let eventData;
 
 	onMount(async () => {
 		// wait for the library to be imported
@@ -165,24 +166,24 @@
 	}
 
 	// function to update markers on the map
-	function updateMarkers(markerData) {
+	function updateMarkers(eventData) {
 		if (map) {
 			// clear existing markers
 			eventMarkersLayer.clearLayers();
 
 			// add markers from the fetched data
-			markerData.forEach((singleMarkerData) => {
+			eventData.forEach((singleEvent) => {
 				// Find the corresponding facility for the current marker
 
 				const facility = facilityData.find(
-					(facility) => facility.facility_id == singleMarkerData.facility_id
+					(facility) => facility.facility_id == singleEvent.facility_id
 				);
 
 				if (facility) {
 					const marker = L.marker([facility.latitude, facility.longitude], {
 						icon: markerIcon
 					})
-						.bindPopup(getPopupContent(singleMarkerData), getPopupOptions())
+						.bindPopup(getPopupContent(singleEvent), getPopupOptions())
 						.addTo(map);
 
 					eventMarkersLayer.addLayer(marker);
@@ -217,7 +218,7 @@
 					'Content-Type': 'application/json'
 				}
 			});
-			const markerData = await response.json();
+			eventData = await response.json();
 
 			console.log('get events');
 
@@ -228,7 +229,7 @@
 					eventMarkersLayer = L.layerGroup().addTo(map);
 				}
 				eventMarkersLayer = L.layerGroup().addTo(map);
-				updateMarkers(markerData);
+				updateMarkers(eventData);
 			} else {
 				console.error('Map is not defined');
 			}
