@@ -28,7 +28,7 @@
         friends: ["Jane Doe", "Bob Smith", "John Smith"]
     }
 
-</scrip
+</script>
 <main>
   <div class="p-4">
     <div class="flex items-center justify-center">
