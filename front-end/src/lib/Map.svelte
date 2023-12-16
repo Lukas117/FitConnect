@@ -1,7 +1,15 @@
 <script>
 	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
-	import { userLocation, size, icon, showHostModal } from '../store.js';
+	import {
+		userLocation,
+		size,
+		icon,
+		showHostModal,
+		facilities,
+		refreshEvents
+	} from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
 
 	import { getPopupOptions, basketballIcon } from './MarkerIcon.js';
@@ -19,6 +27,7 @@
 	let eventMarkersLayer;
 	let markerIcon;
 	let facilityData;
+	let intervalId;
 
 	onMount(async () => {
 		// wait for the library to be imported
@@ -39,8 +48,20 @@
 		};
 		userLocation.subscribe(handleUserLocationChange); // calls function everytime userLocation updates
 
+		refreshEvents.subscribe((value) => {
+			if (value) {
+				getEvents();
+			}
+		});
+
 		await getFacilities();
-		await getEvents(L);
+		await getEvents();
+
+		intervalId = setInterval(getEvents, 10000); // Call getEvents every 5 seconds
+	});
+
+	onDestroy(() => {
+		clearInterval(intervalId); // Clear the interval when the component is destroyed
 	});
 
 	// function for initializing the leaflet map
@@ -147,9 +168,7 @@
 	function updateMarkers(markerData) {
 		if (map) {
 			// clear existing markers
-			if (eventMarkersLayer) {
-				eventMarkersLayer.clearLayers();
-			}
+			eventMarkersLayer.clearLayers();
 
 			// add markers from the fetched data
 			markerData.forEach((singleMarkerData) => {
@@ -163,7 +182,7 @@
 					const marker = L.marker([facility.latitude, facility.longitude], {
 						icon: markerIcon
 					})
-						.bindPopup(getPopupContent('nothing'), getPopupOptions())
+						.bindPopup(getPopupContent(singleMarkerData), getPopupOptions())
 						.addTo(map);
 
 					eventMarkersLayer.addLayer(marker);
@@ -182,13 +201,15 @@
 			});
 			facilityData = await response.json();
 
-			console.log(facilityData);
+			$facilities = facilityData;
+
+			console.log($facilities);
 		} catch (error) {
 			console.error('Error fetching facilities:', error);
 		}
 	}
 
-	async function getEvents(L) {
+	async function getEvents() {
 		try {
 			const response = await fetch('http://localhost:3012/events', {
 				method: 'GET',
@@ -198,9 +219,14 @@
 			});
 			const markerData = await response.json();
 
-			console.log(markerData);
+			console.log('get events');
 
 			if (map) {
+				if (eventMarkersLayer) {
+					eventMarkersLayer.clearLayers();
+				} else {
+					eventMarkersLayer = L.layerGroup().addTo(map);
+				}
 				eventMarkersLayer = L.layerGroup().addTo(map);
 				updateMarkers(markerData);
 			} else {

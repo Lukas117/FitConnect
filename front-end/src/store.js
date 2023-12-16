@@ -4,6 +4,8 @@ export const showJoinModal = writable(false);
 
 export const showHostModal = writable(false);
 
+export const refreshEvents = writable(false);
+
 export const userLocation = writable({
 	latitude: null,
 	longitude: null,
@@ -18,6 +20,14 @@ export const size = writable({
 export const icon = writable({
 	svg: ``
 });
+
+export const facilities = writable([
+	{
+		facility_id: null,
+		lat: null,
+		lng: null
+	}
+]);
 
 export const event = writable({
 	eventName: 'Basketball',
