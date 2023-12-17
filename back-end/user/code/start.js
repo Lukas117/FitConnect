@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/', indexRouter);
 app.use('/users', indexRouter);
+app.use('/login', indexRouter);
 
 app.use((req, res, next) => {
 	try {
@@ -28,7 +29,7 @@ app.use((req, res, next) => {
 });
 app.use(errorHandler);
 
-app.set('port', process.env.PORT || 3020);
+app.set('port', process.env.PORT || 3010);
 const server = app.listen(app.get('port'), () => {
 	console.log(`🍿 Express running → PORT ${server.address().port}`);
 });
