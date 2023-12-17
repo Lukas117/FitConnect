@@ -1,12 +1,14 @@
 <script>
 	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
 	import {
-		markerList,
 		userLocation,
 		size,
 		icon,
-		showHostModal
+		showHostModal,
+		facilities,
+		refreshEvents
 	} from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
 
@@ -24,6 +26,9 @@
 	let locationMarker;
 	let eventMarkersLayer;
 	let markerIcon;
+	let facilityData;
+	let intervalId;
+	let eventData;
 
 	onMount(async () => {
 		// wait for the library to be imported
@@ -33,7 +38,6 @@
 
 		setIconOptions();
 		markerIcon = basketballIcon(L);
-		await getEvents()
 
 		const handleUserLocationChange = (value) => {
 			handleMapStatus(value);
@@ -42,13 +46,23 @@
 			}
 			updateUserLocationMarker([value.latitude, value.longitude]);
 			statusTimeout();
-			if (map) {
-				eventMarkersLayer = L.layerGroup().addTo(map);
-				updateMarkers();
-			}
 		};
-
 		userLocation.subscribe(handleUserLocationChange); // calls function everytime userLocation updates
+
+		refreshEvents.subscribe((value) => {
+			if (value) {
+				getEvents();
+			}
+		});
+
+		await getFacilities();
+		await getEvents();
+
+		intervalId = setInterval(getEvents, 10000); // Call getEvents every 5 seconds
+	});
+
+	onDestroy(() => {
+		clearInterval(intervalId); // Clear the interval when the component is destroyed
 	});
 
 	// function for initializing the leaflet map
@@ -120,19 +134,18 @@
 	}
 
 	async function sendEventRequest() {
-
 		const newEvent = {
-				eventId: '9',
-				eventName: 'Basketball',
-				hostedName: 'Joao\'s',
-				startDate: '2023-11-20T09:00:00Z',
-				endDate: '',
-				eventState: 'inProgress',
-				maximumPlayers: 10,
-				hostId: '5',
-				playerList: ['player1', 'player2', 'player3'],
-				facilityId: '5678'
-			};
+			eventId: '9',
+			eventName: 'Basketball',
+			hostedName: "Joao's",
+			startDate: '2023-11-20T09:00:00Z',
+			endDate: '',
+			eventState: 'inProgress',
+			maximumPlayers: 10,
+			hostId: '5',
+			playerList: ['player1', 'player2', 'player3'],
+			facilityId: '5678'
+		};
 
 		const response = await fetch('http://localhost:3012/api/events', {
 			method: 'POST',
@@ -143,84 +156,92 @@
 			body: JSON.stringify({ newEvent })
 		});
 		const data = await response.json();
-		console.log(data);
 	}
 
-  // create new event
-  function createEvent() {
-    if (map) {
-      sendEventRequest();
-
-      const newMarker = {
-        id: $markerList.length + 1,
-        lat: $userLocation.latitude + 0.000025,
-        lng: $userLocation.longitude,
-        status: 'notStarted',
-        title: `Joao's Event #${$markerList.length + 1}`,
-        content: 'Players: 4/5'
-      };
-
-			// update the store by pushing the new marker
-			markerList.update((existingMarkers) => [...existingMarkers, newMarker]);
+	// create new event
+	function createEvent() {
+		if (map) {
+			sendEventRequest();
 		}
 	}
 
 	// function to update markers on the map
-	function updateMarkers() {
+	function updateMarkers(eventData) {
 		if (map) {
 			// clear existing markers
 			eventMarkersLayer.clearLayers();
 
-			// add markers from the store array
-			$markerList.forEach((markerData) => {
+			// add markers from the fetched data
+			eventData.forEach((singleEvent) => {
+				// Find the corresponding facility for the current marker
 
+				const facility = facilityData.find(
+					(facility) => facility.facility_id == singleEvent.facility_id
+				);
 
-				const marker = L.marker([markerData.lat, markerData.lng], {
-					icon: markerIcon
-				}).bindPopup(getPopupContent("nothing"), getPopupOptions()).addTo(map);
+				if (facility) {
+					const marker = L.marker([facility.latitude, facility.longitude], {
+						icon: markerIcon
+					})
+						.bindPopup(getPopupContent(singleEvent), getPopupOptions())
+						.addTo(map);
 
-				eventMarkersLayer.addLayer(marker);
-
-				eventMarkersLayer.addLayer(marker);
+					eventMarkersLayer.addLayer(marker);
+				}
 			});
 		}
 	}
+
+	async function getFacilities() {
+		try {
+			const response = await fetch('http://localhost:3013/facilities', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+			facilityData = await response.json();
+
+			$facilities = facilityData;
+
+			console.log($facilities);
+		} catch (error) {
+			console.error('Error fetching facilities:', error);
+		}
+	}
+
+	async function getEvents() {
+		try {
+			const response = await fetch('http://localhost:3012/events', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+			eventData = await response.json();
+
+			console.log('get events');
+
+			if (map) {
+				if (eventMarkersLayer) {
+					eventMarkersLayer.clearLayers();
+				} else {
+					eventMarkersLayer = L.layerGroup().addTo(map);
+				}
+				eventMarkersLayer = L.layerGroup().addTo(map);
+				updateMarkers(eventData);
+			} else {
+				console.error('Map is not defined');
+			}
+			// Update the markers after updating the markerData
+		} catch (error) {
+			console.error('Error fetching events:', error);
+		}
+	}
+
 	function displayHostModal() {
 		$showHostModal = true;
 	}
-
-  async function getEvents() {
-    try {
-      const response = await fetch('http://localhost:3012/events', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      const data = await response.json();
-
-      $markerList = Object.keys(data).map((key) => ({
-        title: data[key].event_name,
-        content: `${data[key].player_list.length} / ${data[key].maximum_players}`,
-        lat: 51.4555 + (data[key].event_id * 0.001),
-        lng: 3.56655 + (data[key].event_id * 0.001),
-        ...data[key] // You may want to include other properties from data[key] if needed
-      }));
-
-      // $markerList = data; // Update the events array with the retrieved data
-      console.log(data);
-
-    } catch (error) {
-      console.error('Error fetching events:', error);
-    }
-  }
-
-	// subscribe to changes in the markerList store and update markers
-	markerList.subscribe((value) => {
-		if (map) {
-			updateMarkers();
-		}
-	});
 </script>
 
 <div
@@ -262,4 +283,3 @@
 		</button>
 	{/if}
 </div>
-
