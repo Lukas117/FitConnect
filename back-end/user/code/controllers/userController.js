@@ -40,7 +40,7 @@ export async function register(req, res) {
     newUser.password_salt = password_salt;
 
     // Save the new user to the 'users' table in Supabase
-    const { data, error } = await supabase.from('user').upsert([newUser]);
+      const { data, error } = await supabase.from('user').upsert([newUser]);
 
     if (error) {
       console.error('Error creating user:', error.message);
@@ -141,4 +141,25 @@ export async function login(req, res) {
     console.error('Error fetching user:', error.message);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+
 }
+export async function addSport(req, res) {
+  const { sport_list, email } = req.body;
+  console.log(sport_list);
+  console.log(email);
+  try {
+    const { data, error } = await supabase
+      .from('user')
+      .update({ sport_list: sport_list }) 
+      .eq('email', email);
+
+    if (error) {
+      console.error('Error adding sport:', error.message);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    res.status(201).json({ sport: sport_list });
+  } catch (error) {
+    console.error('Error adding sport:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

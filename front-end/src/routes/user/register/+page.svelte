@@ -33,6 +33,7 @@
       const responseData = await response.json();
       console.log('Registration successful:', responseData);
       if (responseData) {
+        localStorage.setItem('email', email);
         navigate('/map'); 
         location.reload();
       } 

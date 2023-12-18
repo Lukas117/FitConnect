@@ -16,8 +16,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/', indexRouter);
-app.use('/users', indexRouter);
-app.use('/login', indexRouter);
 
 app.use((req, res, next) => {
 	try {
