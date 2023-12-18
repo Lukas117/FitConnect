@@ -2,7 +2,7 @@
 	import logo from '$lib/assets/logo.png';
 	import { showJoinModal } from '../../store';
 
-	export const markerData = {};
+	export let markerData = {};
 
 	function closeModal() {
 		$showJoinModal = false;
@@ -17,7 +17,9 @@
 		style="z-index: 1000"
 	>
 		<!-- Increase the size of the modal container -->
-		<div class="bg-background bg-opacity-90 relative p-8 rounded-md shadow-md w-5/6 mb-12">
+		<div
+			class="bg-background bg-opacity-90 relative p-8 rounded-md shadow-md w-5/6 mb-12"
+		>
 			<img alt="The project logo" src={logo} class="w-16 h-16 mb-4" />
 			<h1 class="text-2xl font-bold mb-4">Join Event</h1>
 			<form class="space-y-4">
