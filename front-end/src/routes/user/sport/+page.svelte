@@ -27,8 +27,8 @@
   };
 
   const navigateToMap = () => {
-    // navigate('/map/');
-    // location.reload();
+    navigate('/map/');
+    location.reload();
   };
 
   let selectedSports = [];
