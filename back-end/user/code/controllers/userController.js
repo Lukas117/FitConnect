@@ -4,11 +4,25 @@ import crypto from 'crypto';
 
 const supabaseUrl = "https://nhrrgnjkvzxceshaiwih.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ocnJnbmprdnp4Y2VzaGFpd2loIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwMDc0MjIxMSwiZXhwIjoyMDE2MzE4MjExfQ.iKmh3-Zlka-WfYDrG0-DcS_WCW6gIEqz5XPIbw4rF9o"
-const supabase = createClient( supabaseUrl, supabaseKey);
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function register(req, res) {
 
   const { name, user_name, birth_date, email, password_hash } = req.body;
+
+  const { data: existingUsers, error: existingUsersError } = await supabase
+    .from('user')
+    .select()
+    .or('email.eq.' + email, 'user_name.eq.' + user_name);
+
+  if (existingUsersError) {
+    console.error('Error checking existing users:', existingUsersError.message);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+
+  if (existingUsers.length > 0) {
+    return res.status(400).json({ error: 'Email or user_name already exists' });
+  }
 
   const newUser = {
     name,
@@ -40,7 +54,7 @@ export async function register(req, res) {
     newUser.password_salt = password_salt;
 
     // Save the new user to the 'users' table in Supabase
-      const { data, error } = await supabase.from('user').upsert([newUser]);
+    const { data, error } = await supabase.from('user').upsert([newUser]);
 
     if (error) {
       console.error('Error creating user:', error.message);
@@ -48,23 +62,23 @@ export async function register(req, res) {
     }
 
     const { data: user, error: userError } = await supabase
-    .from('user')
-    .select('*')
-    .eq('user_name', newUser.user_name)   
+      .from('user')
+      .select('*')
+      .eq('user_name', newUser.user_name)
 
-  if (userError) {
-    console.error('Error fetching user:', userError.message);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    if (userError) {
+      console.error('Error fetching user:', userError.message);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ userId: user.id }, 'wompwomp', { expiresIn: '24h' });
+
+    res.status(200).json({ user, token });
+  } catch (error) {
+    console.error('Error creating user:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-
-  // Generate JWT token
-  const token = jwt.sign({ userId: user.id }, 'wompwomp', { expiresIn: '24h' });
-
-  res.status(200).json({ user, token });
-} catch (error) {
-  console.error('Error creating user:', error.message);
-  res.status(500).json({ error: 'Internal Server Error' });
-}
 }
 
 export async function getUserById(req, res) {
@@ -150,7 +164,7 @@ export async function addSport(req, res) {
   try {
     const { data, error } = await supabase
       .from('user')
-      .update({ sport_list: sport_list }) 
+      .update({ sport_list: sport_list })
       .eq('email', email);
 
     if (error) {
