@@ -43,7 +43,7 @@ const toggleSport = (sport) => {
 
 const handleNextButtonClick = () => {
   addSport(selectedSports);
-  navigateToMap();
+  setTimeout(navigateToMap, 400); //idk why it doesnt work without this anymore. it used to work without it
 };
 
 </script>
