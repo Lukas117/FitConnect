@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
+import crypto, { scrypt } from 'crypto';
+
 
 const supabaseUrl = "https://nhrrgnjkvzxceshaiwih.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ocnJnbmprdnp4Y2VzaGFpd2loIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwMDc0MjIxMSwiZXhwIjoyMDE2MzE4MjExfQ.iKmh3-Zlka-WfYDrG0-DcS_WCW6gIEqz5XPIbw4rF9o"
@@ -10,105 +11,145 @@ const errorStrings = {
   500: 'Internal Server Error'
 }
 
-function errorResponse(errorCode, errorTitle, errorMessage) {
-  console.error('Error ', errorTitle, errorMessage);
-  return res.status(errorCode).json({ error: errorStrings[errorCode] });
+const array = {}
+
+function log(code, message) {
+  console.log(code, message);
+  Array.prototype.push.apply(array, {Id: array.length + 1, Code: code, Message: message})
 }
 
-async function userCreateAsync(userData) {
-  const { name, user_name, birth_date, email, password_hash } = userData;
-
+/**
+ * 
+ * @param {String} name 
+ * @param {String} user_name 
+ * @param {Date} birth_date 
+ * @param {String} email
+ * @param {String} password
+ * @returns [User | null] If user is created, returns, else returned null.
+ * @returns [Error | null] If errored, returns, else returned null.
+ */
+async function makeUserAsync(name, user_name, birth_date, email, password) {
   const newUser = {
     name,
     user_name,
     birth_date,
     email,
-    password_hash: null,
     password_salt: null,
+    password_hash: null
   };
 
-  try {
-    newUser.password_hash, newUser.password_salt = await userPasswordGenerateAsync(password_hash);
-  } catch (error) {
-    return null, errorResponse(400, 'Password generation: ', error.message);
-  }
+  newUser.password_salt = crypto.randomBytes(16).toString('hex');
+  newUser.password_hash = makePasswordAsync(password, newUser.password_salt);
   
-  try {
-    const { data, error } = await supabase
-      .from('user')
-      .upsert([newUser]);
+  const { user, makeUserError } = await supabase
+  .from('user')
+  .upsert([newUser]);
 
-    if (error) throw error
-    else return data, null;
-  } catch (error) {
-    return null, errorResponse(500, 'Error creating user:', error.message);
-  }
+  if (makeUserError) throw makeUserError;
+  else return user;
 }
 
-async function userFindEmailUsernameAsync(userData) {
-  const { email, user_name } = userData;
+async function matchTwoFieldsAsync(email, user_name) {
   return await supabase
     .from('user')
     .select('*')
     .or('email.eq.' + email, 'user_name.eq.' + user_name);
 }
 
-async function userPasswordGenerateAsync(hash, salt) {
-  const password_salt = salt ? salt : crypto.randomBytes(16).toString('hex');
-  const passwordBuffer = Buffer.from(hash, 'utf8');
-  const saltBuffer = Buffer.from(password_salt, 'hex');
-  const N = 16384; // CPU/memory cost parameter
-  const r = 8; // block size parameter
-  const p = 1; // parallelization parameter
-  const dkLen = 64; // derived key length
+const cpuMCP = 16384; 
+const hashLength = 128;
 
-  // Use the scrypt implementation from the crypto module
-  const derivedKey = await new Promise((resolve, reject) => {
-    crypto.scrypt(passwordBuffer, saltBuffer, dkLen, (err, derivedKey) => {
-      if (err) reject(err);
-      else resolve(derivedKey);
-    });
-  });
+function makePasswordAsync(password, password_salt) {
+  log("Runtime", "Creating user password");
+  const passwordBuffer = Buffer.from(password).toString('hex');
+  const saltBufferr = Buffer.from(password_salt).toString('hex');
 
-  return derivedKey.toString('hex'), password_salt;
-}
+  log("Runtime", "Hashing user password");
 
-async function getUserFromFieldAsync(name, valueMatch) {
+  let password_hash
   try {
-    const { data, error } = await supabase.from('user').select('*').eq(name, valueMatch);
-    if (error) throw error;
-    else return data, null
+    password_hash = crypto.scrypt(passwordBuffer, saltBufferr, hashLength, function(err, derivedKey){
+      if (err) throw err;
+      else return derivedKey.toString('hex');
+    })
   } catch (error) {
-    return null, errorResponse(500, 'Error fetching user:', error.message);
+    log("Error", error.message);
   }
+
+  log("Runtime", "Hased user password: " + password_hash);
+
+  return password_hash;
 }
 
-async function setUserFieldFromFieldAsync(fieldlist, fieldName, valueMatch) {
+function matchPassword(hashed_password, password, salt) {
+  const passwordBuffer = Buffer.from(password).toString('hex');
+  const saltBufferr = Buffer.from(salt).toString('hex');
+
+  let password_hash
   try {
-    const { user, error } = await supabase.from('user').select(fieldlist).eq(fieldName, valueMatch);
-    if (error) throw error;
-    else return user, null
+    password_hash = crypto.scrypt(passwordBuffer, saltBufferr, hashLength, function(err, derivedKey){
+      if (err) throw err;
+      else return derivedKey.toString('hex');
+    })
   } catch (error) {
-    return null, errorResponse(500, 'Error fetching user:', error.message);
+    log("Error", error.message);
+  }
+
+  log("Runtime", "Hased user password: " + password_hash);
+
+  return password_hash == hashed_password;
+}
+
+/**
+ * 
+ * @param {String} name 
+ * @param {any} valueMatch 
+ * @returns [User | null] If user is found, returns, else returned null.
+ * @returns [Error | null] If errored, returns, else returned null.
+ */
+async function getUserFromFieldAndValueAsync(name, valueMatch) {
+  try {
+    const { user, error } = await supabase.from('user').select('*').eq(name, valueMatch);
+    if (error) throw error;
+    else return user, null;
+  } catch (error) {
+    return null, error;
   }
 }
 
-export async function userRegister(req, res) {
-  let existingUser, existingUserError = await userFindEmailUsernameAsync(req.body);
+/**
+ * 
+ * @param {String} name 
+ * @param {any} valueMatch 
+ * @param {Array<String>} updateValues 
+ * @returns [Error | null] If errored, return, else return null.
+ */
+async function updateUserFromFieldMatch(name, valueMatch, updateValues) {
+  try {
+    const { error } = await supabase.from('user').update(updateValues).eq(name, valueMatch);
+    if (error) throw error;
+  } catch (error) {
+    return error;
+  }
+}
 
-  if (existingUserError) {
-    return errorResponse(500, 'Error checking existing users:', existingUserError.message);
+export async function register(req, res) {
+  log("Runtime", "Registering user");
+  const { name, user_name, birth_date, email, password } = req.body;
+  if (!name || !user_name || !birth_date || !email || !password) return res.status(400);
+
+  let user, getUserError = getUserFromFieldAndValueAsync("user_name", user_name);
+  if (getUserError) log("Error", getUserError.message);
+
+  if (!user) {
+    log(400, 'Error checking existing users: Email or user_name has already been taken.');
+
+    user = makeUserAsync(name, user_name, birth_date, email, password);
+    if (!user) throw new Error('Error creating user.');
   }
 
-  if (existingUser.length > 0) {
-    return errorResponse(400, 'Error checking existing users:', 'Email or user_name has already been taken.');
-  }
-
-  let user, userCreationError = await userCreateAsync(req.body);
-  if (userCreationError) return userCreationError;
-
-  const token = jwt.sign({ userId: user.id }, 'wompwomp', { expiresIn: '24h' });
-
+  const token = jwt.sign({ userId: user.user_id }, 'wompwomp', { expiresIn: '24h' });
+  
   return res.status(200).json({ user, token });
 }
 
@@ -116,54 +157,62 @@ export async function getUserFromId(req, res) {
   // Logic for fetching a user by userId
   const userId = req.params.id;
 
-  try {
-    let user, userError = await getUserFromFieldAsync('id', userId);
-    if (userError) return userError;
+  if (userId) {
+    let user, getUserError = await getUserFromFieldAndValueAsync('id', userId);
+    if (getUserError) log("Error", getUserError.message);
 
-    console.log(user[0])
-
-    if (!user) {
-      throw {message: 'Could not locate the user based on the id: ' + toString(userId)}
+    if (!user) { 
+      log(404, "Couldn't find user with id: " + toString(userId)); 
+      return res.status(404).json({ userId: userId }); 
     }
 
     return res.status(200).json(user);
-  } catch (error) {
-    return errorResponse(500, 'Error fetching user:', error.message);
   }
 }
+
 export async function login(req, res) {
   const { email, password } = req.body;
 
-  if (email && password) {
-    const { user, error } = await getUserFromFieldAsync('email', email);
-    if (error) return errorResponse(500, 'Error fetching user:', error.message);
+  if (!email && !password) {
+    log(400, "Email and password is required.");
+    return req.status(400).json({ error: "Email and password is required."});
+  }
 
-    console.log(data[0]);
+    let user, getUserError = await getUserFromFieldAndValueAsync('email', email);
+    if (getUserError) { log("Error", getUserError.message) }
 
     if (!user) {
-      throw errorResponse(500, 'Error fetching user:', 'Invalid credentials');
+      log(404, "Email or password is not valid.");
+      return req.status(404).json({ error: "Email or password is not valid."});
     }
 
-    const { password_hash } = await userPasswordGenerateAsync(password, user.password_salt)
-    if (password_hash) {
-      const token = jwt.sign({ userId: user.id }, 'wompwomp', { expiresIn: '24h' });
-
-      return res.status(200).json({ user, token });
-    } else {
-      throw errorResponse(500, 'Error fetching user:', 'Invalid credentials');
+    let passwordMatched = matchPassword(user.password_hash, password, user.password_salt);
+    if (!passwordMatched) {
+      log(404, "Email or password is not valid.");
+      return req.status(404).json({ error: "Email or password is not valid."});
     }
-  } else {
-    return errorResponse(400, 'Email and password are required.');
-  }
+
+    const token = jwt.sign({ userId: user.Id }, 'wompwomp', { expiresIn: '24h' });
+
+    return res.status(200).json({ user, token });
+
 }
 
 
-export async function addSport(req, res) {
+export async function addSportList(req, res) {
   const { sport_list, email } = req.body;
   console.log(sport_list);
   console.log(email);
 
-  const { user, error } = await setUserFieldFromFieldAsync({ sport_list: sport_list }, 'email', email)
-  if (error) return errorResponse(500, 'Error adding sport:', error.message); 
-  else return res.status(201).json({ sport: sport_list });
+  if (!sport_list || !email) {
+    log(400, "Sport list and email is required.");
+    return req.status(400).json({ error: "Sport list and email is required."});
+  }
+
+  const { error } = await updateUserFromFieldMatch('email', email, { sport_list: sport_list })
+  if (error) {
+    log(404, "Error updating user from field match.");
+    return req.status(500).json({ error: error.message});
+  }
+  return res.status(201).json({ sport: sport_list });
 };
