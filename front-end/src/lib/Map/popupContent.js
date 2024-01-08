@@ -6,7 +6,7 @@ export default function getPopupContent(markerData) {
 <h3 class="text-lg font-semibold">
 ${markerData.event_name} 
 #${markerData.event_id}</h3>
-<p class="text-sm">players 1/10</p>`; // Added closing backtick here
+<p class="text-sm">players ${markerData.player_list.length}/${markerData.maximum_players}</p>`; // Added closing backtick here
 
 	const button = document.createElement('button');
 	button.innerHTML = 'Join Match';

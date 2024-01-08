@@ -1,6 +1,9 @@
 <script>
 	import logo from '$lib/assets/logo.png';
-	import { showJoinModal } from '../../store';
+	import {refreshEvents, showJoinModal} from '../../store';
+	import SuccessNotif from './SuccessJoinNotification.svelte';
+
+	let showSuccess = false;
 
 	export let markerData = {};
 
@@ -9,7 +12,56 @@
 	}
 
 	let players = ['John', 'Lukani', 'Megan', 'saulius'];
+
+	function showSuccessNotification() {
+		showSuccess = true;
+		$refreshEvents = true;
+		setTimeout(() => {
+			$refreshEvents = false;
+			showSuccess = false;
+		}, 2000);
+	}
+
+	async function joinEventRequest() {
+		const currentEventDataResponse = await fetch(`http://localhost:3012/events/64`);
+		const currentEventData = await currentEventDataResponse.json();
+
+		const newPlayerList = [...currentEventData.player_list, 4];
+
+		const updatedEvent = {
+			playerList: newPlayerList,
+		};
+
+		try {
+			const response = await fetch('http://localhost:3012/events/64', {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(updatedEvent)
+			});
+			if (response.status === 201) {
+
+				closeModal();
+				showSuccessNotification();
+			} else {
+				// Handle other status codes if needed
+				console.error('Error joining an event. Status:', response.status);
+			}
+		} catch (error) {
+			console.error('Error joining an event:', error);
+		}
+	}
 </script>
+
+{#if showSuccess}
+	<div
+			class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
+			style="z-index: 1000"
+	>
+		<SuccessNotif />
+	</div>
+{/if}
 
 {#if $showJoinModal}
 	<div
@@ -61,6 +113,7 @@
 					<!-- Save button in the middle -->
 					<button
 						type="submit"
+						on:click={joinEventRequest}
 						class="bg-button text-text px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
 					>
 						Join
