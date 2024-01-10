@@ -1,17 +1,26 @@
-  name: Continuous integration
-  on: [push]
-  jobs:
-    GitHub-Actions:
-      runs-on: ubuntu-latest
-      steps:
-        - run: echo "Working..."
-        - uses: actions/checkout@v3
+name: Continuous Integration
 
-        - name: Install dependencies front-end
-          run: cd front-end; npm ci
+on:
+  push:
+    branches:
+      - main
 
-        - name: Install playwright
-          run: cd front-end; npx playwright install
+jobs:
+  GitHub-Actions:
+    runs-on: ubuntu-latest
 
-        - name: Run tests front-end
-          run: cd front-end; npm test
+    steps:
+      - run: echo "Working..."
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies front-end
+        run: cd front-end; npm ci
+
+      - name: Install playwright
+        run: cd front-end; npx playwright install
+
+      - name: Run tests front-end
+        run: cd front-end; npm test
+
+      - name: Run ESLint
+        run: cd front-end; npx eslint .
