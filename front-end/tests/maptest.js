@@ -1,11 +1,18 @@
-// map.test.js
 import { expect, test } from '@playwright/test';
 
-test('map component renders without errors', async ({ page }) => {
+test('map and UI renders without errors', async ({ page }) => {
 	await page.goto('/map');
-
+  
 	const mapContainer = await page.locator('#mapContainer');
-
+  
 	// Check if the map container is visible
 	await expect(mapContainer).toBeVisible();
+  
+	// Check if the navigation button is visible
+	const navigationButton = await page.locator('#navigationButton');
+	await expect(navigationButton).toBeVisible();
+  
+	// Check if the host button is visible
+	const hostButton = await page.locator('#hostButton');
+	await expect(hostButton).toBeVisible();
 });

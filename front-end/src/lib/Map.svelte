@@ -266,6 +266,7 @@
 	{#if !showError && !showLoading}
 		<!-- Center button on top of the map -->
 		<button
+			id="navigationButton"
 			on:click={centerMap}
 			class="absolute bottom-3 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
 			style="z-index: 1000"
@@ -275,6 +276,7 @@
 		</button>
 
 		<button
+			id="hostButton"
 			on:click={displayHostModal}
 			class="absolute bottom-3 left-2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
 			style="z-index: 1000"
