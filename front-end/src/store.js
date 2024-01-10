@@ -21,13 +21,6 @@ export const icon = writable({
 	svg: ``
 });
 
-export const mapCenter = writable(
-	{
-		lat: 0,
-		lng: 0,
-	}
-);
-
 export const facilities = writable([
 	{
 		facility_id: null,

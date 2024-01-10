@@ -15,11 +15,7 @@
 	style="height: 7%;"
 >
 	<ul class="row-start-2 row-end-3 grid grid-cols-3 list-none p-0 m-0 w-full">
-<<<<<<< Updated upstream
-		<a href="/overview" on:click={() => setActiveTab('home')}>
-=======
 		<a href="/overview" on:click={() => setActiveTab('overview')}>
->>>>>>> Stashed changes
 			<li
 				class="cursor-pointer flex items-center justify-center border-r-2 border-gray-300"
                     

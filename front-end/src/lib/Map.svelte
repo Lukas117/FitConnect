@@ -1,15 +1,13 @@
 <script>
 	import { onMount } from 'svelte';
 	import { onDestroy } from 'svelte';
-	import { browser } from '$app/environment';
 	import {
 		userLocation,
 		size,
 		icon,
 		showHostModal,
 		facilities,
-		refreshEvents,
-		mapCenter
+		refreshEvents
 	} from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
 
@@ -30,7 +28,6 @@
 	let facilityData;
 	let intervalId;
 	let eventData;
-	let isCentered;
 
 	onMount(async () => {
 		// wait for the library to be imported
@@ -55,14 +52,6 @@
 			if (value) {
 				getEvents();
 			}
-		});
-
-		map.on('moveend', () => {
-			$mapCenter = map.getCenter();
-		});
-
-		mapCenter.subscribe((center) => {
-			isCentered = isMapCentered();
 		});
 
 		await getFacilities();
@@ -102,19 +91,6 @@
 		if (map) {
 			map.flyTo([$userLocation.latitude, $userLocation.longitude], 16);
 		}
-	}
-
-	// checks if the map view is the same as the user location
-	function isMapCentered() {
-		console.log(
-			Math.floor($mapCenter.lat * 1000) / 1000 ==
-				Math.floor($userLocation.latitude * 1000) / 1000
-		);
-
-		return (
-			Math.floor($mapCenter.lat * 1000) / 1000 ==
-			Math.floor($userLocation.latitude * 1000) / 1000
-		);
 	}
 
 	// controls the status message of the map and is dependent on $userlocation
@@ -290,19 +266,8 @@
 
 	{#if !showError && !showLoading}
 		<!-- Center button on top of the map -->
-<<<<<<< Updated upstream
-		<button
-			id="navigationButton"
-			on:click={centerMap}
-			class="absolute bottom-3 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
-			style="z-index: 1000"
-		>
-			<!-- Adjust the max-w and height (h) values to make the image smaller -->
-			<NavigationIcon />
-		</button>
-=======
-		{#if !isCentered}
 			<button
+				id="navigationButton"
 				on:click={centerMap}
 				class="absolute bottom-20 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
 				style="z-index: 1000"
@@ -310,9 +275,6 @@
 				<!-- Adjust the max-w and height (h) values to make the image smaller -->
 				<NavigationIcon />
 			</button>
-		{/if}
->>>>>>> Stashed changes
-
 		<button
 			id="hostButton"
 			on:click={displayHostModal}
