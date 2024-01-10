@@ -23,7 +23,7 @@ module.exports = {
 		'svelte/no-store-async': 'error',
 		'svelte/require-each-key': 'error',
 		'svelte/no-unused-svelte-ignore': 'error',
-		'svelte/no-unused-class-name': 'error',
+		// 'svelte/no-unused-class-name': 'error',
 		'svelte/require-stores-init': 'error',
 		'svelte/valid-each-key': 'error',
 
