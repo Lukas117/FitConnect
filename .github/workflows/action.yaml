@@ -21,4 +21,4 @@ jobs:
         run: cd front-end; npm test
 
       - name: Run ESLint
-        run: cd front-end; npx eslint .
+        run: cd front-end; npx eslint --debug .

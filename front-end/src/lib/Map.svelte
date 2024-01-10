@@ -275,6 +275,7 @@
 				<!-- Adjust the max-w and height (h) values to make the image smaller -->
 				<NavigationIcon />
 			</button>
+			
 		<button
 			id="hostButton"
 			on:click={displayHostModal}
