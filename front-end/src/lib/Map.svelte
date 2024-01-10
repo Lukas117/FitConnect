@@ -282,7 +282,6 @@
 			style="z-index: 1000"
 		>
 			Host Match
-			<!-- <HostIcon /> -->
 		</button>
 	{/if}
 </div>
