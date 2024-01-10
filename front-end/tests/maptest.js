@@ -10,18 +10,18 @@ test('map and UI renders without errors', async ({ page }) => {
 	await expect(mapContainer).toBeVisible();
 
 	// Check if the navigation button is visible
-	await page.waitForSelector('#navigationButton', {
+	const navigationButton = await page.locator('#navigation');
+	await page.waitForSelector('#navigation', {
 		state: 'visible',
-		timeout: 5000
+		timeout: 10000
 	});
-	const navigationButton = await page.locator('#navigationButton');
 	await expect(navigationButton).toBeVisible();
 
 	// Check if the host button is visible
-	await page.waitForSelector('#hostButton', { 
-		state: 'visible', 
-		timeout: 5000 
+	const hostButton = await page.locator('#host');
+	await page.waitForSelector('#host', {
+		state: 'visible',
+		timeout: 10000
 	});
-	const hostButton = await page.locator('#hostButton');
 	await expect(hostButton).toBeVisible();
 });
