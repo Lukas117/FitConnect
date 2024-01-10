@@ -9,37 +9,37 @@
   let password_hash = "";
 
   const handleRegister = async () => {
-  const registrationData = {
-    name: `${firstName} ${lastName}`,
-    user_name,
-    birth_date,
-    email,
-    password_hash,
+  	const registrationData = {
+  		name: `${firstName} ${lastName}`,
+  		user_name,
+  		birth_date,
+  		email,
+  		password_hash,
+  	};
+
+  	try {
+  		const response = await fetch('http://localhost:3010/register', {
+  			method: 'POST',
+  			headers: {
+  				'Content-Type': 'application/json',
+  			},
+  			body: JSON.stringify(registrationData),
+  		});
+
+  		if (!response.ok) {
+  			throw new Error('Registration failed');
+  		}
+  		// Registration successful, handle the response as needed
+  		const responseData = await response.json();
+  		console.log('Registration successful:', responseData);
+  		if (responseData) {
+  			navigate('/map'); 
+  			location.reload();
+  		} 
+  	} catch (error) {
+  		console.error('Error during registration:', error.message);
+  	}
   };
-
-  try {
-    const response = await fetch('http://localhost:3010/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(registrationData),
-    });
-
-    if (!response.ok) {
-      throw new Error('Registration failed');
-    }
-      // Registration successful, handle the response as needed
-      const responseData = await response.json();
-      console.log('Registration successful:', responseData);
-      if (responseData) {
-        navigate('/map'); 
-        location.reload();
-      } 
-    } catch (error) {
-      console.error('Error during registration:', error.message);
-    }
-};
 
 </script>
 

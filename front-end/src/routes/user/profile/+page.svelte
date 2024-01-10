@@ -20,12 +20,12 @@
     // console.log(user);
     // });
     user = {
-        name: "John Doe",
-        location: "Vlissingen",
-        about: "Can we just talk about the poltical and economic situation in the world right now? 🤓🤓🤓🤓🤓",
-        sports: "Basketball, Tennis",
-        recentActivities: ["Played basketball at the park", "Played tennis at the park"],
-        friends: ["Jane Doe", "Bob Smith", "John Smith"]
+    	name: "John Doe",
+    	location: "Vlissingen",
+    	about: "Can we just talk about the poltical and economic situation in the world right now? 🤓🤓🤓🤓🤓",
+    	sports: "Basketball, Tennis",
+    	recentActivities: ["Played basketball at the park", "Played tennis at the park"],
+    	friends: ["Jane Doe", "Bob Smith", "John Smith"]
     }
 
 </script>

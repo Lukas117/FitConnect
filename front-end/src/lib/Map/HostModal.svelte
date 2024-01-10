@@ -27,9 +27,9 @@
 
 	function showSuccessNotification() {
 		showSuccess = true;
-    $refreshEvents = true;
+		$refreshEvents = true;
 		setTimeout(() => {
-      $refreshEvents = false;
+			$refreshEvents = false;
 			showSuccess = false;
 		}, 2000);
 	}

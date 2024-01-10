@@ -10,45 +10,45 @@
   let filteredData;
 
   onMount(async () => {
-    await getEvents();
+  	await getEvents();
   });
 
   const toggleOtherEvents = () => {
-    showOtherEvents = !showOtherEvents;
-    showMyEvents = false; // Hide My Events
+  	showOtherEvents = !showOtherEvents;
+  	showMyEvents = false; // Hide My Events
   };
 
   const toggleMyEvents = () => {
-    showMyEvents = !showMyEvents;
-    showOtherEvents = false; // Hide Other Events
+  	showMyEvents = !showMyEvents;
+  	showOtherEvents = false; // Hide Other Events
   };
 
   async function getEvents() {
-    const myId = 4;
+  	const myId = 4;
 
-    try {
-      const response = await fetch('http://localhost:3012/events', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+  	try {
+  		const response = await fetch('http://localhost:3012/events', {
+  			method: 'GET',
+  			headers: {
+  				'Content-Type': 'application/json'
+  			}
+  		});
 
-      let eventData = await response.json();
-      filteredData = eventData.filter(item => item.player_list
+  		let eventData = await response.json();
+  		filteredData = eventData.filter(item => item.player_list
         && item.player_list
-          .includes(myId));
+        	.includes(myId));
 
-    } catch (error) {
-      console.error('Error fetching events:', error);
-    }
+  	} catch (error) {
+  		console.error('Error fetching events:', error);
+  	}
   }
 
   function formatDate(dateString) {
-    const date = new Date(dateString);
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
-    return formattedDate;
+  	const date = new Date(dateString);
+  	const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+  	const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+  	return formattedDate;
   }
 
 </script>

@@ -8,21 +8,21 @@
     const minutes = Array.from({ length: 60 }, (_, index) => index.toString().padStart(2, "0"));
 
     function openClockPicker() {
-        showClockPicker = true;
+    	showClockPicker = true;
     }
 
     function closeClockPicker() {
-        showClockPicker = false;
+    	showClockPicker = false;
     }
 
     function selectHour(hour) {
-        selectedTime = `${hour}:${selectedTime.split(":")[1]}`;
-        closeClockPicker();
+    	selectedTime = `${hour}:${selectedTime.split(":")[1]}`;
+    	closeClockPicker();
     }
 
     function selectMinute(minute) {
-        selectedTime = `${selectedTime.split(":")[0]}:${minute}`;
-        closeClockPicker();
+    	selectedTime = `${selectedTime.split(":")[0]}:${minute}`;
+    	closeClockPicker();
     }
 </script>
 

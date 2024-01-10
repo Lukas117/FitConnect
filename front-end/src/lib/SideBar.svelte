@@ -3,28 +3,28 @@
     import { navigate } from "svelte-routing";
 
     const goToProfile = () => {
-    navigate("/user/profile");
-    location.reload();
-  };
+    	navigate("/user/profile");
+    	location.reload();
+    };
 
   const goToSettings = () => {
-    navigate("/settings");
-    location.reload();
-    };
+  	navigate("/settings");
+  	location.reload();
+  };
 
     let isSidebarOpen = false;
 
     const toggleSidebar = () => {
-        isSidebarOpen = !isSidebarOpen;
+    	isSidebarOpen = !isSidebarOpen;
     };
 
     const closeSidebar = () => {
-        isSidebarOpen = false;
+    	isSidebarOpen = false;
     };
 
     function handleClickOutside(event) {
-		closeSidebar();
-	}
+    	closeSidebar();
+    }
 </script>
 
 <style>

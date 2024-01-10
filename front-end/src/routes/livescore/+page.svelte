@@ -7,47 +7,47 @@
     let isPaused = false;
   
     const updateCountdown = () => {
-      // Update countdown logic here
-      // For simplicity, I'll decrement each unit every second for demonstration purposes
-      if (!isPaused) {
-      seconds -= 1;
+    	// Update countdown logic here
+    	// For simplicity, I'll decrement each unit every second for demonstration purposes
+    	if (!isPaused) {
+    		seconds -= 1;
   
-      if (seconds < 0) {
-        minutes -= 1;
-        seconds = 59;
-      }
+    		if (seconds < 0) {
+    			minutes -= 1;
+    			seconds = 59;
+    		}
   
-      if (minutes < 0) {
-        minutes = 59;
-      }
-    }
+    		if (minutes < 0) {
+    			minutes = 59;
+    		}
+    	}
   
     };
   
     onMount(() => {
-      const interval = setInterval(updateCountdown, 1000);
+    	const interval = setInterval(updateCountdown, 1000);
   
-      return () => {
-        clearInterval(interval);
-      };
+    	return () => {
+    		clearInterval(interval);
+    	};
     });
 
     let number1 = 0;
     let number2 = 0;
 
     const handleClick1 = () => {
-      number1 += 2;
+    	number1 += 2;
       
     };
     const handleClick2 = () => {
       
-      number2 += 2;
+    	number2 += 2;
     };
 
 
     const togglePause = () => {
-      isPaused = !isPaused;
-      // Add logic for pausing/resuming functionality as needed
+    	isPaused = !isPaused;
+    	// Add logic for pausing/resuming functionality as needed
     };
 
 </script>
@@ -111,7 +111,7 @@
       <button
         on:click={togglePause}
         class={`bg-primary text-white px-4 py-2 transition-transform duration-300 ease-in-out ${
-          isPaused ? 'triangle-button transform -rotate-180 px-4 py-4' : ''
+        	isPaused ? 'triangle-button transform -rotate-180 px-4 py-4' : ''
         }`}
       >
         {isPaused ? '' : 'Pause'}

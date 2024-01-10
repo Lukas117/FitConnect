@@ -6,31 +6,31 @@
   let password = '';
 
   async function handleLogin() {
-    try {
-      const response = await fetch('http://localhost:3010/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }), 
-      });
+  	try {
+  		const response = await fetch('http://localhost:3010/login', {
+  			method: 'POST',
+  			headers: {
+  				'Content-Type': 'application/json',
+  			},
+  			body: JSON.stringify({ email, password }), 
+  		});
 
-      if (response.ok) {
-        // Handle successful login
-        const data = await response.json();
-        console.log(data);
-        if (data) {
-          navigate('/map');
-          location.reload();
-        }
-      } else {
-        // Handle login failure
-        const errorData = await response.json();
-        console.error(errorData);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
+  		if (response.ok) {
+  			// Handle successful login
+  			const data = await response.json();
+  			console.log(data);
+  			if (data) {
+  				navigate('/map');
+  				location.reload();
+  			}
+  		} else {
+  			// Handle login failure
+  			const errorData = await response.json();
+  			console.error(errorData);
+  		}
+  	} catch (error) {
+  		console.error('Error:', error);
+  	}
   }
 </script>
 
