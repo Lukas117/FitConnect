@@ -16,6 +16,7 @@ ${markerData.player_list.length}/${markerData.maximum_players}</p>`;
 		'mt-2 bg-primary text-white px-4 py-2 rounded hover:bg-blue-700'+
 		'focus:outline-none focus:shadow-outline-blue'+
 		'active:bg-blue-800 mx-auto block';
+	button.id = 'joinButton'; // Added id to the button
 
 	button.onclick = function () {
 		showJoinModal.set(true);

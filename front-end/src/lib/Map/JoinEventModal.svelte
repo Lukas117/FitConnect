@@ -67,6 +67,7 @@
 	<div
 		class="fixed inset-0 z-50 flex items-center justify-center"
 		style="z-index: 1000"
+		id="joinModal"
 	>
 		<!-- Increase the size of the modal container -->
 		<div
