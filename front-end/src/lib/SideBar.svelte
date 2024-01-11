@@ -47,16 +47,13 @@
     }
 </style>
 
-<div class="flex flex-col justify-center items-center h-screen bg-background relative">
+<div class="flex flex-col justify-center items-center h-screen bg-background relative z-50">
     <div class="absolute top-0 right-0 m-4">
-        <!-- Hamburger Icon for Sidebar Toggle -->
         <button class="text-3xl cursor-pointer" on:click={toggleSidebar}>
             &#x2630;
         </button>
 
-        <!-- Account Sidebar -->
-        <div class={`fixed top-0 right-0 h-screen sm:w-1/3 lg:w-1/5 bg-white shadow-md p-4 z-10 sidebar ${isSidebarOpen ? '' : 'translate-x-full'}`} use:clickOutside on:click_outside={handleClickOutside}>
-            <!-- Sidebar content goes here -->
+        <div class={`fixed top-0 right-0 h-screen sm:w-1/3 lg:w-1/5 bg-white shadow-md p-4 z-50 sidebar ${isSidebarOpen ? '' : 'translate-x-full'}`} use:clickOutside on:click_outside={handleClickOutside}>
             <button class="block px-4 py-2 text-gray-800 hover:bg-gray-200" on:click={goToProfile}>
                 Profile
             </button>
