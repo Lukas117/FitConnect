@@ -15,6 +15,7 @@
 <nav
 	class="fixed bottom-0 left-0 w-full bg-white flex items-center"
 	style="height: 7%;"
+	id="navigationBar"
 >
 	<ul class="row-start-2 row-end-3 grid grid-cols-3 list-none p-0 m-0 w-full">
 		<a href="/overview" on:click={() => setActiveTab('overview')}>

@@ -25,6 +25,14 @@ test('map and UI renders without errors', async ({ page }) => {
 	// Check if the host button is visible
 	const hostButton = await page.locator('#host');
 	await expect(hostButton).toBeVisible();
+
+	// check if navigation bar is visible
+	const navigationBar = await page.locator('#navigationBar');
+	await expect(navigationBar).toBeVisible();
+
+	// check if the user marker is visible
+	const userMarker = await page.locator('#userIcon');
+	await expect(userMarker).toBeVisible();
 });
 
 test('expected path from event marker to join modal', async ({ page }) => {
@@ -94,5 +102,33 @@ test('expected path from event marker to join modal', async ({ page }) => {
 	await expect(joinModal).toBeVisible();
 
 	// take ss of page
-	await page.screenshot({ path: 'screenshot.png' });
+	await page.screenshot({ path: 'test3.png' });
+});
+
+test('expected path from map to host modal', async ({ page }) => {
+	// give geolocation to app
+	await page.context().grantPermissions(['geolocation']);
+	await page.context().setGeolocation({
+		latitude: 51.4646,
+		longitude: 3.5687
+	});
+
+	// Wait for the page to load
+	await page.goto('/map');
+	await page.waitForLoadState('load');
+
+	// find the host button
+	const hostButton = await page.locator('#host');
+	await expect(hostButton).toBeVisible();
+
+	//click the host button
+
+	await hostButton.click();
+
+	//find the host modal
+	const hostModal = await page.locator('#hostModal');
+	await expect(hostModal).toBeVisible();
+
+	// take ss of page
+	await page.screenshot({ path: 'test4.png' });
 });

@@ -131,7 +131,7 @@
 		const locationIcon = L.divIcon({
 			className: 'leaflet-control-locate-location',
 			// uses store $icon and $size variables from iconUtility.js
-			html: $icon.svg,
+			html: $icon.svg.replace('<svg ', '<svg id="userIcon" '),
 			iconSize: [$size.s2, $size.s2]
 		});
 

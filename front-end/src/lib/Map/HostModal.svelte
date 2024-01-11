@@ -91,6 +91,7 @@
 	<div
 		class="fixed inset-0 z-50 flex items-center justify-center"
 		style="z-index: 1000"
+		id="hostModal"
 	>
 		<div class="relative p-8 bg-white rounded-md shadow-md">
 			<img
