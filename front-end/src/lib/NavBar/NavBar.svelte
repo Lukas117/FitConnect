@@ -18,13 +18,13 @@
 		<a href="/overview" on:click={() => setActiveTab('overview')}>
 			<li
 				class="cursor-pointer flex items-center justify-center border-r-2 border-gray-300"
-                    
 			>
 				<HomeIcon />
 			</li>
 		</a>
 		<a href="/map" on:click={() => setActiveTab('map')}>
-			<li class="cursor-pointer flex items-center justify-center border-r-2 border-gray-300 h-full"
+			<li
+				class="cursor-pointer flex items-center justify-center border-r-2 border-gray-300 h-full"
 			>
 				<div class="w-10 h-10 flex items-center">
 					<MapIcon />
@@ -32,9 +32,7 @@
 			</li>
 		</a>
 		<a href="/stats" on:click={() => setActiveTab('stats')}>
-			<li
-				class="cursor-pointer flex items-center justify-center"
-			>
+			<li class="cursor-pointer flex items-center justify-center">
 				<StatsIcon />
 			</li>
 		</a>
@@ -42,5 +40,4 @@
 </nav>
 
 <style>
-
 </style>

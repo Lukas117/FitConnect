@@ -18,7 +18,7 @@ test('map and UI renders without errors', async ({ page }) => {
 
 	// await page.screenshot({ path: 'screenshot.png' });
 	// Check if the navigation button is visible
-	
+
 	const navigationButton = await page.locator('#navigation');
 	await expect(navigationButton).toBeVisible();
 

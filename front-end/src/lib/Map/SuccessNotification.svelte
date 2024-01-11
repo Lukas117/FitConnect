@@ -20,5 +20,5 @@
 		</svg>
 		<span class="sr-only">Check icon</span>
 	</div>
-    <div class="ms-3 text-sm font-normal">Event Created Successfully!</div>
+	<div class="ms-3 text-sm font-normal">Event Created Successfully!</div>
 </div>

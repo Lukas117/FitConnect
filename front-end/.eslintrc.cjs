@@ -1,20 +1,30 @@
 module.exports = {
 	root: true,
-	extends: ['eslint:recommended', 'plugin:svelte/recommended', 'prettier'],
-	parserOptions: {
-		sourceType: 'module',
-		ecmaVersion: 2020,
-		extraFileExtensions: ['.svelte']
-	},
+	extends: [
+		'eslint:recommended',
+		'plugin:svelte/recommended',
+		'plugin:svelte/prettier',
+		'prettier'
+	],
+	parser: '@babel/eslint-parser',
+	// Add an `overrides` section to add a parser configuration for svelte.
+	overrides: [
+		{
+			files: ['*.svelte'],
+			parser: 'svelte-eslint-parser'
+		}
+	],
 	env: {
 		browser: true,
 		es2017: true,
 		node: true
 	},
 	plugins: ['import', 'security', 'svelte'],
+
 	rules: {
 		//Indentation and Formatting
 		indent: ['error', 'tab'],
+
 		'max-len': ['error', { code: 80 }],
 
 		// svelte

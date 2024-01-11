@@ -2,7 +2,12 @@
 	import logo from '$lib/assets/logo.png';
 	import Timepicker from 'svelty-picker';
 	import EditIcon from './EditIcon.svelte';
-	import { showHostModal, userLocation, facilities, refreshEvents} from '../../store.js';
+	import {
+		showHostModal,
+		userLocation,
+		facilities,
+		refreshEvents
+	} from '../../store.js';
 	import SucessNotif from './SuccessNotification.svelte';
 
 	let date = new Date().toISOString().slice(0, 10);

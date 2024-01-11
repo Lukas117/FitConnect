@@ -1,6 +1,6 @@
 <script>
 	import logo from '$lib/assets/logo.png';
-	import {refreshEvents, showJoinModal} from '../../store';
+	import { refreshEvents, showJoinModal } from '../../store';
 	import SuccessNotif from './SuccessJoinNotification.svelte';
 
 	let showSuccess = false;
@@ -23,13 +23,15 @@
 	}
 
 	async function joinEventRequest() {
-		const currentEventDataResponse = await fetch(`http://localhost:3012/events/64`);
+		const currentEventDataResponse = await fetch(
+			`http://localhost:3012/events/64`
+		);
 		const currentEventData = await currentEventDataResponse.json();
 
 		const newPlayerList = [...currentEventData.player_list, 4];
 
 		const updatedEvent = {
-			playerList: newPlayerList,
+			playerList: newPlayerList
 		};
 
 		try {
@@ -41,7 +43,6 @@
 				body: JSON.stringify(updatedEvent)
 			});
 			if (response.status === 201) {
-
 				closeModal();
 				showSuccessNotification();
 			} else {
@@ -56,8 +57,8 @@
 
 {#if showSuccess}
 	<div
-			class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
-			style="z-index: 1000"
+		class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
+		style="z-index: 1000"
 	>
 		<SuccessNotif />
 	</div>

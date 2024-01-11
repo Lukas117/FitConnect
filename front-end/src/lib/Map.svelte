@@ -266,15 +266,15 @@
 
 	{#if !showError && !showLoading}
 		<!-- Center button on top of the map -->
-			<button
-				id="navigation"
-				on:click={centerMap}
-				class="absolute bottom-20 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
-				style="z-index: 1000"
-			>
-				<!-- Adjust the max-w and height (h) values to make the image smaller -->
-				<NavigationIcon />
-			</button>
+		<button
+			id="navigation"
+			on:click={centerMap}
+			class="absolute bottom-20 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
+			style="z-index: 1000"
+		>
+			<!-- Adjust the max-w and height (h) values to make the image smaller -->
+			<NavigationIcon />
+		</button>
 
 		<button
 			id="host"
