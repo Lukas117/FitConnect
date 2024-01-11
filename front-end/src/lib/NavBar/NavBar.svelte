@@ -8,6 +8,8 @@
 	function setActiveTab(tab) {
 		activeTab = tab;
 	}
+
+	console.log(activeTab);
 </script>
 
 <nav
@@ -17,14 +19,16 @@
 	<ul class="row-start-2 row-end-3 grid grid-cols-3 list-none p-0 m-0 w-full">
 		<a href="/overview" on:click={() => setActiveTab('overview')}>
 			<li
-				class="cursor-pointer flex items-center justify-center border-r-2 border-gray-300"
+				class="cursor-pointer flex 
+				items-center justify-center border-r-2 border-gray-300"
 			>
 				<HomeIcon />
 			</li>
 		</a>
 		<a href="/map" on:click={() => setActiveTab('map')}>
 			<li
-				class="cursor-pointer flex items-center justify-center border-r-2 border-gray-300 h-full"
+				class="cursor-pointer flex 
+				items-center justify-center border-r-2 border-gray-300 h-full"
 			>
 				<div class="w-10 h-10 flex items-center">
 					<MapIcon />

@@ -1,8 +1,5 @@
 <script>
 	import { onMount } from 'svelte';
-	import { setIconOptions } from '$lib/iconUtility.js';
-	import { basketballIcon } from '$lib/MarkerIcon.js';
-	import { refreshEvents, userLocation } from '../../store.js';
 
 	let showOtherEvents = false;
 	let showMyEvents = false;
@@ -52,7 +49,9 @@
 			hour: '2-digit',
 			minute: '2-digit'
 		};
-		const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+		const formattedDate = new Intl.DateTimeFormat('en-US', options).format(
+			date
+		);
 		return formattedDate;
 	}
 </script>
@@ -117,10 +116,18 @@
 			<h1 class="mt-2 font-bold">Joined events</h1>
 			{#each filteredData as event (event.id)}
 				<div class="bg-orange-300 text-white p-4 rounded mt-4">
-					<div class="mt-4 bg-red-700 rounded-md">{event.event_name}</div>
-					<div class="mt-3 text-black">Date: {formatDate(event.start_date)}</div>
+					<div
+						class="mt-4
+					bg-red-700 rounded-md"
+					>
+						{event.event_name}
+					</div>
 					<div class="mt-3 text-black">
-						Players: {event.player_list.length}/{event.maximum_players}
+						Date: {formatDate(event.start_date)}
+					</div>
+					<div class="mt-3 text-black">
+						Players: {event.player_list.length}/
+						{event.maximum_players}
 					</div>
 				</div>
 			{/each}
@@ -129,12 +136,6 @@
 </body>
 
 <style>
-	.event-container {
-		margin-top: 20px;
-		display: flex;
-		justify-content: center;
-	}
-
 	.card {
 		max-width: 400px;
 		padding: 20px;

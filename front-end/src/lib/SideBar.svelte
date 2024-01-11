@@ -22,13 +22,14 @@
 		isSidebarOpen = false;
 	};
 
-	function handleClickOutside(event) {
+	function handleClickOutside() {
 		closeSidebar();
 	}
 </script>
 
 <div
-	class="flex flex-col justify-center items-center h-screen bg-background relative"
+	class="flex flex-col justify-center
+	items-center h-screen bg-background relative"
 >
 	<div class="absolute top-0 right-0 m-4">
 		<!-- Hamburger Icon for Sidebar Toggle -->
@@ -38,7 +39,8 @@
 
 		<!-- Account Sidebar -->
 		<div
-			class={`fixed top-0 right-0 h-screen sm:w-1/3 lg:w-1/5 bg-white shadow-md p-4 z-10 sidebar ${
+			class={`fixed top-0 right-0 h-screen 
+			sm:w-1/3 lg:w-1/5 bg-white shadow-md p-4 z-10 sidebar ${
 				isSidebarOpen ? '' : 'translate-x-full'
 			}`}
 			use:clickOutside
@@ -65,10 +67,10 @@
 			</button>
 		</div>
 
-		<div
-			class={`fixed top-0 right-0 bottom-0 left-0 bg-black opacity-50 ${
-				isSidebarOpen ? 'overlay' : 'overlay-hidden'
-			}`}
+		<button
+			class={`fixed top-0 right-0 bottom-0 
+			left-0 bg-black opacity-50 
+			${isSidebarOpen ? 'overlay' : 'overlay-hidden'}`}
 			on:click={closeSidebar}
 		/>
 	</div>
@@ -84,7 +86,8 @@
 	}
 
 	.overlay {
-		transition: opacity 0.5s ease-in-out; /* Add transition for opacity property */
+		transition: opacity 0.5s ease-in-out; 
+		/* Add transition for opacity property */
 	}
 
 	.overlay-hidden {

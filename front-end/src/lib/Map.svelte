@@ -13,7 +13,7 @@
 
 	import { getPopupOptions, basketballIcon } from './MarkerIcon.js';
 	import NavigationIcon from './NavigationSVG.svelte';
-	import HostIcon from './HostIcon.svelte';
+	import { importLeaflet } from './Map/leaflet-imports.js';
 	import Loading from './Loading.svelte';
 	import HostModal from './Map/HostModal.svelte';
 	import JoinEventModal from './Map/JoinEventModal.svelte';
@@ -28,13 +28,11 @@
 	let facilityData;
 	let intervalId;
 	let eventData;
+	let L;
 
 	onMount(async () => {
 		// wait for the library to be imported
-		const L = await import('leaflet');
-		await import('leaflet.locatecontrol');
-		await import('leaflet.locatecontrol/dist/L.Control.Locate.min.css');
-
+		L = await importLeaflet();
 		setIconOptions();
 		markerIcon = basketballIcon(L);
 
@@ -46,7 +44,8 @@
 			updateUserLocationMarker([value.latitude, value.longitude]);
 			statusTimeout();
 		};
-		userLocation.subscribe(handleUserLocationChange); // calls function everytime userLocation updates
+		userLocation.subscribe(handleUserLocationChange);
+		// calls function everytime userLocation updates
 
 		refreshEvents.subscribe((value) => {
 			if (value) {
@@ -57,11 +56,13 @@
 		await getFacilities();
 		await getEvents();
 
-		intervalId = setInterval(getEvents, 10000); // Call getEvents every 5 seconds
+		intervalId = setInterval(getEvents, 10000);
+		// Call getEvents every 5 seconds
 	});
 
 	onDestroy(() => {
-		clearInterval(intervalId); // Clear the interval when the component is destroyed
+		clearInterval(intervalId);
+		// Clear the interval when the component is destroyed
 	});
 
 	// function for initializing the leaflet map
@@ -70,7 +71,8 @@
 			minZoom: 10
 		}).setView(latlng, 17);
 		L.tileLayer(
-			'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+			'https://{s}.basemaps.cartocdn.com/' +
+				'rastertiles/voyager/{z}/{x}/{y}{r}.png'
 		).addTo(map);
 	}
 
@@ -98,9 +100,11 @@
 	function statusTimeout() {
 		setTimeout(() => {
 			if (!$userLocation.loaded) {
-				handleMapStatus('timeout'); // set the status message to couldnt load map
+				handleMapStatus('timeout');
+				// set the status message to couldnt load map
 			}
-			handleMapStatus($userLocation.loaded); // set status to loaded or failed
+			handleMapStatus($userLocation.loaded);
+			// set status to loaded or failed
 		}, 5000);
 	}
 
@@ -134,38 +138,6 @@
 		return L.marker(latlng, { icon: locationIcon });
 	}
 
-	async function sendEventRequest() {
-		const newEvent = {
-			eventId: '9',
-			eventName: 'Basketball',
-			hostedName: "Joao's",
-			startDate: '2023-11-20T09:00:00Z',
-			endDate: '',
-			eventState: 'inProgress',
-			maximumPlayers: 10,
-			hostId: '5',
-			playerList: ['player1', 'player2', 'player3'],
-			facilityId: '5678'
-		};
-
-		const response = await fetch('http://localhost:3012/api/events', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-
-			body: JSON.stringify({ newEvent })
-		});
-		const data = await response.json();
-	}
-
-	// create new event
-	function createEvent() {
-		if (map) {
-			sendEventRequest();
-		}
-	}
-
 	// function to update markers on the map
 	function updateMarkers(eventData) {
 		if (map) {
@@ -177,14 +149,17 @@
 				// Find the corresponding facility for the current marker
 
 				const facility = facilityData.find(
-					(facility) => facility.facility_id == singleEvent.facility_id
+					(facility) => facility.facility_id == 
+					singleEvent.facility_id
 				);
 
 				if (facility) {
-					const marker = L.marker([facility.latitude, facility.longitude], {
+					const marker = L.marker([facility.latitude, 
+						facility.longitude], {
 						icon: markerIcon
 					})
-						.bindPopup(getPopupContent(singleEvent), getPopupOptions())
+						.bindPopup(getPopupContent(singleEvent), 
+							getPopupOptions())
 						.addTo(map);
 
 					eventMarkersLayer.addLayer(marker);
@@ -254,7 +229,9 @@
 	<div id="mapContainer" class="h-full w-full">
 		{#if showError}
 			<div
-				class="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-bold animate-fade-in mb-2"
+				class="text-center absolute top-1/2
+				left-1/2 transform -translate-x-1/2 -translate-y-1/2
+				text-4xl font-bold animate-fade-in mb-2"
 			>
 				Could not load map
 			</div>
@@ -269,17 +246,28 @@
 		<button
 			id="navigation"
 			on:click={centerMap}
-			class="absolute bottom-20 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 active:scale-100"
+			class="absolute bottom-20
+			left-1/2 transform -translate-x-1/2
+			focus:outline-none outline-none
+			transition-transform transform-gpu hover:scale-110 active:scale-100"
 			style="z-index: 1000"
 		>
-			<!-- Adjust the max-w and height (h) values to make the image smaller -->
+			<!-- Adjust the max-w and height 
+				(h) values to make the image smaller -->
 			<NavigationIcon />
 		</button>
 
 		<button
 			id="host"
 			on:click={displayHostModal}
-			class="absolute bottom-3 left-1/2 transform -translate-x-1/2 focus:outline-none outline-none transition-transform transform-gpu hover:scale-110 hover:text-text active:scale-100 cta-button bg-primary text-white font-bold px-8 py-3 text-lg rounded-full hover:bg-accent transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-accent shadow-lg"
+			class="absolute bottom-3 left-1/2
+			transform -translate-x-1/2 focus:outline-none
+			outline-none transition-transform transform-gpu
+			hover:scale-110 hover:text-text active:scale-100
+			cta-button bg-primary text-white font-bold px-8
+			py-3 text-lg rounded-full hover:bg-accent transition
+			duration-300 ease-in-out focus:outline-none
+			focus:ring focus:border-accent shadow-lg"
 			style="z-index: 1000"
 		>
 			Host Match

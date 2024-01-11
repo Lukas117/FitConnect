@@ -34,7 +34,8 @@
 </script>
 
 <div
-	class="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-gray-100 to-gray-300"
+	class="flex flex-col items-center justify-center
+	h-screen bg-gradient-to-b from-gray-100 to-gray-300"
 >
 	<h1 class="text-4xl font-bold text-gray-800 mb-8">Login</h1>
 
@@ -52,7 +53,11 @@
 		</div>
 
 		<div class="mb-4">
-			<label for="password" class="block text-gray-700 mb-1">Password:</label>
+			<label
+				for="password"
+				class="block
+			text-gray-700 mb-1">Password:</label
+			>
 			<input
 				type="password"
 				id="password"
@@ -63,12 +68,19 @@
 		</div>
 
 		<div class="text-right mb-2">
-			<a href="/forgot-password" class="text-blue-500">Forgot password?</a>
+			<a
+				href="/forgot-password"
+				class="text-blue-500
+			">Forgot password?</a
+			>
 		</div>
 
 		<button
 			type="submit"
-			class="cta-button bg-primary text-white px-4 py-2 rounded-md transition duration-300 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
+			class="cta-button bg-primary text-white px-4 py-2 rounded-md
+			transition duration-300 ease-in-out
+			hover:bg-blue-700 focus:outline-none
+			focus:ring focus:border-blue-300"
 		>
 			Login
 		</button>

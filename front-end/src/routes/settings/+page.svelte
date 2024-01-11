@@ -46,7 +46,9 @@
 					<p class="text-white mb-2 mr-4">Duration:</p>
 					<button
 						on:click={() => openClockPicker()}
-						class="bg-white text-text px-5 py-0.33 rounded-md hover:bg-accent focus:outline-none"
+						class="bg-white text-text
+						px-5 py-0.33 rounded-md
+						hover:bg-accent focus:outline-none"
 					>
 						{selectedTime}
 					</button>
@@ -56,17 +58,23 @@
 								<!-- Hours dropdown -->
 								<div class="flex flex-col">
 									{#each hours as hour (hour)}
-										<a on:click={() => selectHour(hour)} class="text-xs md:text-sm">
+										<button
+											on:click={() => selectHour(hour)}
+											class="text-xs md:text-sm"
+										>
 											{hour}
-										</a>
+										</button>
 									{/each}
 								</div>
 								<!-- Minutes dropdown -->
 								<div class="flex flex-col">
 									{#each minutes as minute (minute)}
-										<a on:click={() => selectMinute(minute)} class="text-xs md:text-sm">
+										<button
+										on:click={() => selectMinute(minute)}
+											class="text-xs md:text-sm"
+										>
 											{minute}
-										</a>
+										</button>
 									{/each}
 								</div>
 							</div>
@@ -76,23 +84,42 @@
 
 				<h1 class="text-text bg-titles mb-2">Devices</h1>
 				<div class="flex flex-col mb-4">
-					<h5 class="text-white bg-titles rounded-md">Score sensors</h5>
+					<h5
+						class="text-white
+					bg-titles rounded-md"
+					>
+						Score sensors
+					</h5>
 					<div class="flex items-center">
-						<p class="text-white bg-titles rounded-md" style="width: 200px;">
+						<p
+							class="text-white
+						bg-titles rounded-md"
+							style="width: 200px;"
+						>
 							#1 Hoop Sensor not Setup
 						</p>
 						<button
-							class="bg-button text-text px-2 py-1 rounded ml-4 focus:outline-none"
-							>Add</button
+							class="bg-button
+							 text-text px-2 py-1
+							 rounded ml-4 focus:outline-none"
+						>
+							Add</button
 						>
 					</div>
 					<div class="flex items-center">
-						<p class="text-white bg-titles rounded-md" style="width: 200px;">
+						<p
+							class="text-white
+						bg-titles rounded-md"
+							style="width: 200px;"
+						>
 							#2 Hoop Sensor not Setup
 						</p>
 						<button
-							class="bg-button text-text px-2 py-1 rounded ml-4 focus:outline-none"
-							>Add</button
+							class="bg-button
+							text-text px-2 py-1
+							rounded ml-4 focus:outline-none"
+						>
+							Add</button
 						>
 					</div>
 				</div>
@@ -102,14 +129,17 @@
 				<!-- Cancel button on the left -->
 				<button
 					type="button"
-					class="text-primary hover:text-gray-700 px-4 py-2 rounded focus:outline-none"
+					class="text-primary
+					hover:text-gray-700 px-4 py-2
+					rounded focus:outline-none"
 				>
 					Cancel
 				</button>
 				<!-- Save button in the middle -->
 				<button
 					type="submit"
-					class="text-text px-4 py-2 rounded bg-button focus:outline-none"
+					class="text-text px-4 py-2
+					rounded bg-button focus:outline-none"
 				>
 					Save
 				</button>

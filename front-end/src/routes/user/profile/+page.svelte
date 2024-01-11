@@ -1,7 +1,5 @@
 <script>
-	import SideBar from '$lib/SideBar.svelte';
 	import NavBar from '$lib/NavBar/NavBar.svelte';
-	import { onMount } from 'svelte';
 
 	let user;
 
@@ -22,7 +20,8 @@
 		name: 'John Doe',
 		location: 'Vlissingen',
 		about:
-			'Can we just talk about the poltical and economic situation in the world right now? 🤓🤓🤓🤓🤓',
+			'Can we just talk about the poltical and economic'+
+			'situation in the world right now? 🤓🤓🤓🤓🤓',
 		sports: 'Basketball, Tennis',
 		recentActivities: [
 			'Played basketball at the park',

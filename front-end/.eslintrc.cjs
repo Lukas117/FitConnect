@@ -7,6 +7,9 @@ module.exports = {
 		'prettier'
 	],
 	parser: '@babel/eslint-parser',
+	parserOptions: {
+		requireConfigFile: false,
+	},
 	// Add an `overrides` section to add a parser configuration for svelte.
 	overrides: [
 		{
@@ -43,7 +46,7 @@ module.exports = {
 		'no-unused-vars': 'error',
 
 		// Some other rules
-		'no-console': 'warn',
+		'no-console': 'off',
 		'consistent-this': ['error', 'self'],
 
 		// Security rules

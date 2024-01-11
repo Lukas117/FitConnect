@@ -102,7 +102,8 @@
 
 		<button
 			type="submit"
-			class="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-blue-700 transition duration-400 ease-in-out"
+			class="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer
+			hover:bg-blue-700 transition duration-400 ease-in-out"
 		>
 			Register
 		</button>
