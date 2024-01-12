@@ -2,7 +2,9 @@
 <script>
 	import landingpageimage from '$lib/assets/landingpageimage.png';
 </script>
-  
+
+<title>FitConnect</title>
+
   <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-100 to-gray-300">
 	
 		<div class="fixed top-2 w-full bg-white p-4 text-center">
