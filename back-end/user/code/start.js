@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-dotenv.config({ path: 'variables.env' });
+dotenv.config({ path: '.env' });
 import indexRouter from './routes/userRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { authenticate } from './middleware/authenticate.js';
@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 });
 app.use(errorHandler);
 
-app.set('port', process.env.PORT || 3010);
+app.set('port', process.env.PORT);
 const server = app.listen(app.get('port'), () => {
 	console.log(`🍿 Express running → PORT ${server.address().port}`);
 });
