@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 
 export const showJoinModal = writable(false);
+export const moreInformation = writable(false);
 
 export const showHostModal = writable(false);
 

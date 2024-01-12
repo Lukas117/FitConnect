@@ -42,7 +42,7 @@
       <p class="text-gray-600">{user.location}</p>
     </div>
   
-    <div class="mt-4 background-primary">
+    <div class="mt-4">
       <h3 class="text-lg font-semibold">About Me</h3>
       <p>{user.about}</p>
       <h3 class="text-lg font-semibold mt-2">Sports I Like</h3>
@@ -51,7 +51,7 @@
       <p>21</p>
     </div>
   
-    <div class="mt-4 " style="background-color: #fbf8f9;">
+    <div class="mt-4">
       <h3 class="text-lg font-semibold">Recent Activities</h3>
       <ul>
         {#each user.recentActivities as activity (activity)}
@@ -60,7 +60,7 @@
       </ul>
     </div>
   
-    <div class="mt-4" style="color: #170c0d;">
+    <div class="mt-4">
       <h3 class="text-lg font-semibold">Friend List</h3>
       <ul>
         {#each user.friends as friend (friend)}
