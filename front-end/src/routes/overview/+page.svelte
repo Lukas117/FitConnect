@@ -4,7 +4,7 @@
   import TitleComponent from "$lib/Title/TitleComponent.svelte";
   import HostModal from "$lib/Map/HostModal.svelte";
   import JoinEventModal from "$lib/Map/JoinEventModal.svelte";
-  import {facilities, moreInformation, showHostModal, showJoinModal} from "../../store.js";
+  import {facilities, moreInformation, showHostModal, showJoinModal, selectedEvent} from "../../store.js";
   import {goto} from '$app/navigation';
 
   let showOtherEvents = true;
@@ -85,6 +85,7 @@
 
   function displayHostModal(event) {
     if (event.alreadyStarted) {
+      $selectedEvent = event
       goto('/livescore');
     } else {
       $showHostModal = true;
