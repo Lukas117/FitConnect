@@ -3,6 +3,7 @@
 		<div
 			class="flex justify-center
 			items-center text-4xl font-bold animate-fade-in mb-2"
+			id="loading"
 		>
 			Loading...
 		</div>

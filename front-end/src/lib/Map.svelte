@@ -10,7 +10,7 @@
 		refreshEvents
 	} from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
-
+	import LoadError from './Map/LoadError.svelte';
 	import { getPopupOptions, basketballIcon } from './MarkerIcon.js';
 	import NavigationIcon from './NavigationSVG.svelte';
 	import { importLeaflet } from './Map/leaflet-imports.js';
@@ -228,13 +228,7 @@
 	<HostModal />
 	<div id="mapContainer" class="h-full w-full">
 		{#if showError}
-			<div
-				class="text-center absolute top-1/2
-				left-1/2 transform -translate-x-1/2 -translate-y-1/2
-				text-4xl font-bold animate-fade-in mb-2"
-			>
-				Could not load map
-			</div>
+			<LoadError/>
 		{/if}
 		{#if showLoading}
 			<Loading />
