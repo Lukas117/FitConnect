@@ -1,9 +1,10 @@
 import express from 'express';
 import {
-    getEventList,
-    getEventById,
-    createEvent,
-    updateEvent, updateEventPlayerList
+	getEventList,
+	getEventById,
+	createEvent,
+	updateEvent,
+	updateEventPlayerList
 } from '../controllers/eventController.js';
 
 const router = express.Router();

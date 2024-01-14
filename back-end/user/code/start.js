@@ -6,8 +6,6 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { authenticate } from './middleware/authenticate.js';
 import cors from 'cors';
 
-
-
 const app = express();
 app.use(cors());
 

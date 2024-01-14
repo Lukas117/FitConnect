@@ -48,8 +48,8 @@ services:
 networks:
   users:
     driver: bridge
-    
-  events: 
+
+  events:
     driver: bridge
 
   facilities:
