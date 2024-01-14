@@ -51,10 +51,6 @@
 		return value < 10 ? `0${value}` : value;
 	}
 
-	onMount(() => {
-		setInterval(updateCountdown, 1000);
-	});
-
 	let number1 = 0;
 	let number2 = 0;
 
@@ -76,21 +72,6 @@
 			clearInterval(interval);
 		};
 	});
-
-	let number1 = 0;
-	let number2 = 0;
-
-	const handleClick1 = () => {
-		number1 += 2;
-	};
-	const handleClick2 = () => {
-		number2 += 2;
-	};
-
-	const togglePause = () => {
-		isPaused = !isPaused;
-		// Add logic for pausing/resuming functionality as needed
-	};
 </script>
 
 <title>Livescore</title>
@@ -99,7 +80,8 @@
 	<TitleComponent title="LIVESCORE" />
 
 	<div>
-		<div class="pt-24 text-xl text-center justify-center">Time remaining</div>
+		<div class="pt-24 text-xl 
+		text-center justify-center">Time remaining</div>
 		<div class="flex flex-row text-center justify-center">
 			<div class="flex flex-col p-2 items-center">
 				<span class="font-bold text-5xl"
@@ -115,24 +97,29 @@
 	</div>
 
 	<div class="flex pt-14 pb-24">
-		<div class="flex flex-col text-2xl font-bold items-center w-1/2 relative">
+		<div class="flex flex-col text-2xl 
+		font-bold items-center w-1/2 relative">
 			TEAM 1
 			<button on:click={handleClick1}>
-				<div class="w-36 h-36 bg-primary rounded-full flex mt-10 text-white">
+				<div class="w-36 h-36 bg-primary
+				 rounded-full flex mt-10 text-white">
 					<span class="text-7xl pt-0 m-auto">{number1}</span>
 				</div>
 			</button>
 		</div>
 
 		<div
-			class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0.5 h-[50vh] bg-black"
+			class="absolute left-1/2 top-1/2 
+			transform -translate-x-1/2 -translate-y-1/2 w-0.5 h-[50vh] bg-black"
 			style="top: calc(50% + 23px);"
 		/>
 
-		<div class="flex flex-col text-2xl font-bold items-center w-1/2 relative">
+		<div class="flex flex-col text-2xl font-bold 
+		items-center w-1/2 relative">
 			TEAM 2
 			<button on:click={handleClick2}>
-				<div class="w-36 h-36 bg-red-700 rounded-full flex mt-10 text-white">
+				<div class="w-36 h-36 bg-red-700 
+				rounded-full flex mt-10 text-white">
 					<span class="text-7xl pt-0 m-auto">{number2}</span>
 				</div>
 			</button>
@@ -157,7 +144,8 @@
 					stroke-linecap="round"
 					stroke-linejoin="round"
 					stroke-width="2"
-					d={isPaused ? 'M5 3l14 9L5 21V3z' : 'M6 4h4v16H6zM14 4h4v16h-4z'}
+					d={isPaused ? 
+						'M5 3l14 9L5 21V3z' : 'M6 4h4v16H6zM14 4h4v16h-4z'}
 				/>
 			</svg>
 		</button>
