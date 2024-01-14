@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 
 export const showJoinModal = writable(false);
+export const moreInformation = writable(false);
 
 export const showHostModal = writable(false);
 
@@ -41,4 +42,9 @@ export const event = writable({
 	// lng: 3.56655,
 	// title: 'Marker 1',
 	// content: 'This is marker 1'
+});
+
+export const selectedEvent = writable({
+	start_date: '',
+	end_date: '',
 });

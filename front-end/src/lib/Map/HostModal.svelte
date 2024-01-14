@@ -9,25 +9,25 @@
 	} from '../../store.js';
 	import SucessNotif from './SuccessNotification.svelte';
 
-	let date = new Date().toISOString().slice(0, 10);
-	let eventName = 'Name of Event';
-	let selectedFacilityId;
-	let showSuccess = false;
+  let date = new Date().toISOString().slice(0, 10);
+  let eventName = 'Name of Event';
+  let selectedFacilityId;
+  let showSuccess = false;
 
-	let hours = new Date();
-	let selectedTime;
+  let hours = new Date();
+  let selectedTime;
 
-	let eventNameInput;
+  let eventNameInput;
 
-	function focusEventNameInput(event) {
-		event.preventDefault();
-		eventNameInput.focus();
-	}
+  function focusEventNameInput(event) {
+  	event.preventDefault();
+  	eventNameInput.focus();
+  }
 
-	// Close the modal
-	function closeModal() {
-		$showHostModal = false;
-	}
+  // Close the modal
+  function closeModal() {
+  	$showHostModal = false;
+  }
 
 	function showSuccessNotification() {
 		showSuccess = true;
@@ -79,12 +79,12 @@
 </script>
 
 {#if showSuccess}
-	<div
-		class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
-		style="z-index: 1000"
-	>
-		<SucessNotif />
-	</div>
+    <div
+            class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
+            style="z-index: 1000"
+    >
+        <SucessNotif/>
+    </div>
 {/if}
 
 {#if $showHostModal}
@@ -129,7 +129,7 @@
 					</button>
 				</div>
 
-				<!-- TIME PICKER -->
+                <!-- TIME PICKER -->
 
 				<div class="flex flex-col items-center mb-2 md:mb-4">
 					<div
