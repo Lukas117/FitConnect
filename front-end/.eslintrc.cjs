@@ -9,6 +9,7 @@ module.exports = {
 	parser: '@babel/eslint-parser',
 	parserOptions: {
 		requireConfigFile: false,
+		"ecmaVersion": 2018
 	},
 	// Add an `overrides` section to add a parser configuration for svelte.
 	overrides: [
