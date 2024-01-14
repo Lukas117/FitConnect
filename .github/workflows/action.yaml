@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   GitHub-Actions:
-    runs-on: ubuntu-latest
+        runs-on: ubuntu-latest
 
     steps:
       - run: echo "Working..."
@@ -37,8 +37,10 @@ jobs:
 
       - name: Build and analyze code using SonarCloud
         uses: SonarSource/sonarcloud-github-action@master
-        with:
-          args: -Dsonar.projectKey=Lukas117:FitConnect -Dsonar.organization=my_sonarcloud_organization
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}f
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECTKEY: Lukas117_FitConnect
+          SONAR_ORGANIZATION: fitconnect
+        with:
+          args: -Dsonar.projectKey=${{ env.SONAR_PROJECTKEY }} -Dsonar.organization=${{ env.SONAR_ORGANIZATION }}
