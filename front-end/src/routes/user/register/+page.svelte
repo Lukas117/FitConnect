@@ -1,5 +1,6 @@
 <script>
 	import { navigate } from 'svelte-routing';
+	import TitleComponent from "$lib/Title/TitleComponent.svelte";
 
 	let firstName = '';
 	let lastName = '';
@@ -40,20 +41,19 @@
 			console.error('Error during registration:', error.message);
 		}
 	};
+
 </script>
 
-<main
-	class="flex flex-col items-center 
-	justify-center min-h-screen bg-gradient-to-b 
-	from-gray-100 to-gray-300"
->
-	<div class="fixed top-2 w-full bg-white p-4 text-center">
-		<h1 class="text-4xl font-bold mb-4">Register</h1>
-	</div>
+<title>Sign up</title>
 
-	<form on:submit|preventDefault={handleRegister} 
-	class="max-w-md mx-auto p-10">
-		<label for="firstName" class=" mb-2">First Name:</label>
+<TitleComponent title="SIGN UP" enableSideBar={false} />
+
+<body class="flex flex-col items-center min-h-screen bg-gradient-to-b from-gray-100 to-gray-300">
+
+    <form on:submit|preventDefault={handleRegister}
+	    class="h-full px-10 mt-24">
+
+        <label for="firstName" class="text-xl">First Name:</label>
 		<input
 			type="text"
 			id="firstName"
@@ -62,7 +62,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="lastName" class=" mb-2">Last Name:</label>
+		<label for="lastName" class="text-xl">Last Name:</label>
 		<input
 			type="text"
 			id="lastName"
@@ -71,7 +71,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="user_name" class=" mb-2">Username:</label>
+		<label for="user_name" class="text-xl">Username:</label>
 		<input
 			type="text"
 			id="user_name"
@@ -80,7 +80,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="Birthday" class=" mb-2">Birthday:</label>
+		<label for="Birthday" class="text-xl">Birthday:</label>
 		<input
 			type="date"
 			id="birth_date"
@@ -89,7 +89,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="email" class=" mb-2">Email:</label>
+		<label for="email" class="text-xl">Email:</label>
 		<input
 			type="email"
 			id="email"
@@ -98,26 +98,21 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="password" class=" mb-2">Password:</label>
+		<label for="password" class="text-xl">Password:</label>
 		<input
-			type="password_hash"
+			type="password"
 			id="password_hash"
 			bind:value={password_hash}
 			required
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<div class="flex justify-center">
-			<button
+        <div class="flex justify-center pt-52">
+            <button
 				type="submit"
-				class="cta-button text-2xl bg-primary
-				text-white px-12 py-2 rounded-md
-				transition duration-300 ease-in-out
-				hover:bg-blue-700 focus:outline-none
-				focus:ring focus:border-blue-300 mt-4"
-			>
-				Register
-			</button>
-		</div>
+				class="text-2xl bg-primary text-white px-8 py-2 rounded-md">
+                	Create account
+            </button>
+        </div>
 	</form>
-</main>
+</body>
