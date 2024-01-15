@@ -81,7 +81,7 @@ export async function getUserById(req, res) {
 		const { data, error } = await supabase
 			.from('user')
 			.select('*')
-			.eq('userId', userId);
+			.eq('id', userId);
 
 		if (error) {
 			console.error('Error fetching user:', error.message);

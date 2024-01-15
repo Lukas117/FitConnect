@@ -255,9 +255,9 @@
 			class="absolute bottom-3 left-1/2
 			transform -translate-x-1/2 focus:outline-none
 			outline-none transition-transform transform-gpu
-			hover:scale-110 hover:text-text active:scale-100
+			hover:scale-110 hover:text-primary active:scale-100
 			cta-button bg-primary text-white font-bold px-8
-			py-3 text-lg rounded-full hover:bg-accent transition
+			py-3 text-lg rounded-full hover:bg-white transition
 			duration-300 ease-in-out focus:outline-none
 			focus:ring focus:border-accent shadow-lg"
 			style="z-index: 1000"
