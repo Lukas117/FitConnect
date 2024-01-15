@@ -48,7 +48,9 @@
 
 <TitleComponent title="SIGN UP" enableSideBar={false} />
 
-<body class="flex flex-col items-center min-h-screen bg-gradient-to-b from-gray-100 to-gray-300">
+<body class="flex flex-col items-center min-h-screen
+	bg-gradient-to-b from-gray-100 to-gray-300"
+>
 
     <form on:submit|preventDefault={handleRegister}
 	    class="h-full px-10 mt-24">

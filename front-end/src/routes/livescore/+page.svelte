@@ -127,9 +127,9 @@
 		<div class="flex flex-col items-center mt-44">
 			<button
 					on:click={togglePause}
-					class={`text-black transition-transform duration-300 ease-in-out ${
-				isPaused ? 'transform -rotate-180' : ''
-			}`}
+					class={`text-black transition-transform
+					duration-300 ease-in-out ${isPaused ?
+						'transform -rotate-180' : ''}`}
 			>
 				<svg
 						class="w-16 h-16 text-primary fill-primary rotate-180"
@@ -143,7 +143,8 @@
 							stroke-linejoin="round"
 							stroke-width="2"
 							d={isPaused ?
-						'M5 3l14 9L5 21V3z' : 'M6 4h4v16H6zM14 4h4v16h-4z'}
+								'M5 3l14 9L5 21V3z' :
+								'M6 4h4v16H6zM14 4h4v16h-4z'}
 					/>
 				</svg>
 			</button>

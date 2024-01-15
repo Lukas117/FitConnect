@@ -2,12 +2,12 @@
   import TitleComponent from "$lib/Title/TitleComponent.svelte";
 
   function toggleAnswer(answerId) {
-    const answer = document.getElementById(answerId);
-    if (answer.style.display === 'none') {
-      answer.style.display = 'block';
-    } else {
-      answer.style.display = 'none';
-    }
+  	const answer = document.getElementById(answerId);
+  	if (answer.style.display === 'none') {
+  		answer.style.display = 'block';
+  	} else {
+  		answer.style.display = 'none';
+  	}
   }
 
 </script>
@@ -23,7 +23,9 @@
                 <button on:click={() => toggleAnswer('answer1')}
                         class="flex items-center justify-between w-full"
                 >
-                        <span class="text-lg font-medium text-left">How can I get started?</span>
+                        <span class="text-lg font-medium text-left">
+                            How can I get started?
+                        </span>
                     <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -55,7 +57,9 @@
                 <button on:click={() => toggleAnswer('answer2')}
                         class="flex items-center justify-between w-full"
                 >
-                    <span class="text-lg font-medium text-left">How do I create a match?</span>
+                    <span class="text-lg font-medium text-left">
+                        How do I create a match?
+                    </span>
                     <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -88,7 +92,9 @@
                 <button on:click={() => toggleAnswer('answer3')}
                         class="flex items-center justify-between w-full"
                 >
-                    <span class="text-lg font-medium text-left">How can I track my match results on the app?</span>
+                    <span class="text-lg font-medium text-left">
+                        How can I track my match results on the app?
+                    </span>
                     <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -113,7 +119,9 @@
                 <button on:click={() => toggleAnswer('answer4')}
                         class="flex items-center justify-between w-full"
                 >
-                    <span class="text-lg font-medium text-left">Where do I get the sensors?</span>
+                    <span class="text-lg font-medium text-left">
+                        Where do I get the sensors?
+                    </span>
                     <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -142,7 +150,9 @@
                 <button on:click={() => toggleAnswer('answer5')}
                         class="flex items-center justify-between w-full"
                 >
-                    <span class="text-lg font-medium text-left">How do I connect the sensor to the app?</span>
+                    <span class="text-lg font-medium text-left">
+                        How do I connect the sensor to the app?
+                    </span>
                     <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -169,7 +179,9 @@
                 <button on:click={() => toggleAnswer('answer6')}
                         class="flex items-center justify-between w-full"
                 >
-                    <span class="text-lg font-medium text-left">How do I report a player?</span>
+                    <span class="text-lg font-medium text-left">
+                        How do I report a player?
+                    </span>
                     <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
