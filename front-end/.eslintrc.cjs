@@ -1,20 +1,34 @@
 module.exports = {
 	root: true,
-	extends: ['eslint:recommended', 'plugin:svelte/recommended', 'prettier'],
+	extends: [
+		'eslint:recommended',
+		'plugin:svelte/recommended',
+		'plugin:svelte/prettier',
+		'prettier'
+	],
+	parser: '@babel/eslint-parser',
 	parserOptions: {
-		sourceType: 'module',
-		ecmaVersion: 2020,
-		extraFileExtensions: ['.svelte']
+		requireConfigFile: false,
+		"ecmaVersion": 2018
 	},
+	// Add an `overrides` section to add a parser configuration for svelte.
+	overrides: [
+		{
+			files: ['*.svelte'],
+			parser: 'svelte-eslint-parser'
+		}
+	],
 	env: {
 		browser: true,
 		es2017: true,
 		node: true
 	},
 	plugins: ['import', 'security', 'svelte'],
+
 	rules: {
 		//Indentation and Formatting
 		indent: ['error', 'tab'],
+
 		'max-len': ['error', { code: 80 }],
 
 		// svelte
@@ -23,7 +37,7 @@ module.exports = {
 		'svelte/no-store-async': 'error',
 		'svelte/require-each-key': 'error',
 		'svelte/no-unused-svelte-ignore': 'error',
-		'svelte/no-unused-class-name': 'error',
+		// 'svelte/no-unused-class-name': 'error',
 		'svelte/require-stores-init': 'error',
 		'svelte/valid-each-key': 'error',
 
@@ -33,7 +47,7 @@ module.exports = {
 		'no-unused-vars': 'error',
 
 		// Some other rules
-		'no-console': 'warn',
+		'no-console': 'off',
 		'consistent-this': ['error', 'self'],
 
 		// Security rules

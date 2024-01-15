@@ -4,8 +4,8 @@ dotenv.config({ path: '.env' });
 
 // The Supabase client
 const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
+	process.env.SUPABASE_URL,
+	process.env.SUPABASE_KEY
 );
 
 /**
@@ -13,14 +13,16 @@ const supabase = createClient(
  * @returns confirmation
  */
 export async function createFacilityData(req) {
-  const { response, error } = await supabase.from('Facilities')
-      .insert({
-        latitude: req.body.latitude,
-        longitude: req.body.longitude,
-        // sport_id: req.body.endDate,
-      });
-  if (error) console.log('Query error', error);
-  else return response;
+	const { response, error } = await supabase.from('Facilities').insert({
+		latitude: req.body.latitude,
+		longitude: req.body.longitude
+		// sport_id: req.body.endDate,
+	});
+	if (error) {
+		console.log('Query error', error);
+	} else {
+		return response;
+	}
 }
 
 /**
@@ -28,9 +30,12 @@ export async function createFacilityData(req) {
  * @returns an array of events
  */
 export async function getFacilityListData() {
-  const { data, error } = await supabase.from('Facilities').select('*');
-  if (error) console.log('Query error', error);
-  else return data;
+	const { data, error } = await supabase.from('Facilities').select('*');
+	if (error) {
+		console.log('Query error', error);
+	} else {
+		return data;
+	}
 }
 
 /**
@@ -38,9 +43,16 @@ export async function getFacilityListData() {
  * @returns a specific event
  */
 export async function getFacilityData(eventId) {
-  const { data, error } = await supabase.from('Facilities').select('*').eq('facility_id', eventId).single();
-  if (error) console.log('Query error', error);
-  else return data;
+	const { data, error } = await supabase
+		.from('Facilities')
+		.select('*')
+		.eq('facility_id', eventId)
+		.single();
+	if (error) {
+		console.log('Query error', error);
+	} else {
+		return data;
+	}
 }
 
 /**
@@ -48,13 +60,17 @@ export async function getFacilityData(eventId) {
  * @returns confirmation
  */
 export async function updateFacilityData(req) {
-    const { response, error } = await supabase.from('Facilities')
-        .update({
-          latitude: req.body.latitude,
-          longitude: req.body.longitude,
-          // sport_id: req.body.endDate,
-        })
-        .eq('facility_id', req.params.facilityId);
-    if (error) console.log('Query error', error);
-    else return response;
+	const { response, error } = await supabase
+		.from('Facilities')
+		.update({
+			latitude: req.body.latitude,
+			longitude: req.body.longitude
+			// sport_id: req.body.endDate,
+		})
+		.eq('facility_id', req.params.facilityId);
+	if (error) {
+		console.log('Query error', error);
+	} else {
+		return response;
+	}
 }

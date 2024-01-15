@@ -9,13 +9,11 @@ export default {
 				primary: '#fb8900',
 				secondary: '#e6d0d2',
 				accent: '#fcde8f',
-				box:'#FFDBB0',
-				titles:'#CC5934',
-				button:'#FAA541',
+				box: '#FFDBB0',
+				titles: '#CC5934',
+				button: '#FAA541'
 			}
 		}
 	},
 	plugins: []
-
-	
 };

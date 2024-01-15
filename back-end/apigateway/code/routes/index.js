@@ -5,10 +5,9 @@ const router = express.Router();
 
 // create a proxy for each microservice
 const appointmentProxy = createProxyMiddleware({
-  target: 'http://localhost:3010',
-  changeOrigin: true,
+	target: 'http://localhost:3010',
+	changeOrigin: true
 });
-
 
 router.use('/user', cors(), appointmentProxy);
 
