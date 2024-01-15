@@ -34,9 +34,10 @@ export async function register(req, res) {
       return res.status(500).send("Internal Server Error");
     }
   }
-
-  const token = jwt.sign({ userId: user.user_id }, 'wompwomp', { expiresIn: '24h' });
-  return res.status(200).json({ user, token });
+  user = await getUserFromFieldAndValueAsync("user_name", user_name);
+  const token = jwt.sign({ userId: user.id }, 'wompwomp', { expiresIn: '24h' });
+  const verifieedtoken = jwt.verify(token, 'wompwomp');
+  return res.status(200).json({ token });
 }
 
 /**
@@ -80,7 +81,7 @@ export async function login(req, res) {
       return res.status(404).json({ error: "Email or password is not valid." });
     }
 
-    let passwordMatched = matchPassword(user.password_hash, password, user.password_salt);
+    let passwordMatched =  matchPassword(user.password_hash, password, user.password_salt);
     if (passwordMatched) {
       const token = jwt.sign({ userId: user.Id }, 'wompwomp', { expiresIn: '24h' });
 
@@ -118,13 +119,14 @@ export async function addSportList(req, res) {
  * @param {Object} req - The request object.
  * @returns {string|null} - The user ID if the JWT is valid, otherwise null.
  */
-export function getUserIdFromJWT(req) {
-  const token = req.headers.authorization?.split(' ')[1]; // Extract the token from the Authorization header
+export function getUserIdFromJWT(req, res) {
+  const authToken = req.headers.cookie.split('; ').find(cookie => cookie.startsWith('token='));
 
-  if (token) {
+  if (authToken) {
     try {
-      const decodedToken = jwt.verify(token, 'wompwomp'); // Verify and decode the token
-      return decodedToken.userId; // Return the user ID from the decoded token
+      const token = authToken.split('=')[1];
+      const decodedToken = jwt.verify(token, 'wompwomp');
+      return  res.status(200).json({ message: 'Authorized', userId: decodedToken.userId});
     } catch (error) {
       // Token verification failed
       return null;
@@ -133,3 +135,4 @@ export function getUserIdFromJWT(req) {
 
   return null; 
 }
+

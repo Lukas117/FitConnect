@@ -1,24 +1,34 @@
 
 <script>
+  import { navigate } from 'svelte-routing';
   import SideBar from '$lib/SideBar.svelte';
   import NavBar from '$lib/NavBar/NavBar.svelte';
   import { onMount } from 'svelte';
 
   let user;
 
-    // onMount(async () => { 
-        
-    //   const res = await fetch('http://localhost:3000/api/user/profile', {
-    //     method: 'GET',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': 'Bearer ' + localStorage.getItem('token')
-    //     }
-    //   });
-    // const data = await res.json();
-    // user = data;
-    // console.log(user);
-    // });
+  onMount(async () => {
+  try {
+    const response = await fetch('http://localhost:3010/check-auth', {
+      credentials: 'include'
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const userId = data.userId;
+      
+    } else {
+      const errorData = await response.json(); // Assuming the server sends an error message
+      const errorMessage = errorData.message || 'Authentication failed';
+      throw new Error(errorMessage);
+    }
+  } catch (error) {
+    console.error('Authentication error:', error);
+    navigate('/user/login'); 
+    window.location.reload();
+    }
+  });
+
     user = {
         name: "John Doe",
         location: "Vlissingen",

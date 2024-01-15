@@ -3,13 +3,17 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 import indexRouter from './routes/userRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
-import { authenticate } from './middleware/authenticate.js';
 import cors from 'cors';
 
 
 
 const app = express();
-app.use(cors());
+app.use(cors(
+	{
+		origin: process.env.CLIENT_URL,
+		credentials: true
+	}
+));
 
 // support json encoded and url-encoded bodies, mainly used for post and update
 app.use(express.json());
@@ -19,7 +23,6 @@ app.use('/', indexRouter);
 
 app.use((req, res, next) => {
 	try {
-		// set header before response
 		res.status(404).send("Sorry can't find that!");
 	} catch (err) {
 		next(err);

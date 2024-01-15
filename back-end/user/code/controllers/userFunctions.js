@@ -1,4 +1,9 @@
+import { createClient } from '@supabase/supabase-js';
 import crypto, { scrypt } from 'crypto';
+import dotenv from 'dotenv';
+dotenv.config({ path: './/.env' });
+
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 const hashLength = 64;
 
@@ -13,6 +18,8 @@ const hashLength = 64;
  * @throws {Error} - If an error occurs during the operation.
  */
 export async function makeUserAsync(name, user_name, birth_date, email, password) {
+
+  if (!name || !user_name || !birth_date || !email || !password) throw new Error('Missing required fields');
   const newUser = {
     name,
     user_name,
@@ -36,7 +43,7 @@ export async function makeUserAsync(name, user_name, birth_date, email, password
 
     return newUser;
   } catch (error) {
-    throw error;
+    throw new Error('Error occurred during user creation');
   }
 }
 
@@ -48,6 +55,7 @@ export async function makeUserAsync(name, user_name, birth_date, email, password
  * @throws {Error} - If an error occurs during the operation.
  */
 export async function makePasswordAsync(password, password_salt) {
+  if (!password || !password_salt) throw new Error('Missing required fields');
   return new Promise((resolve, reject) => {
     crypto.scrypt(password, password_salt, hashLength, (err, derivedKey) => {
       if (err) {
@@ -67,14 +75,13 @@ export async function makePasswordAsync(password, password_salt) {
  * @param {string} salt - The salt used for hashing.
  * @returns {boolean} - True if the passwords match, false otherwise.
  */
-export function matchPassword(hashed_password, password, salt) {
+export async function matchPassword(hashed_password, password, salt) {
   const passwordBuffer = Buffer.from(password);
   const saltBuffer = Buffer.from(salt, 'hex');
 
   try {
-    const derivedKey = crypto.scryptSync(passwordBuffer, saltBuffer, hashLength);
-    const password_hash = derivedKey.toString('hex');
-    return password_hash === hashed_password;
+    const derivedKey = await makePasswordAsync(password, salt);
+    return derivedKey === hashed_password;
   } catch (error) {
     return false;
   }
@@ -88,16 +95,19 @@ export function matchPassword(hashed_password, password, salt) {
  * @throws {Error} - If an error occurs during the operation.
  */
 export async function getUserFromFieldAndValueAsync(name, valueMatch) {
+  if (!name || !valueMatch) throw new Error('Missing required fields');
   try {
     const { data, error } = await supabase.from('user').select('*').eq(name, valueMatch);
-    if (error) throw error;
-    if (data && data.length > 0) {
-      return data[0];
-    } else {
+    if (error) throw new Error('Error occurred during user retrieval');
+
+    const matchingUser = data.find(user => user[name] == valueMatch);
+    if (matchingUser)
+      return matchingUser
+    else {
       return null;
     }
   } catch (error) {
-    throw error;
+    throw new Error(`Error occurred during user retrieval: ${error.message}`);
   }
 }
 
@@ -110,11 +120,13 @@ export async function getUserFromFieldAndValueAsync(name, valueMatch) {
  * @throws {Error} - If an error occurs during the operation.
  */
 export async function updateUserFromFieldMatch(name, valueMatch, updateValues) {
+  if (!name || !valueMatch || !updateValues) throw new Error('Missing required fields');
   try {
     const { error } = await supabase.from('user').update(updateValues).eq(name, valueMatch);
-    if (error) throw error;
+    if (error) throw new Error('error');
+   
   } catch (error) {
-    throw error;
+    throw new Error('Error occurred during user update');
   }
 }
 
@@ -126,12 +138,16 @@ export async function updateUserFromFieldMatch(name, valueMatch, updateValues) {
  * @throws {Error} - If an error occurs during the operation.
  */
 export async function matchTwoFieldsAsync(email, user_name) {
+  if (!email || !user_name) throw new Error('Missing required fields');
   try {
     return await supabase
       .from('user')
       .select('*')
-      .or('email.eq.' + email, 'user_name.eq.' + user_name);
-  } catch (error) {
+      .or(
+        { 'email.eq': email, 'user_name.eq': null },
+        { 'user_name.eq': user_name, 'email.eq': null }
+      );
+      } catch (error) {
     throw error;
   }
 }
@@ -153,4 +169,4 @@ export async function getUserFromTwoFieldsMatchAsync(name, valueMatch, secondNam
   } catch (error) {
     throw error;
   }
-}
+} 

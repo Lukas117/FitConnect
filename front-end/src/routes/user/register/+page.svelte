@@ -46,9 +46,10 @@
       const responseData = await response.json();
       console.log('Registration successful:', responseData);
       if (responseData) {
-        localStorage.setItem('email', email);
+        const token = responseData.token;
+        document.cookie = `token=${token}; path=/`;
+        
         navigate('/user/sport'); 
-        location.reload();
       } else {
         throw new Error('Email or username already exists');
       }
