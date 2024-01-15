@@ -1,18 +1,47 @@
 <script>
 	import logo from '$lib/assets/logo.png';
-	import { refreshEvents, showJoinModal, moreInformation } from '../../store';
+	import {
+		refreshEvents,
+		showJoinModal,
+		moreInformation,
+		joinEventId,
+		facilities
+	} from '../../store';
 	import SuccessNotif from './SuccessJoinNotification.svelte';
 
 	let showSuccess = false;
-
-	// export let markerData = {};
 
 	function closeModal() {
 		$showJoinModal = false;
 		$moreInformation = false;
 	}
 
+	let user_id = 1;
+	let eventData = {};
+	let facilityData = {
+		facility_name: '...'
+	};
+
 	let players = ['John', 'Lukani', 'Megan', 'saulius'];
+
+	// get event after its known which join button was pressed
+	showJoinModal.subscribe(async (showModal) => {
+		if (showModal) {
+			await getEvent();
+		}
+		if (!showModal) {
+			// reset event and facility data to default after modal closes
+			eventData = {
+				event_name: '...',
+				player_list: [],
+				facility_id: 0,
+				start_date: '2021-05-05T12:00:00.000Z'
+			};
+			facilityData = {
+				facility_name: '...'
+			};
+		}
+	});
 
 	function showSuccessNotification() {
 		showSuccess = true;
@@ -23,11 +52,28 @@
 		}, 2000);
 	}
 
+	async function getEvent() {
+		const response = await fetch(
+			`http://localhost:3012/events/${$joinEventId}`
+		);
+		eventData = await response.json();
+
+		facilityData = $facilities.find(
+			(facility) => facility.facility_id === eventData.facility_id
+		);
+
+		console.log(facilityData);
+	}
+
 	async function joinEventRequest() {
 		const currentEventDataResponse = await fetch(
-			`http://localhost:3012/events/64`
+			`http://localhost:3012/events/${$joinEventId}`
 		);
 		const currentEventData = await currentEventDataResponse.json();
+
+		joinEventId.subscribe((value) => {
+			console.log(value);
+		});
 
 		const newPlayerList = [...currentEventData.player_list, 4];
 
@@ -48,8 +94,7 @@
 				showSuccessNotification();
 			} else {
 				// Handle other status codes if needed
-				console.error('Error joining an event. Status:', 
-					response.status);
+				console.error('Error joining an event. Status:', response.status);
 			}
 		} catch (error) {
 			console.error('Error joining an event:', error);
@@ -72,10 +117,12 @@
 		style="z-index: 1000"
 	>
 		<!-- Increase the size of the modal container -->
-		<div class="bg-background relative 
-    p-8 rounded-md shadow-md w-5/6 mb-12">
+		<div
+			class="bg-background relative
+    p-8 rounded-md shadow-md w-5/6 mb-12"
+		>
 			<img alt="The project logo" src={logo} class="w-16 h-16 mb-4" />
-			<h1 class="text-2xl font-bold mb-4">Join Event</h1>
+			<h1 class="text-2xl font-bold mb-4">Join "{eventData.event_name}"</h1>
 			<form class="space-y-4">
 				<h1 class="text-primary text-l font-bold mb-4">Players</h1>
 				<div class="bg-box" style="overflow-y: auto; height: 200px;">
@@ -94,16 +141,16 @@
 				<div class="flex">
 					<h2 class="text-2xl font-bold mb-4 mt-2">Location:</h2>
 					<h2
-						class="text-2xl font-bold mb-4 bg-gray-300 
+						class="text-2xl font-bold mb-4 bg-gray-300
             rounded-lg p-2 mb-6 ml-2"
 					>
-						FACILITY1
+						{facilityData.facility_name}
 					</h2>
 				</div>
 				<div class="flex">
 					<h2 class="text-2xl font-bold mb-4 mt-2">Start:</h2>
 					<h2
-						class="text-2xl font-bold mb-4 bg-gray-300 
+						class="text-2xl font-bold mb-4 bg-gray-300
             rounded-lg p-2 mb-6 ml-2"
 					>
 						12:00
@@ -113,7 +160,7 @@
 					<!-- Cancel button on the left -->
 					<button
 						type="button"
-						class="text-primary hover:text-gray-700 
+						class="text-primary hover:text-gray-700
             px-4 py-2 rounded focus:outline-none"
 						on:click={closeModal}
 					>
@@ -124,7 +171,7 @@
 						<button
 							type="submit"
 							on:click={joinEventRequest}
-							class="bg-button text-text px-4 py-2 
+							class="bg-button text-text px-4 py-2
               rounded hover:bg-blue-600 focus:outline-none"
 						>
 							Join

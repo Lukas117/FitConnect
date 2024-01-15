@@ -224,8 +224,6 @@
 	class="relative bg-background"
 	style="height: 93%; width: 100%; z-index: 0;"
 >
-	<JoinEventModal />
-	<HostModal />
 	<div id="mapContainer" class="h-full w-full">
 		{#if showError}
 			<LoadError/>
@@ -267,4 +265,6 @@
 			Host Match
 		</button>
 	{/if}
+	<JoinEventModal />
+	<HostModal />
 </div>
