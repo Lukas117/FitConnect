@@ -1,5 +1,4 @@
 module.exports = {
-	type: 'module',
 	root: true,
 	env: {
 		node: true
@@ -10,6 +9,7 @@ module.exports = {
 		'plugin:node/recommended'
 	],
 	parserOptions: {
+		sourceType: 'module',
 		ecmaVersion: 2021
 	},
 	rules: {

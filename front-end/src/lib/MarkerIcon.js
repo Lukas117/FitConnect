@@ -36,7 +36,7 @@ l38 -39 29 20 c102 73 293 86 493 34 32 -9 59 -14 61 -12 2 2 -5 39 -16 83
 l-4 -33 37 6 c175 30 280 80 441 211 7 6 -148 229 -239 344 -119 149 -114 144
 -127 128z"/>
 </g>
-</svg>`; 
+</svg>`;
 
 const iconUrl = 'data:image/svg+xml;base64,' + btoa(svgIcon);
 
@@ -50,6 +50,6 @@ export function basketballIcon(L) {
 
 export function getPopupOptions() {
 	return {
-		offset: [0,-50]
+		offset: [0, -50]
 	};
 }

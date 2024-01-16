@@ -5,8 +5,6 @@ import indexRouter from './routes/userRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import cors from 'cors';
 
-
-
 const app = express();
 app.use(cors(
 	{

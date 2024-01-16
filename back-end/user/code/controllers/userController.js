@@ -83,8 +83,7 @@ export async function login(req, res) {
 
     let passwordMatched =  matchPassword(user.password_hash, password, user.password_salt);
     if (passwordMatched) {
-      const token = jwt.sign({ userId: user.Id }, 'wompwomp', { expiresIn: '24h' });
-
+      const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: '24h' });
       return res.status(200).json({ user, token });
     } else {
       return res.status(404).json({ error: "Email or password is not valid." });
@@ -125,7 +124,7 @@ export function getUserIdFromJWT(req, res) {
   if (authToken) {
     try {
       const token = authToken.split('=')[1];
-      const decodedToken = jwt.verify(token, 'wompwomp');
+      const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
       return  res.status(200).json({ message: 'Authorized', userId: decodedToken.userId});
     } catch (error) {
       // Token verification failed
@@ -135,4 +134,3 @@ export function getUserIdFromJWT(req, res) {
 
   return null; 
 }
-

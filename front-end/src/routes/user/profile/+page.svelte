@@ -1,4 +1,3 @@
-
 <script>
   import { navigate } from 'svelte-routing';
   import SideBar from '$lib/SideBar.svelte';

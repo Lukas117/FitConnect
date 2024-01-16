@@ -1,4 +1,6 @@
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config({ path: './/.env' });
 
 export async function authenticate(req, res, next) {
     if (req.headers.cookie) {
@@ -6,7 +8,7 @@ export async function authenticate(req, res, next) {
         if (authToken) {
             const token = authToken.split('=')[1];
             try {
-                const decodedToken = jwt.verify(token, 'wompwomp');
+                const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
                 const currentTime = Math.floor(Date.now() / 1000); 
                 if (decodedToken.exp < currentTime) {
                     res.status(401).json({

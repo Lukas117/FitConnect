@@ -1,9 +1,9 @@
 import express from 'express';
 import {
-    createFacility,
-    getFacilityById,
-    getFacilityList,
-    updateFacility
+	createFacility,
+	getFacilityById,
+	getFacilityList,
+	updateFacility
 } from '../controllers/facilityController.js';
 
 const router = express.Router();
