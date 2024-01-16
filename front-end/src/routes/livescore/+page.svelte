@@ -3,8 +3,26 @@
 	import TitleComponent from '$lib/Title/TitleComponent.svelte';
 	import NavBar from '$lib/NavBar/NavBar.svelte';
 	import { selectedEvent } from '../../store.js';
+	import {checkAuth} from "$lib/auth.js";
+	import {navigate} from "svelte-routing";
 
 	let isPaused = false;
+	let userId = 0;
+
+	onMount(() => {
+		checkAuth(fetch)
+				.then(result => {
+					userId = result;
+					console.log('Authentication successful:', result);
+				})
+				.catch(error => {
+					console.error('Authentication error:', error);
+					navigate('/user/login');
+					window.location.reload();
+				});
+
+		setInterval(updateCountdown, 1000);
+	});
 
 	function calculateDuration(currentDate, endDate) {
 		if (!endDate) {
@@ -65,9 +83,6 @@
 		isPaused = !isPaused;
 	};
 
-	onMount(() => {
-		setInterval(updateCountdown, 1000);
-	});
 </script>
 
 <title>Livescore</title>
@@ -134,30 +149,30 @@
 		</div>
 	</div>
 
-	<!--{#if $selectedEvent.host_id === myUserId}-->
-	<div class="flex flex-col items-center mt-44">
-		<button
-			on:click={togglePause}
-			class={`text-black transition-transform
-					duration-300 ease-in-out ${isPaused ? 'transform -rotate-180' : ''}`}
-		>
-			<svg
-				class="w-16 h-16 text-primary fill-primary rotate-180"
-				fill="none"
-				stroke="currentColor"
-				viewBox="0 0 24 24"
-				xmlns="http://www.w3.org/2000/svg"
+	{#if $selectedEvent.host_id === userId}
+		<div class="flex flex-col items-center mt-44">
+			<button
+				on:click={togglePause}
+				class={`text-black transition-transform
+						duration-300 ease-in-out ${isPaused ? 'transform -rotate-180' : ''}`}
 			>
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d={isPaused ? 'M5 3l14 9L5 21V3z' : 'M6 4h4v16H6zM14 4h4v16h-4z'}
-				/>
-			</svg>
-		</button>
-	</div>
-	<!--{/if}-->
+				<svg
+					class="w-16 h-16 text-primary fill-primary rotate-180"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d={isPaused ? 'M5 3l14 9L5 21V3z' : 'M6 4h4v16H6zM14 4h4v16h-4z'}
+					/>
+				</svg>
+			</button>
+		</div>
+	{/if}
 
 	<NavBar />
 </body>
