@@ -4,13 +4,17 @@
   import TitleComponent from "$lib/Title/TitleComponent.svelte";
   import {onMount} from "svelte";
   import {navigate} from "svelte-routing";
+  import Loading from "$lib/Loading.svelte";
 
   let chosenSports = [];
   let sportList = [];
   let isWarningVisible = false;
   let userId;
+  let showError = false;
+  let showLoading = true;
 
   onMount(async () => {
+    // handlePageStatus(sportList.length === 0);
     await checkAuth(fetch)
       .then(result => {
         userId = result;
@@ -39,6 +43,7 @@
   	} catch (error) {
   		console.error('Error fetching sports:', error);
   	}
+    handlePageStatus({loaded: true})
   }
 
   function chooseSport(sport) {
@@ -75,46 +80,61 @@
     }
   }
 
+  function handlePageStatus(status) {
+    if (status.loaded === true) {
+      // successfully loaded
+      showLoading = false;
+    }
+    if (status.loaded === false) {
+      // still loading
+      showLoading = true;
+    }
+  }
+
 </script>
 
 <title>Choose sports</title>
 
-    <TitleComponent title="CHOOSE SPORTS" enableSideBar={false}/>
+<TitleComponent title="CHOOSE SPORTS" enableSideBar={false}/>
+
 
 <body class="flex flex-col flex-grow">
+    {#if showLoading}
+        <Loading />
+    {:else}
+        <div class="m-5 pt-24 text-2xl pb-20">
+            {#if sportList.length === 0}
+                <h1 class="text-center font-bold mt-4">
+                    No sports available
+                </h1>
+            {:else}
+                {#each sportList as sport (sport.sport_id)}
+                    <div class="{chosenSports.includes(sport) ?
+                        'bg-red-700' : 'bg-orange-300'}
+                     text-white p-3 rounded mt-4">
+                        <button class="w-full" on:click={() => chooseSport(sport)}>
+                            <div class="pl-2 text-left">
+                                {sport.sport_name}
+                            </div>
+                        </button>
+                    </div>
+                {/each}
+            {/if}
+        </div>
 
-    <div class="m-5 pt-24 text-2xl pb-20">
-        {#if sportList.length === 0}
-            <h1 class="text-center font-bold mt-4">
-                No sports available
-            </h1>
-        {:else}
-            {#each sportList as sport (sport.sport_id)}
-                <div class="{chosenSports.includes(sport) ?
-                	'bg-red-700' : 'bg-orange-300'}
-                 text-white p-3 rounded mt-4">
-                    <button class="w-full" on:click={() => chooseSport(sport)}>
-                        <div class="pl-2 text-left">
-                            {sport.sport_name}
-                        </div>
-                    </button>
-                </div>
-            {/each}
-        {/if}
-    </div>
+        <div class="flex flex-col items-center mt-auto mb-7">
+            {#if isWarningVisible}
+                <p class="text-red-500 mb-4 text-xl font-bold">
+                    Please select at least one sport
+                </p>
+            {/if}
 
-    <div class="flex flex-col items-center mt-auto mb-7">
-        {#if isWarningVisible}
-            <p class="text-red-500 mb-4 text-xl font-bold">
-                Please select at least one sport
-            </p>
-        {/if}
-
-        <button
-                on:click={setSportToUser}
-                class="text-2xl bg-primary
-                text-white px-8 py-2 rounded-md mb-4">
-            START EXERCISING
-        </button>
-    </div>
+            <button
+                    on:click={setSportToUser}
+                    class="text-2xl bg-primary
+                    text-white px-8 py-2 rounded-md mb-4">
+                START EXERCISING
+            </button>
+        </div>
+    {/if}
 </body>
