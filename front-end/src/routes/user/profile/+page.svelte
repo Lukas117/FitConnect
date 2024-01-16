@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 
 	let user;
-  console.log(user);
+
 	onMount(async () => {
 		try {
 			const response = await fetch('http://localhost:3010/check-auth', {
@@ -15,8 +15,9 @@
 			if (response.ok) {
 				const data = await response.json();
 				const userId = data.userId;
+				console.log(userId);
 			} else {
-				const errorData = await response.json(); // Assuming the server sends an error message
+				const errorData = await response.json();
 				const errorMessage = errorData.message || 'Authentication failed';
 				throw new Error(errorMessage);
 			}
@@ -31,7 +32,8 @@
 		name: 'John Doe',
 		location: 'Vlissingen',
 		about:
-			'Can we just talk about the poltical and economic situation in the world right now? 🤓🤓🤓🤓🤓',
+			'Can we just talk about the poltical and economic ' +
+			'situation in the world right now? 🤓🤓🤓🤓🤓',
 		sports: 'Basketball, Tennis',
 		recentActivities: [
 			'Played basketball at the park',
