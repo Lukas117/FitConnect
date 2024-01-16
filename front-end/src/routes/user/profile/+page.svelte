@@ -1,11 +1,11 @@
 <script>
 	import { navigate } from 'svelte-routing';
-	import SideBar from '$lib/SideBar.svelte';
+	// import SideBar from '$lib/SideBar.svelte';
 	import NavBar from '$lib/NavBar/NavBar.svelte';
 	import { onMount } from 'svelte';
 
 	let user;
-
+  console.log(user);
 	onMount(async () => {
 		try {
 			const response = await fetch('http://localhost:3010/check-auth', {

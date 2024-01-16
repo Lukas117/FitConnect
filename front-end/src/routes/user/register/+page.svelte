@@ -63,7 +63,8 @@
 </script>
 
 <main
-	class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-100 to-gray-300"
+	class="flex flex-col items-center justify-center min-h-screen
+  bg-gradient-to-b from-gray-100 to-gray-300"
 >
 	<div class="fixed top-2 w-full bg-white p-4 text-center">
 		<h1 class="text-4xl font-bold mb-4">Register</h1>
@@ -146,7 +147,9 @@
 		<div class="flex justify-center">
 			<button
 				type="submit"
-				class="cta-button text-2xl bg-primary text-white px-12 py-2 rounded-md transition duration-300 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 mt-4"
+				class="cta-button text-2xl bg-primary text-white px-12 py-2
+        rounded-md transition duration-300 ease-in-out hover:bg-blue-700
+        focus:outline-none focus:ring focus:border-blue-300 mt-4"
 			>
 				Register
 			</button>

@@ -1,5 +1,5 @@
 <script>
-	import { navigate } from 'svelte-routing';
+	// import { navigate } from 'svelte-routing';
 	import iconforlogin from '$lib/assets/iconforlogin.png';
 
 	let email = '';

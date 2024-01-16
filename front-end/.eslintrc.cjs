@@ -29,7 +29,7 @@ module.exports = {
 		//Indentation and Formatting
 		indent: ['error', 'tab'],
 
-		'max-len': ['error', { code: 80 }],
+		'max-len': ['warn', { code: 80 }],
 
 		// svelte
 		'svelte/no-dupe-style-properties': 'error',

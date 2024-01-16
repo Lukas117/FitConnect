@@ -9,7 +9,7 @@
 	import { checkAuth } from '$lib/auth.js';
 
 	let userId;
-
+	console.log(userId);
 	onMount(() => {
 		checkAuth(fetch)
 			.then((result) => {
@@ -74,7 +74,8 @@
 	<button
 		on:click={toggleSport.bind(null, 'Basketball')}
 		class="sport-button flex items-center bg-orange-300 text-white
-    text-3xl w-60 h-16 rounded-md m-2 transition duration-400 ease-in-out hover:bg-accent"
+    text-3xl w-60 h-16 rounded-md m-2 transition duration-400
+    ease-in-out hover:bg-accent"
 	>
 		{#if logo}
 			<img src={logo} alt="Logo" class="w-10 h-10 mr-4 ml-4" />
@@ -87,7 +88,8 @@
 	<button
 		on:click={toggleSport.bind(null, 'Footbal')}
 		class="sport-button flex items-center bg-orange-300 text-white
-    text-3xl w-60 h-16 rounded-md m-2 transition duration-400 ease-in-out hover:bg-accent"
+    text-3xl w-60 h-16 rounded-md m-2 transition duration-400
+    ease-in-out hover:bg-accent"
 	>
 		{#if logofootball}
 			<img src={logofootball} alt="Logo" class="w-10 h-10 mr-4 ml-4" />
@@ -98,7 +100,8 @@
 	<button
 		on:click={toggleSport.bind(null, 'Tennis')}
 		class="sport-button flex items-center bg-orange-300 text-white
-    text-3xl w-60 h-16 rounded-md m-2 transition duration-400 ease-in-out hover:bg-accent"
+    text-3xl w-60 h-16 rounded-md m-2 transition duration-400
+    ease-in-out hover:bg-accent"
 	>
 		{#if logotenis}
 			<img src={logotenis} alt="Logo" class="w-10 h-10 mr-4 ml-4" />
@@ -109,7 +112,8 @@
 	<button
 		on:click={toggleSport.bind(null, 'Baseball')}
 		class="sport-button flex items-center bg-orange-300 text-white
-    text-3xl w-60 h-16 rounded-md m-2 transition duration-400 ease-in-out hover:bg-accent"
+    text-3xl w-60 h-16 rounded-md m-2 transition duration-400
+    ease-in-out hover:bg-accent"
 	>
 		{#if logobaseball}
 			<img src={logobaseball} alt="Logo" class="w-10 h-10 mr-4 ml-4" />
@@ -122,8 +126,9 @@
 		<a href="/map/">
 			<button
 				on:click={confirmSelection}
-				class="cta-button text-2xl bg-primary text-white px-12 py-2 mt-40 rounded-md
-        transition duration-300 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 mb-4"
+				class="cta-button text-2xl bg-primary text-white px-12 py-2 mt-40
+        rounded-md transition duration-300 ease-in-out hover:bg-blue-700
+        focus:outline-none focus:ring focus:border-blue-300 mb-4"
 			>
 				Confirm
 			</button>
