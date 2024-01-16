@@ -39,10 +39,6 @@
 	}
 
 	async function createEventRequest() {
-		console.log('Form data:', 
-			{ eventName, hours, selectedFacilityId, date });
-
-		console.log(selectedTime);
 
 		const newEvent = {
 			eventName: `${eventName}`,

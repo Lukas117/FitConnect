@@ -179,8 +179,6 @@
 			facilityData = await response.json();
 
 			$facilities = facilityData;
-
-			console.log($facilities);
 		} catch (error) {
 			console.error('Error fetching facilities:', error);
 		}
@@ -195,8 +193,6 @@
 				}
 			});
 			eventData = await response.json();
-
-			console.log('get events');
 
 			if (map) {
 				if (eventMarkersLayer) {

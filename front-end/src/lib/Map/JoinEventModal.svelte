@@ -52,17 +52,17 @@
 			players = [
 				{
 					id: 1,
-					name: '...',
+					name: '... ...',
 					user_name: '...'
 				},
 				{
 					id: 2,
-					name: '...',
+					name: '... ...',
 					user_name: '...'
 				},
 				{
 					id: 3,
-					name: '...',
+					name: '... ...',
 					user_name: '...'
 				}
 			];
