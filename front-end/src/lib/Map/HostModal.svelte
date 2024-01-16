@@ -7,13 +7,12 @@
 		facilities,
 		refreshEvents
 	} from '../../store.js';
-	import SuccessNotif from './SuccessNotification.svelte';
+	import SuccessNotif from './Notification.svelte';
 
   let date = new Date().toISOString().slice(0, 10);
   let eventName = 'Name of Event';
   let selectedFacilityId;
   let showSuccess = false;
-  let showfail = false;
 
   let hours = new Date();
   let selectedTime;
@@ -80,18 +79,6 @@
 </script>
 
 {#if showSuccess}
-    <div
-            class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
-            style="z-index: 1000"
-    >
-        <SuccessNotif 
-		message="Event Created Successfully!"
-		success={true}
-		/>
-    </div>
-{/if}
-
-{#if showfail}
     <div
             class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
             style="z-index: 1000"

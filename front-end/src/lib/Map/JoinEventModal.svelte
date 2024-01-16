@@ -8,7 +8,7 @@
 		facilities
 	} from '../../store';
 	import playerListToNames from './playerAdapter.js';
-	import SuccessNotif from './SuccessNotification.svelte';
+	import Notif from './Notification.svelte';
 
 	let showSuccess = false;
 	let showfail = false;
@@ -123,7 +123,6 @@
 	async function joinEventRequest() {
 		if (eventData.player_list.includes(user_id)) {
 			showFailNotification();
-			console.log('User is already in the event');
 			return;
 		}
 
@@ -149,6 +148,7 @@
 				getEvent();
 				showSuccessNotification();
 			} else {
+				closeModal();
 				// Handle other status codes if needed
 				console.error('Error joining an event. Status:',
 				 response.status);
@@ -164,7 +164,7 @@
 		class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
 		style="z-index: 1000"
 	>
-		<SuccessNotif 
+		<Notif 
 		message="Event Joined Successfully!"
 		success={true}
 		/>
@@ -176,14 +176,14 @@
             class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
             style="z-index: 1000"
     >
-        <SuccessNotif 
+        <Notif 
 		message="You are already in the event"
 		success={false}
 		/>
     </div>
 {/if}
 
-{#if $showJoinModal}
+{#if $showJoinModal}Z
 	<div
 		class="fixed inset-0 z-50 flex items-center justify-center"
 		style="z-index: 1000"
