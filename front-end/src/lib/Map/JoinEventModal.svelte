@@ -22,7 +22,6 @@
 	let eventData = {};
 	let facilityData = {};
 	let formatedStartTime = '...';
-	let host = {};
 	let lastEventData = {};
 	let players = [{}];
 
@@ -104,8 +103,6 @@
 			formatedStartTime = formatDate(eventData.start_date);
 			playerListToNames(eventData.player_list).then((result) => {
 				players = result;
-				host = players.find((player) => player.id === 
-				eventData.host_id);
 			});
 		}
 	}
