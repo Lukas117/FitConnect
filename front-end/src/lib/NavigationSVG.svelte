@@ -9,8 +9,7 @@
 	<title>navigation_fill</title>
 	<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 		<g id="Map" transform="translate(-192.000000, -48.000000)">
-			<g id="navigation_fill" 
-			transform="translate(192.000000, 48.000000)">
+			<g id="navigation_fill" transform="translate(192.000000, 48.000000)">
 				<path
 					d="M24,0 L24,24 L0,24 L0,0 L24,0 Z 
 					M12.5934901,23.257841 L12.5819402,23.2595131 

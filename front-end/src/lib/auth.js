@@ -20,5 +20,5 @@ export async function checkAuth(fetch) {
 		navigate('/user/login');
 		window.location.reload();
 	}
-	return null
+	return null;
 }
