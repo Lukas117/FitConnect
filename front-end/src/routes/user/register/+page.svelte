@@ -8,6 +8,11 @@
 	let email = '';
 	let password_hash = '';
 
+	// used to make the youngest user be at least 4 years old
+	let today = new Date();
+	let fourYearsAgo = new Date(today.getFullYear() - 
+	4, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+
 	const handleRegister = async () => {
 		const registrationData = {
 			name: `${firstName} ${lastName}`,
@@ -84,6 +89,8 @@
 		<input
 			type="date"
 			id="birth_date"
+			max={fourYearsAgo}
+			min="1907-03-07"
 			bind:value={birth_date}
 			required
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
