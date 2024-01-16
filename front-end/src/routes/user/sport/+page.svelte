@@ -58,11 +58,11 @@
         const idList = chosenSports.map(item => item.sport_id);
         const response = await fetch('http://localhost:3010/addSports', {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(idList)
-        });
+          body: JSON.stringify({ idList, userId })        });
         if (response.status === 201) {
           console.log("success")
         } else {

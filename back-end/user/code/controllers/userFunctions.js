@@ -120,12 +120,20 @@ export async function getUserFromFieldAndValueAsync(name, valueMatch) {
  * @throws {Error} - If an error occurs during the operation.
  */
 export async function updateUserFromFieldMatch(name, valueMatch, updateValues) {
-  if (!name || !valueMatch || !updateValues) throw new Error('Missing required fields');
+  if (!name || !valueMatch || !updateValues) {
+    throw new Error('Missing required fields');
+  }
+  console.log('updateValues:', updateValues);
+
   try {
-    const { error } = await supabase.from('user').update(updateValues).eq(name, valueMatch);
-    if (error) throw new Error('error');
-   
+    const { error } = await supabase.from('user').select(name,valueMatch).upsert(updateValues);
+
+    if (error) {
+      console.log('error:', error);
+      throw new Error('Error occurred during upsert operation');
+    }
   } catch (error) {
+    console.log('error:', error);
     throw new Error('Error occurred during user update');
   }
 }
@@ -152,21 +160,27 @@ export async function matchTwoFieldsAsync(email, user_name) {
   }
 }
 
-/**
- * Retrieves a user from the 'user' table based on two fields and their respective values.
- * @param {string} name - The name of the first field to match.
- * @param {any} valueMatch - The value to match against the first field.
- * @param {string} secondName - The name of the second field to match.
- * @param {any} secondValueMatch - The value to match against the second field.
- * @returns {Promise<User|null>} - The user if found, null otherwise.
- * @throws {Error} - If an error occurs during the operation.
- */
-export async function getUserFromTwoFieldsMatchAsync(name, valueMatch, secondName, secondValueMatch) {
+export async function findAndUpdateUser(userId, name, value) {
+  if (!name || !valueMatch || !updateValues) {
+    throw new Error('Missing required fields');
+  }
   try {
-    const { user, error } = await supabase.from('user').select('*').or(name.toLowerCase() + '.eq.' + valueMatch, secondName.toLowerCase() + '.eq.' + secondValueMatch);
-    if (error) throw error;
-    else return user;
+    const { data: updatedUser, error: updateError } = await supabase
+      .from('user')
+      .upsert({ name: value })
+      .eq('id', userId);
+
+    if (updateError) {
+      throw new Error('Error occurred while updating the user');
+    }
+
+    if (!updatedUser) {
+      throw new Error('User update failed');
+    }
+
+    // Return the updated user
+    return updatedUser;
   } catch (error) {
     throw error;
   }
-} 
+}

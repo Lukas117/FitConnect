@@ -100,16 +100,23 @@ export async function login(req, res) {
  * @returns {Object} - The response object with the updated sport list.
  */
 export async function addSportList(req, res) {
-  const { sport_list, email } = req.body;
+  const { idList, userId } = req.body;
 
-  if (!sport_list || !email) {
-    return req.status(400).json({ error: "Sport list and email is required." });
+  // Debugging: Check the values of sport_list and userId
+ 
+
+  if (!idList|| !userId) {
+    return res.status(400).json({ error: "Sport list and userId are required." });
   }
+  console.log('idList:', idList);
+  // Debugging: Check if updateUserFromFieldMatch is working correctly
+  const updateUserError = await updateUserFromFieldMatch('Id', userId, { sport_list: idList});
+  console.log('updateUserError:', updateUserError);
 
-  const updateUserError = await updateUserFromFieldMatch('email', email, { sport_list: sport_list });
   if (updateUserError) {
-    return req.status(500).json({ error: updateUserError.message });
+    return res.status(500).json({ error: updateUserError.message });
   }
+
   return res.status(201).json({ sport: sport_list });
 }
 

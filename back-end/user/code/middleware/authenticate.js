@@ -7,8 +7,15 @@ export async function authenticate(req, res, next) {
         const authToken = req.headers.cookie.split('; ').find(cookie => cookie.startsWith('token='));
         if (authToken) {
             const token = authToken.split('=')[1];
+
+            // Debugging: Check the value of the token
+
             try {
                 const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+
+                // Debugging: Check the decoded token
+                console.log('decodedToken:', decodedToken);
+
                 const currentTime = Math.floor(Date.now() / 1000); 
                 if (decodedToken.exp < currentTime) {
                     res.status(401).json({
@@ -21,6 +28,9 @@ export async function authenticate(req, res, next) {
                     next();
                 }
             } catch (error) {
+                // Debugging: Check the error object
+                console.log('error:', error);
+
                 res.status(401).json({
                     success: false,
                     status: 401,
