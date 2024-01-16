@@ -26,6 +26,7 @@ export const icon = writable({
 
 export const facilities = writable([
 	{
+		facility_name: "",
 		facility_id: null,
 		lat: null,
 		lng: null

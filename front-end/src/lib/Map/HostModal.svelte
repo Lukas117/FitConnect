@@ -7,12 +7,13 @@
 		facilities,
 		refreshEvents
 	} from '../../store.js';
-	import SucessNotif from './SuccessNotification.svelte';
+	import SuccessNotif from './SuccessNotification.svelte';
 
   let date = new Date().toISOString().slice(0, 10);
   let eventName = 'Name of Event';
   let selectedFacilityId;
   let showSuccess = false;
+  let showfail = false;
 
   let hours = new Date();
   let selectedTime;
@@ -83,7 +84,22 @@
             class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
             style="z-index: 1000"
     >
-        <SucessNotif/>
+        <SuccessNotif 
+		message="Event Created Successfully!"
+		success={true}
+		/>
+    </div>
+{/if}
+
+{#if showfail}
+    <div
+            class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
+            style="z-index: 1000"
+    >
+        <SuccessNotif 
+		message="Event Created Successfully!"
+		success={true}
+		/>
     </div>
 {/if}
 
@@ -182,7 +198,7 @@
 								{#each $facilities as facility 
 									(facility.facility_id)}
 									<option value={facility.facility_id}
-										>facility: {facility.facility_id}
+										>{facility.facility_name}
 										</option
 									>
 								{/each}

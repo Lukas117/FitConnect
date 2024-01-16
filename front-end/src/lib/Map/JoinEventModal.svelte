@@ -8,28 +8,35 @@
 		facilities
 	} from '../../store';
 	import playerListToNames from './playerAdapter.js';
-	import SuccessNotif from './SuccessJoinNotification.svelte';
+	import SuccessNotif from './SuccessNotification.svelte';
 
 	let showSuccess = false;
-
+	let showfail = false;
 	function closeModal() {
 		$showJoinModal = false;
 		$moreInformation = false;
 	}
+	// should be changed to get it from db
+	let user_id = 7;
 
-	let user_id = 1;
 	let eventData = {};
 	let facilityData = {};
 	let formatedStartTime = '...';
-
+	let host = {};
+	let lastEventData = {};
 	let players = [{}];
+
+	let intervalId;
 
 	// get event after its known which join button was pressed
 	showJoinModal.subscribe(async (showModal) => {
 		if (showModal) {
 			await getEvent();
+			intervalId = setInterval(getEvent, 1000);
 		}
 		if (!showModal) {
+			clearInterval(intervalId);
+			lastEventData = {};
 			// reset event and facility data to default after modal closes
 			eventData = {
 				event_name: '...',
@@ -45,16 +52,19 @@
 			formatedStartTime = '...';
 			players = [
 				{
-					player_id: 1,
-					name: '...'
+					id: 1,
+					name: '...',
+					user_name: '...'
 				},
 				{
-					player_id: 2,
-					name: '...'
+					id: 2,
+					name: '...',
+					user_name: '...'
 				},
 				{
-					player_id: 3,
-					name: '...'
+					id: 3,
+					name: '...',
+					user_name: '...'
 				}
 			];
 		}
@@ -69,22 +79,35 @@
 		}, 2000);
 	}
 
+	function showFailNotification() {
+		showfail = true;
+		$refreshEvents = true;
+		setTimeout(() => {
+			$refreshEvents = false;
+			showfail = false;
+		}, 4000);
+	}
+
 	async function getEvent() {
-		const response = await fetch(
-			`http://localhost:3012/events/${$joinEventId}`
-		);
-		eventData = await response.json();
+		const response = await 
+		fetch(`http://localhost:3012/events/${$joinEventId}`);
+    	const newEventData = await response.json();
 
-		facilityData = $facilities.find(
-			(facility) => facility.facility_id === eventData.facility_id
-		);
+		if (JSON.stringify(newEventData) !== JSON.stringify(lastEventData)) {
+			eventData = newEventData;
+			lastEventData = newEventData;
 
-		formatedStartTime = formatDate(eventData.start_date);
-		playerListToNames(eventData.player_list).then((result) => {
-			players = result;
-		});
+			facilityData = $facilities.find(
+				(facility) => facility.facility_id === eventData.facility_id
+			);
 
-		console.log(players);
+			formatedStartTime = formatDate(eventData.start_date);
+			playerListToNames(eventData.player_list).then((result) => {
+				players = result;
+				host = players.find((player) => player.id === 
+				eventData.host_id);
+			});
+		}
 	}
 
 	function formatDate(unformattedDate) {
@@ -97,42 +120,43 @@
 		).slice(-2)}`;
 	}
 
-	// async function joinEventRequest() {
-	// 	const currentEventDataResponse = await fetch(
-	// 		`http://localhost:3012/events/${$joinEventId}`
-	// 	);
-	// 	const currentEventData = await currentEventDataResponse.json();
+	async function joinEventRequest() {
+		if (eventData.player_list.includes(user_id)) {
+			showFailNotification();
+			console.log('User is already in the event');
+			return;
+		}
 
-	// 	joinEventId.subscribe((value) => {
-	// 		console.log(value);
-	// 	});
+		const newPlayerList = [...eventData.player_list, user_id];
 
-	// 	const newPlayerList = [...currentEventData.player_list, 4];
+		const updatedEvent = {
+			playerList: newPlayerList
+		};
 
-	// 	const updatedEvent = {
-	// 		playerList: newPlayerList
-	// 	};
-
-	// 	try {
-	// 		const response = await fetch('http://localhost:3012/events/64', {
-	// 			method: 'PATCH',
-	// 			headers: {
-	// 				'Content-Type': 'application/json'
-	// 			},
-	// 			body: JSON.stringify(updatedEvent)
-	// 		});
-	// 		if (response.status === 201) {
-	// 			closeModal();
-	// 			showSuccessNotification();
-	// 		} else {
-	// 			// Handle other status codes if needed
-	// 			console.error('Error joining an event. Status:',
-	// 				response.status);
-	// 		}
-	// 	} catch (error) {
-	// 		console.error('Error joining an event:', error);
-	// 	}
-	// }
+		try {
+			const response = await fetch(
+				`http://localhost:3012/events/${$joinEventId}`,
+				{
+					method: 'PATCH',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(updatedEvent)
+				}
+			);
+			if (response.status === 201) {
+				closeModal();
+				getEvent();
+				showSuccessNotification();
+			} else {
+				// Handle other status codes if needed
+				console.error('Error joining an event. Status:',
+				 response.status);
+			}
+		} catch (error) {
+			console.error('Error joining an event:', error);
+		}
+	}
 </script>
 
 {#if showSuccess}
@@ -140,8 +164,23 @@
 		class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
 		style="z-index: 1000"
 	>
-		<SuccessNotif />
+		<SuccessNotif 
+		message="Event Joined Successfully!"
+		success={true}
+		/>
 	</div>
+{/if}
+
+{#if showfail}
+    <div
+            class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
+            style="z-index: 1000"
+    >
+        <SuccessNotif 
+		message="You are already in the event"
+		success={false}
+		/>
+    </div>
 {/if}
 
 {#if $showJoinModal}
@@ -167,10 +206,24 @@
 					<ul class="bg-box">
 						{#each players as player, index (player)}
 							<li class="flex flex-col mb-4">
-								<div class="p-2 border bg-titles rounded">
-									<option value="friend1" class="text-white"
-										>{index + 1}. {player.name}
+								<div
+									class="p-2 border
+									bg-titles rounded
+									flex justify-between items-center"
+								>
+									<option value="friend1" 
+									class="text-white font-medium">
+										{index + 1}.
+										{player.name.split(' ')[0]}
+										({player.user_name})
 									</option>
+									{#if player.id === eventData.host_id}
+										<span
+											class="text-titles
+										bg-white px-2 py-1
+										rounded font-medium">Host</span
+										>
+									{/if}
 								</div>
 							</li>
 						{/each}
@@ -247,7 +300,9 @@
 						<button
 							type="submit"
 							class="bg-button text-text px-4 py-2
-              rounded hover:bg-blue-600 focus:outline-none font-medium"
+              				rounded hover:bg-blue-600
+							focus:outline-none font-medium"
+							on:click={joinEventRequest}
 						>
 							Join
 						</button>
