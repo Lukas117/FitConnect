@@ -18,7 +18,6 @@ test('Map loading error + resolving', async ({ page }) => {
 		longitude: 3.5687
 	});
 
-
 	const refresh = await page.locator('#refresh');
 
 	await refresh.click();

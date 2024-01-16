@@ -1,10 +1,10 @@
 <script>
-	import { navigate } from 'svelte-routing';
-	import LoginIcon from '$lib/assets/iconforlogin.png';
-	import TitleComponent from "$lib/Title/TitleComponent.svelte";
+	// import { navigate } from 'svelte-routing';
+	import iconforlogin from '$lib/assets/iconforlogin.png';
 
 	let email = '';
 	let password = '';
+	let errorMessage = '';
 
 	async function handleLogin() {
 		try {
@@ -19,13 +19,15 @@
 			if (response.ok) {
 				const data = await response.json();
 				console.log(data);
+
 				if (data) {
-					navigate('/map');
-					location.reload();
+					const token = data.token;
+					document.cookie = `token=${token}; path=/`;
+					window.location.href = '/map';
 				}
 			} else {
 				const errorData = await response.json();
-				console.error(errorData);
+				errorMessage = errorData.error;
 			}
 		} catch (error) {
 			console.error('Error:', error);
@@ -33,33 +35,38 @@
 	}
 </script>
 
-<title>Log in</title>
-
-<TitleComponent title="LOG IN" enableSideBar={false}/>
-
-<body class="flex flex-col items-center	justify-center
-	min-h-screen bg-gradient-to-b from-gray-100 to-gray-300"
+<div
+	class="flex flex-col items-center justify-center min-h-screen
+  bg-gradient-to-b from-gray-100 to-gray-300"
 >
+	<div class="fixed top-2 w-full bg-white p-4 text-center">
+		<h1 class="text-4xl font-bold mb-4">Login</h1>
+	</div>
 
 	<section>
-		<img alt="user" src={LoginIcon} class="w-40 h-40 mb-4" />
+		<img alt="The user" src={iconforlogin} class="w-40 h-40 mb-4" />
 	</section>
-
 	<form on:submit={handleLogin} class="max-w-md w-full px-10 py-4">
-
+		{#if errorMessage}
+			<p class="text-red-500 mb-4">{errorMessage}</p>
+		{/if}
 		<div class="mb-4">
-			<label for="email" class="text-xl">Email:</label>
+			<label for="email" class="block text-gray-700 mb-1">Email:</label>
 			<input
 				type="email"
 				id="email"
 				bind:value={email}
 				required
-				class="w-full px-16 py-2 border border-gray-300 rounded-md"
+				class="w-full px-3 py-2 border border-gray-300 rounded-md"
 			/>
+			<!-- Change type to 'email' and id to 'email' -->
 		</div>
 
 		<div class="mb-4">
-			<label for="password" class="text-xl">Password:</label>
+			{#if errorMessage}
+				<p class="text-red-500 mb-4">{errorMessage}</p>
+			{/if}
+			<label for="password" class="block text-gray-700 mb-1">Password:</label>
 			<input
 				type="password"
 				id="password"
@@ -70,25 +77,21 @@
 		</div>
 
 		<div class="text-right mb-2">
-			<a
-				href="/forgot-password"
-				class="text-blue-500"
-			>
-				Forgot password?
-			</a>
+			<a href="/forgot-password" class="text-blue-500">Forgot password?</a>
 		</div>
 
-		<div class="flex flex-col items-center w-full mt-12 ">
+		<div class="flex flex-col items-center w-full mt-12">
 			<button
 				type="submit"
-				class="bg-primary text-white px-14 py-2 text-2xl rounded-md"
+				class="cta-button text-2xl bg-primary text-white px-12 py-2
+         rounded-md transition duration-300 ease-in-out hover:bg-blue-700
+          focus:outline-none focus:ring focus:border-blue-300 mb-4"
 			>
-				Log in
+				Login
 			</button>
-			<button type="submit" class="text-xl mt-4">
-				<a href="/user/register">Create an account</a>
+			<button type="submit" class="p">
+				<a href="/user/register"> Create an account </a>
 			</button>
 		</div>
 	</form>
-
-</body>
+</div>

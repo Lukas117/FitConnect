@@ -1,6 +1,5 @@
 <script>
 	import { navigate } from 'svelte-routing';
-	import TitleComponent from "$lib/Title/TitleComponent.svelte";
 
 	let firstName = '';
 	let lastName = '';
@@ -8,6 +7,7 @@
 	let birth_date = '';
 	let email = '';
 	let password_hash = '';
+	let errorMessage = '';
 
 	const handleRegister = async () => {
 		const registrationData = {
@@ -19,6 +19,20 @@
 		};
 
 		try {
+			if (password_hash.length < 8) {
+				throw new Error('Password must be at least 8 characters long');
+			}
+
+			if (!/\d/.test(password_hash)) {
+				throw new Error('Password must contain at least one digit');
+			}
+
+			if (!/[!@#$%^&*]/.test(password_hash)) {
+				throw new Error(
+					'Password must contain at least one special character (!@#$%^&*)'
+				);
+			}
+
 			const response = await fetch('http://localhost:3010/register', {
 				method: 'POST',
 				headers: {
@@ -34,28 +48,34 @@
 			const responseData = await response.json();
 			console.log('Registration successful:', responseData);
 			if (responseData) {
-				navigate('/map');
-				location.reload();
+				const token = responseData.token;
+				document.cookie = `token=${token}; path=/`;
+
+				navigate('/user/sport');
+			} else {
+				throw new Error('Email or username already exists');
 			}
 		} catch (error) {
 			console.error('Error during registration:', error.message);
+			errorMessage = error.message;
 		}
 	};
-
 </script>
 
-<title>Sign up</title>
-
-<TitleComponent title="SIGN UP" enableSideBar={false} />
-
-<body class="flex flex-col items-center min-h-screen
-	bg-gradient-to-b from-gray-100 to-gray-300"
+<main
+	class="flex flex-col items-center justify-center min-h-screen
+  bg-gradient-to-b from-gray-100 to-gray-300"
 >
+	<div class="fixed top-2 w-full bg-white p-4 text-center">
+		<h1 class="text-4xl font-bold mb-4">Register</h1>
+	</div>
 
-    <form on:submit|preventDefault={handleRegister}
-	    class="h-full px-10 mt-24">
+	<form on:submit|preventDefault={handleRegister} class="max-w-md mx-auto p-10">
+		{#if errorMessage}
+			<p class="text-red-500 mb-4">{errorMessage}</p>
+		{/if}
 
-        <label for="firstName" class="text-xl">First Name:</label>
+		<label for="firstName" class=" mb-2">First Name:</label>
 		<input
 			type="text"
 			id="firstName"
@@ -64,7 +84,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="lastName" class="text-xl">Last Name:</label>
+		<label for="lastName" class=" mb-2">Last Name:</label>
 		<input
 			type="text"
 			id="lastName"
@@ -73,7 +93,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="user_name" class="text-xl">Username:</label>
+		<label for="user_name" class=" mb-2">Username:</label>
 		<input
 			type="text"
 			id="user_name"
@@ -82,7 +102,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="Birthday" class="text-xl">Birthday:</label>
+		<label for="Birthday" class=" mb-2">Birthday:</label>
 		<input
 			type="date"
 			id="birth_date"
@@ -91,7 +111,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="email" class="text-xl">Email:</label>
+		<label for="email" class=" mb-2">Email:</label>
 		<input
 			type="email"
 			id="email"
@@ -100,21 +120,39 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="password" class="text-xl">Password:</label>
+		<label for="password" class=" mb-2">Password:</label>
 		<input
-			type="password"
+			type="password_hash"
 			id="password_hash"
 			bind:value={password_hash}
 			required
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-        <div class="flex justify-center pt-52">
-            <button
+		{#if password_hash.length > 0 && password_hash.length < 8}
+			<p class="text-red-500 mb-2">
+				Password must be at least 8 characters long
+			</p>
+		{/if}
+
+		{#if password_hash.length > 0 && !/\d/.test(password_hash)}
+			<p class="text-red-500 mb-2">Password must contain at least one digit</p>
+		{/if}
+
+		{#if password_hash.length > 0 && !/[!@#$%^&*]/.test(password_hash)}
+			<p class="text-red-500 mb-2">
+				Password must contain at least one special character (!@#$%^&*)
+			</p>
+		{/if}
+		<div class="flex justify-center">
+			<button
 				type="submit"
-				class="text-2xl bg-primary text-white px-8 py-2 rounded-md">
-                	Create account
-            </button>
-        </div>
+				class="cta-button text-2xl bg-primary text-white px-12 py-2
+        rounded-md transition duration-300 ease-in-out hover:bg-blue-700
+        focus:outline-none focus:ring focus:border-blue-300 mt-4"
+			>
+				Register
+			</button>
+		</div>
 	</form>
-</body>
+</main>

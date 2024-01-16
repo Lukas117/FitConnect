@@ -1,26 +1,38 @@
 <script>
+	import { navigate } from 'svelte-routing';
+	// import SideBar from '$lib/SideBar.svelte';
 	import NavBar from '$lib/NavBar/NavBar.svelte';
+	import { onMount } from 'svelte';
 
 	let user;
 
-	// onMount(async () => {
+	onMount(async () => {
+		try {
+			const response = await fetch('http://localhost:3010/check-auth', {
+				credentials: 'include'
+			});
 
-	//   const res = await fetch('http://localhost:3000/api/user/profile', {
-	//     method: 'GET',
-	//     headers: {
-	//         'Content-Type': 'application/json',
-	//         'Authorization': 'Bearer ' + localStorage.getItem('token')
-	//     }
-	//   });
-	// const data = await res.json();
-	// user = data;
-	// console.log(user);
-	// });
+			if (response.ok) {
+				const data = await response.json();
+				const userId = data.userId;
+				console.log(userId);
+			} else {
+				const errorData = await response.json();
+				const errorMessage = errorData.message || 'Authentication failed';
+				throw new Error(errorMessage);
+			}
+		} catch (error) {
+			console.error('Authentication error:', error);
+			navigate('/user/login');
+			window.location.reload();
+		}
+	});
+
 	user = {
 		name: 'John Doe',
 		location: 'Vlissingen',
 		about:
-			'Can we just talk about the poltical and economic'+
+			'Can we just talk about the poltical and economic ' +
 			'situation in the world right now? 🤓🤓🤓🤓🤓',
 		sports: 'Basketball, Tennis',
 		recentActivities: [

@@ -46,5 +46,5 @@ export const event = writable({
 
 export const selectedEvent = writable({
 	start_date: '',
-	end_date: '',
+	end_date: ''
 });

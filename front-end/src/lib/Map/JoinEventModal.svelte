@@ -48,8 +48,7 @@
 				showSuccessNotification();
 			} else {
 				// Handle other status codes if needed
-				console.error('Error joining an event. Status:', 
-					response.status);
+				console.error('Error joining an event. Status:', response.status);
 			}
 		} catch (error) {
 			console.error('Error joining an event:', error);
@@ -72,8 +71,10 @@
 		style="z-index: 1000"
 	>
 		<!-- Increase the size of the modal container -->
-		<div class="bg-background relative 
-    p-8 rounded-md shadow-md w-5/6 mb-12">
+		<div
+			class="bg-background relative
+    p-8 rounded-md shadow-md w-5/6 mb-12"
+		>
 			<img alt="The project logo" src={logo} class="w-16 h-16 mb-4" />
 			<h1 class="text-2xl font-bold mb-4">Join Event</h1>
 			<form class="space-y-4">
@@ -94,7 +95,7 @@
 				<div class="flex">
 					<h2 class="text-2xl font-bold mb-4 mt-2">Location:</h2>
 					<h2
-						class="text-2xl font-bold mb-4 bg-gray-300 
+						class="text-2xl font-bold mb-4 bg-gray-300
             rounded-lg p-2 mb-6 ml-2"
 					>
 						FACILITY1
@@ -103,7 +104,7 @@
 				<div class="flex">
 					<h2 class="text-2xl font-bold mb-4 mt-2">Start:</h2>
 					<h2
-						class="text-2xl font-bold mb-4 bg-gray-300 
+						class="text-2xl font-bold mb-4 bg-gray-300
             rounded-lg p-2 mb-6 ml-2"
 					>
 						12:00
@@ -113,7 +114,7 @@
 					<!-- Cancel button on the left -->
 					<button
 						type="button"
-						class="text-primary hover:text-gray-700 
+						class="text-primary hover:text-gray-700
             px-4 py-2 rounded focus:outline-none"
 						on:click={closeModal}
 					>
@@ -124,7 +125,7 @@
 						<button
 							type="submit"
 							on:click={joinEventRequest}
-							class="bg-button text-text px-4 py-2 
+							class="bg-button text-text px-4 py-2
               rounded hover:bg-blue-600 focus:outline-none"
 						>
 							Join

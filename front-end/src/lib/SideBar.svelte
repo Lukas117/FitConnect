@@ -97,7 +97,7 @@
 	}
 
 	.overlay {
-		transition: opacity 0.5s ease-in-out; 
+		transition: opacity 0.5s ease-in-out;
 		/* Add transition for opacity property */
 	}
 

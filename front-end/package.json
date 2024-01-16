@@ -13,7 +13,8 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
-		"devvv": "vite dev --host 0.0.0.0 --https"
+		"devvv": "vite dev --host 0.0.0.0 --https",
+		"code:style": "npm run format && npm run lint"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.23.7",
