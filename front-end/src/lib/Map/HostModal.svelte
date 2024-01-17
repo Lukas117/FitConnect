@@ -179,7 +179,8 @@
 								class="p-2 border bg-titles
 								 rounded text-white text-xs md:text-sm w-32"
 							>
-								{#each $facilities as facility (facility.facility_id)}
+								{#each $facilities as facility 
+									(facility.facility_id)}
 									<option value={facility.facility_id}
 										>{facility.facility_name}
 										</option

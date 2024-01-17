@@ -5,6 +5,7 @@
 	import Location from '$lib/Location.svelte';
 	import { checkAuth } from '$lib/auth.js';
 	import { onMount } from 'svelte';
+	import { navigate } from 'svelte-routing';
 
 	let userId;
 	onMount(() => {

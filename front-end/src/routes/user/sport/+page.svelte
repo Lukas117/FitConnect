@@ -126,7 +126,8 @@
 		<a href="/map/">
 			<button
 				on:click={confirmSelection}
-				class="cta-button text-2xl bg-primary text-white px-12 py-2 mt-40
+				class="cta-button text-2xl 
+				bg-primary text-white px-12 py-2 mt-40
         rounded-md transition duration-300 ease-in-out hover:bg-blue-700
         focus:outline-none focus:ring focus:border-blue-300 mb-4"
 			>

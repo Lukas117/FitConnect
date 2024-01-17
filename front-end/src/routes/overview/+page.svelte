@@ -70,7 +70,8 @@
 			);
 
 			hostedEvent = eventData.filter(
-				(item) => item.host_id === myId && new Date(item.end_date) >= new Date()
+				(item) => item.host_id === 
+				myId && new Date(item.end_date) >= new Date()
 			);
 		} catch (error) {
 			console.error('Error fetching events:', error);
@@ -195,7 +196,8 @@
 			{:else}
 				{#each hostedEvent as event (event.event_id)}
 					<div class="bg-orange-300 text-white p-3 rounded mt-4">
-						<button class="w-full" on:click={() => displayHostModal(event)}>
+						<button class="w-full" 
+						on:click={() => displayHostModal(event)}>
 							<div class="bg-red-700 rounded-md py-1">
 								<div class="pl-2 text-left">
 									{event.event_name}
@@ -230,7 +232,8 @@
 			{:else}
 				{#each joinedEvent as event (event.event_id)}
 					<div class="bg-orange-300 text-white p-3 rounded mt-4">
-						<button class="w-full" on:click={() => displayJoinInfoModal(event)}>
+						<button class="w-full" 
+						on:click={() => displayJoinInfoModal(event)}>
 							<div class="bg-red-700 rounded-md py-1">
 								<div class="pl-2 text-left">
 									{event.event_name}
