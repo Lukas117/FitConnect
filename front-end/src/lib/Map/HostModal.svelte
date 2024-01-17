@@ -9,25 +9,25 @@
 	} from '../../store.js';
 	import SuccessNotif from './Notification.svelte';
 
-  let date = new Date().toISOString().slice(0, 10);
-  let eventName = 'Name of Event';
-  let selectedFacilityId;
-  let showSuccess = false;
+	let date = new Date().toISOString().slice(0, 10);
+	let eventName = 'Name of Event';
+	let selectedFacilityId;
+	let showSuccess = false;
 
-  let hours = new Date();
-  let selectedTime;
+	let hours = new Date();
+	let selectedTime;
 
-  let eventNameInput;
+	let eventNameInput;
 
-  function focusEventNameInput(event) {
-  	event.preventDefault();
-  	eventNameInput.focus();
-  }
+	function focusEventNameInput(event) {
+		event.preventDefault();
+		eventNameInput.focus();
+	}
 
-  // Close the modal
-  function closeModal() {
-  	$showHostModal = false;
-  }
+	// Close the modal
+	function closeModal() {
+		$showHostModal = false;
+	}
 
 	function showSuccessNotification() {
 		showSuccess = true;
@@ -128,7 +128,7 @@
 					</button>
 				</div>
 
-                <!-- TIME PICKER -->
+				<!-- TIME PICKER -->
 
 				<div class="flex flex-col items-center mb-2 md:mb-4">
 					<div
@@ -179,8 +179,7 @@
 								class="p-2 border bg-titles
 								 rounded text-white text-xs md:text-sm w-32"
 							>
-								{#each $facilities as facility 
-									(facility.facility_id)}
+								{#each $facilities as facility (facility.facility_id)}
 									<option value={facility.facility_id}
 										>{facility.facility_name}
 										</option
@@ -209,14 +208,14 @@
 					<button
 						type="button"
 						on:click={closeModal}
-						class="text-titles hover:text-gray-700 
+						class="text-titles hover:text-gray-700
 						px-2 md:px-4 py-1 md:py-2 rounded text-xs md:text-sm"
 						>Cancel
 					</button>
 					<button
 						type="submit"
 						on:click={createEventRequest}
-						class="bg-button text-white px-4 
+						class="bg-button text-white px-4
 						py-2 rounded hover:bg-primary text-xs md:text-sm"
 						>Save
 					</button>

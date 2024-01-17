@@ -1,160 +1,136 @@
 import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
+import { makeUserAsync, matchPassword, getUserFromFieldAndValueAsync, updateUserFromFieldMatch } from './userFunctions.js';
+import dotenv from 'dotenv';
+dotenv.config({ path: './/.env' });
 
-const supabaseUrl = 'https://nhrrgnjkvzxceshaiwih.supabase.co';
-const supabaseKey =
-	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ocnJnbmprdnp4Y2VzaGFpd2loIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwMDc0MjIxMSwiZXhwIjoyMDE2MzE4MjExfQ.iKmh3-Zlka-WfYDrG0-DcS_WCW6gIEqz5XPIbw4rF9o';
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
+
+/**
+ * Handles the registration of a new user.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The response object with user and token.
+ */
 export async function register(req, res) {
-	const { name, user_name, birth_date, email, password_hash } = req.body;
+  const { name, user_name, birth_date, email, password_hash } = req.body;
+  let password = password_hash;
+  if (!name || !user_name || !birth_date || !email || !password) return res.status(400).send("Bad Request: Missing required fields");
 
-	const newUser = {
-		name,
-		user_name,
-		birth_date,
-		email,
-		password_hash: null,
-		password_salt: null
-	};
+  let user;
+  try {
+    user = await getUserFromFieldAndValueAsync("user_name", user_name);
+    if (user) throw new Error("User already exists.");
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
 
-	try {
-		const password_salt = crypto.randomBytes(16).toString('hex');
-		const passwordBuffer = Buffer.from(password_hash, 'utf8');
-		const saltBuffer = Buffer.from(password_salt, 'hex');
-		const N = 16384; // CPU/memory cost parameter
-		const r = 8; // block size parameter
-		const p = 1; // parallelization parameter
-		const dkLen = 64; // derived key length
-
-		// Use the scrypt implementation from the crypto module
-		const derivedKey = await new Promise((resolve, reject) => {
-			crypto.scrypt(passwordBuffer, saltBuffer, dkLen, (err, derivedKey) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(derivedKey);
-				}
-			});
-		});
-
-		newUser.password_hash = derivedKey.toString('hex');
-		newUser.password_salt = password_salt;
-
-		// Save the new user to the 'users' table in Supabase
-		const { data, error } = await supabase.from('user').upsert([newUser]);
-
-		if (error) {
-			console.error('Error creating user:', error.message);
-			return res.status(500).json({ error: 'Internal Server Error' });
-		}
-
-		const { data: user, error: userError } = await supabase
-			.from('user')
-			.select('*')
-			.eq('user_name', newUser.user_name);
-
-		if (userError) {
-			console.error('Error fetching user:', userError.message);
-			return res.status(500).json({ error: 'Internal Server Error' });
-		}
-
-		// Generate JWT token
-		const token = jwt.sign({ userId: user.id }, 'wompwomp', {
-			expiresIn: '24h'
-		});
-
-		res.status(200).json({ user, token });
-	} catch (error) {
-		console.error('Error creating user:', error.message);
-		res.status(500).json({ error: 'Internal Server Error' });
-	}
+  if (!user) {
+    try {
+      user = await makeUserAsync(name, user_name, birth_date, email, password);
+      if (!user) throw new Error('Error creating user.');
+    } catch (error) {
+      return res.status(500).send("Internal Server Error");
+    }
+  }
+  user = await getUserFromFieldAndValueAsync("user_name", user_name);
+  const token = jwt.sign({ userId: user.id }, 'wompwomp', { expiresIn: '24h' });
+  const verifieedtoken = jwt.verify(token, 'wompwomp');
+  return res.status(200).json({ token });
 }
 
-export async function getUserById(req, res) {
-	// Logic for fetching a user by userId
-	const userId = req.params.id;
+/**
+ * Retrieves a user based on their ID.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The response object with the user.
+ */
+export async function getUserFromId(req, res) {
+  const userId = req.params.id;
 
-	try {
-		// Fetch the user with the matching userId from the 'users' table
-		const { data, error } = await supabase
-			.from('user')
-			.select('*')
-			.eq('id', userId);
+  let user;
+  if (userId) {
+    try {
+      user = await getUserFromFieldAndValueAsync('id', userId);
+      if (!user) throw new Error(`Couldn't find user with id: ${userId}`);
+    } catch (error) {
+      return res.status(404).json({ userId: userId });
+    }
 
-		if (error) {
-			console.error('Error fetching user:', error.message);
-			return res.status(500).json({ error: 'Internal Server Error' });
-		}
-
-		const user = data[0];
-
-		if (!user) {
-			return res.status(404).json({ error: 'User not found' });
-		}
-
-		res.status(200).json(user);
-	} catch (error) {
-		console.error('Error fetching user:', error.message);
-		res.status(500).json({ error: 'Internal Server Error' });
-	}
+    return res.status(200).json(user);
+  }
 }
+
+/**
+ * Handles user login.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The response object with user and token.
+ */
 export async function login(req, res) {
-	// Logic for user login
-	const { email, password } = req.body;
+  const { email, password } = req.body;
 
-	if (!email || !password) {
-		return res.status(400).json({ error: 'Email and password are required' });
-	}
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required." });
+  }
 
-	try {
-		// Fetch the user with the matching email from the 'users' table
-		const { data, error } = await supabase
-			.from('user')
-			.select('*')
-			.eq('email', email);
+  try {
+    let user = await getUserFromFieldAndValueAsync('email', email);
+    if (!user) {
+      return res.status(404).json({ error: "Email or password is not valid." });
+    }
 
-		if (error) {
-			console.error('Error fetching user:', error.message);
-			return res.status(500).json({ error: 'Internal Server Error' });
-		}
+    let passwordMatched =  matchPassword(user.password_hash, password, user.password_salt);
+    if (passwordMatched) {
+      const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: '24h' });
+      return res.status(200).json({ user, token });
+    } else {
+      return res.status(404).json({ error: "Email or password is not valid." });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error." });
+  }
+}
 
-		const user = data[0];
+/**
+ * Adds a sport list to a user.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The response object with the updated sport list.
+ */
+export async function addSportList(req, res) {
+  const { sport_list, email } = req.body;
 
-		if (!user) {
-			return res.status(401).json({ error: 'Invalid credentials' });
-		}
+  if (!sport_list || !email) {
+    return req.status(400).json({ error: "Sport list and email is required." });
+  }
 
-		// Verify the password
-		const passwordBuffer = Buffer.from(password, 'utf8');
-		const saltBuffer = Buffer.from(user.password_salt, 'hex');
-		const dkLen = 64; // derived key length
+  const updateUserError = await updateUserFromFieldMatch('email', email, { sport_list: sport_list });
+  if (updateUserError) {
+    return req.status(500).json({ error: updateUserError.message });
+  }
+  return res.status(201).json({ sport: sport_list });
+}
 
-		const derivedKey = await new Promise((resolve, reject) => {
-			crypto.scrypt(passwordBuffer, saltBuffer, dkLen, (err, key) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(key);
-				}
-			});
-		});
+/**
+ * Checks the JWT and returns the user ID if it is valid.
+ * @param {Object} req - The request object.
+ * @returns {string|null} - The user ID if the JWT is valid, otherwise null.
+ */
+export function getUserIdFromJWT(req, res) {
+  const authToken = req.headers.cookie.split('; ').find(cookie => cookie.startsWith('token='));
 
-		const hashedPassword = derivedKey.toString('hex');
+  if (authToken) {
+    try {
+      const token = authToken.split('=')[1];
+      const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+      return  res.status(200).json({ message: 'Authorized', userId: decodedToken.userId});
+    } catch (error) {
+      // Token verification failed
+      return null;
+    }
+  }
 
-		if (hashedPassword !== user.password_hash) {
-			return res.status(401).json({ error: 'Invalid credentials' });
-		}
-
-		// Password is valid, generate JWT token
-		const token = jwt.sign({ userId: user.id }, 'wompwomp', {
-			expiresIn: '24h'
-		});
-
-		res.status(200).json({ user, token });
-	} catch (error) {
-		console.error('Error fetching user:', error.message);
-		res.status(500).json({ error: 'Internal Server Error' });
-	}
+  return null; 
 }

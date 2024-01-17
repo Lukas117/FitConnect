@@ -12,6 +12,11 @@
 		location.reload();
 	};
 
+	const goToFaq = () => {
+		navigate('/faq');
+		location.reload();
+	};
+
 	let isSidebarOpen = false;
 
 	const toggleSidebar = () => {
@@ -61,9 +66,15 @@
 			</button>
 			<button
 				class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+				on:click={goToFaq}
+			>
+				FAQ
+			</button>
+			<button
+				class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
 				on:click={closeSidebar}
 			>
-				Logout
+				Log out
 			</button>
 		</div>
 
@@ -86,7 +97,7 @@
 	}
 
 	.overlay {
-		transition: opacity 0.5s ease-in-out; 
+		transition: opacity 0.5s ease-in-out;
 		/* Add transition for opacity property */
 	}
 

@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Use the eventRoutes for any requests to /api
+// Use the facilityRoutes for any requests to /api
 app.use('/', facilityRoutes);
 
 // Handle 404 errors
