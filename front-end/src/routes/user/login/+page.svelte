@@ -24,7 +24,7 @@
 				if (data) {
 					const token = data.token;
 					document.cookie = `token=${token}; path=/`;
-					window.location.href = '/map';
+					window.location.href = '/overview';
 				}
 			} else {
 				const errorData = await response.json();
