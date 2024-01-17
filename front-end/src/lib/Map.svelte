@@ -19,6 +19,8 @@
 	import JoinEventModal from './Map/JoinEventModal.svelte';
 	import getPopupContent from './Map/popupContent.js';
 
+	export let userId = 0;
+
 	let map;
 	let showError = false;
 	let showLoading = false;
@@ -29,6 +31,7 @@
 	let intervalId;
 	let eventData;
 	let L;
+
 
 	onMount(async () => {
 		// wait for the library to be imported
@@ -149,14 +152,17 @@
 				// Find the corresponding facility for the current marker
 
 				const facility = facilityData.find(
-					(facility) => facility.facility_id == singleEvent.facility_id
+					(facility) => facility.facility_id == 
+					singleEvent.facility_id
 				);
 
 				if (facility) {
-					const marker = L.marker([facility.latitude, facility.longitude], {
+					const marker = L.marker([facility.latitude, 
+						facility.longitude], {
 						icon: markerIcon
 					})
-						.bindPopup(getPopupContent(singleEvent), getPopupOptions())
+						.bindPopup(getPopupContent(singleEvent), 
+							getPopupOptions())
 						.addTo(map);
 
 					eventMarkersLayer.addLayer(marker);
@@ -176,8 +182,6 @@
 			facilityData = await response.json();
 
 			$facilities = facilityData;
-
-			console.log($facilities);
 		} catch (error) {
 			console.error('Error fetching facilities:', error);
 		}
@@ -192,8 +196,6 @@
 				}
 			});
 			eventData = await response.json();
-
-			console.log('get events');
 
 			if (map) {
 				if (eventMarkersLayer) {
@@ -221,11 +223,9 @@
 	class="relative bg-background"
 	style="height: 93%; width: 100%; z-index: 0;"
 >
-	<JoinEventModal />
-	<HostModal />
 	<div id="mapContainer" class="h-full w-full">
 		{#if showError}
-			<LoadError />
+			<LoadError/>
 		{/if}
 		{#if showLoading}
 			<Loading />
@@ -254,9 +254,9 @@
 			class="absolute bottom-3 left-1/2
 			transform -translate-x-1/2 focus:outline-none
 			outline-none transition-transform transform-gpu
-			hover:scale-110 hover:text-text active:scale-100
+			hover:scale-110 hover:text-primary active:scale-100
 			cta-button bg-primary text-white font-bold px-8
-			py-3 text-lg rounded-full hover:bg-accent transition
+			py-3 text-lg rounded-full hover:bg-white transition
 			duration-300 ease-in-out focus:outline-none
 			focus:ring focus:border-accent shadow-lg"
 			style="z-index: 1000"
@@ -264,4 +264,6 @@
 			Host Match
 		</button>
 	{/if}
+	<JoinEventModal userId={userId}/>
+	<HostModal />
 </div>

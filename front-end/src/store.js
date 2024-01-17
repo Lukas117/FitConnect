@@ -7,6 +7,8 @@ export const showHostModal = writable(false);
 
 export const refreshEvents = writable(false);
 
+export const joinEventId = writable(0);
+
 export const userLocation = writable({
 	latitude: null,
 	longitude: null,
@@ -24,6 +26,7 @@ export const icon = writable({
 
 export const facilities = writable([
 	{
+		facility_name: "",
 		facility_id: null,
 		lat: null,
 		lng: null

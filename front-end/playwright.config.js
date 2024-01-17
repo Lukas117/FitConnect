@@ -6,8 +6,9 @@ const config = {
 	},
 	testDir: 'tests',
 	/* eslint-disable security/detect-unsafe-regex */
-	testMatch: /(.+\.)?(test|spec)\.[jt]s/
+	testMatch: /(.+\.)?(test|spec)\.[jt]s/,
 	/* eslint-enable security/detect-unsafe-regex */
+	outputDir: 'my-test-results',
 };
 
 export default config;

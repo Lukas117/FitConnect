@@ -2,8 +2,12 @@
 	import logo from '$lib/assets/logo.png';
 	import Timepicker from 'svelty-picker';
 	import EditIcon from './EditIcon.svelte';
-	import { showHostModal, facilities, refreshEvents } from '../../store.js';
-	import SucessNotif from './SuccessNotification.svelte';
+	import {
+		showHostModal,
+		facilities,
+		refreshEvents
+	} from '../../store.js';
+	import SuccessNotif from './Notification.svelte';
 
 	let date = new Date().toISOString().slice(0, 10);
 	let eventName = 'Name of Event';
@@ -35,9 +39,6 @@
 	}
 
 	async function createEventRequest() {
-		console.log('Form data:', { eventName, hours, selectedFacilityId, date });
-
-		console.log(selectedTime);
 
 		const newEvent = {
 			eventName: `${eventName}`,
@@ -74,12 +75,15 @@
 </script>
 
 {#if showSuccess}
-	<div
-		class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
-		style="z-index: 1000"
-	>
-		<SucessNotif />
-	</div>
+    <div
+            class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
+            style="z-index: 1000"
+    >
+        <SuccessNotif 
+		message="Event Created Successfully!"
+		success={true}
+		/>
+    </div>
 {/if}
 
 {#if $showHostModal}
@@ -143,6 +147,7 @@
 									mode="time"
 									format="hh:i"
 									bind:value={selectedTime}
+									startDate={date}
 									initialDate={hours}
 									inputClasses="
 									appearance-none bg-transparent 
@@ -174,10 +179,12 @@
 								class="p-2 border bg-titles
 								 rounded text-white text-xs md:text-sm w-32"
 							>
-								{#each $facilities as facility (facility.facility_id)}
+								{#each $facilities as facility 
+									(facility.facility_id)}
 									<option value={facility.facility_id}
-										>facility: {facility.facility_id}
-									</option>
+										>{facility.facility_name}
+										</option
+									>
 								{/each}
 							</select>
 						</div>
@@ -189,8 +196,9 @@
 						<input
 							type="date"
 							required
-							class="w-full px-3 py-2 mb-2
-							md:mb-4 border border-gray-300
+							min={date}
+							class="w-full px-3 py-2 mb-2 
+							md:mb-4 border border-gray-300 
 							rounded-md text-xs md:text-sm"
 							bind:value={date}
 						/>
