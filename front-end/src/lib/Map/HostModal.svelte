@@ -169,7 +169,7 @@
 						<div class="flex items-center">
 							<p
 								class="text-xs text-white
-							md:text-sm mr-2"
+							md:text-sm mr-2 font-medium"
 							>
 								Time:
 							</p>
@@ -199,7 +199,7 @@
 					>
 						<p
 							class="text-xs text-white
-						md:text-sm mr-2"
+						md:text-sm mr-2 font-medium"
 						>
 							Facility:
 						</p>
@@ -209,11 +209,13 @@
 								id="facility"
 								name="facility"
 								class="p-2 border bg-titles
-								 rounded text-white text-xs md:text-sm w-36"
+								 rounded text-white text-xs md:text-sm 
+								 w-36 font-medium"
 							>
 								{#each $facilities as 
 								facility (facility.facility_id)}
-									<option value={facility.facility_id}
+									<option class="font-medium"
+									value={facility.facility_id}
 										>{facility.facility_name}
 									</option>
 								{/each}
@@ -247,14 +249,16 @@
 						type="button"
 						on:click={closeModal}
 						class="text-titles hover:text-gray-700
-						px-2 md:px-4 py-1 md:py-2 rounded text-xs md:text-sm"
+						px-2 md:px-4 py-1 md:py-2 rounded text-xs 
+						md:text-sm font-medium"
 						>Cancel
 					</button>
 					<button
 						type="submit"
 						on:click={createEventRequest}
 						class="bg-button text-white px-4
-						py-2 rounded hover:bg-primary text-xs md:text-sm"
+						py-2 rounded hover:bg-primary 
+						text-xs md:text-sm font-medium"
 						>Save
 					</button>
 				</div>
