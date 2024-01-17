@@ -10,14 +10,10 @@
 	import playerListToNames from './playerAdapter.js';
 	import Notif from './Notification.svelte';
 
+	export let userId = 0;
+
 	let showSuccess = false;
 	let showfail = false;
-	function closeModal() {
-		$showJoinModal = false;
-		$moreInformation = false;
-	}
-	// should be changed to get it from db
-	let user_id = 7;
 
 	let eventData = {};
 	let facilityData = {};
@@ -87,6 +83,11 @@
 		}, 4000);
 	}
 
+	function closeModal() {
+		$showJoinModal = false;
+		$moreInformation = false;
+	}
+
 	async function getEvent() {
 		const response = await 
 		fetch(`http://localhost:3012/events/${$joinEventId}`);
@@ -118,12 +119,12 @@
 	}
 
 	async function joinEventRequest() {
-		if (eventData.player_list.includes(user_id)) {
+		if (eventData.player_list.includes(userId)) {
 			showFailNotification();
 			return;
 		}
 
-		const newPlayerList = [...eventData.player_list, user_id];
+		const newPlayerList = [...eventData.player_list, userId];
 
 		const updatedEvent = {
 			playerList: newPlayerList

@@ -19,6 +19,8 @@
 	import JoinEventModal from './Map/JoinEventModal.svelte';
 	import getPopupContent from './Map/popupContent.js';
 
+	export let userId = 0;
+
 	let map;
 	let showError = false;
 	let showLoading = false;
@@ -29,6 +31,7 @@
 	let intervalId;
 	let eventData;
 	let L;
+
 
 	onMount(async () => {
 		// wait for the library to be imported
@@ -149,14 +152,17 @@
 				// Find the corresponding facility for the current marker
 
 				const facility = facilityData.find(
-					(facility) => facility.facility_id == singleEvent.facility_id
+					(facility) => facility.facility_id == 
+					singleEvent.facility_id
 				);
 
 				if (facility) {
-					const marker = L.marker([facility.latitude, facility.longitude], {
+					const marker = L.marker([facility.latitude, 
+						facility.longitude], {
 						icon: markerIcon
 					})
-						.bindPopup(getPopupContent(singleEvent), getPopupOptions())
+						.bindPopup(getPopupContent(singleEvent), 
+							getPopupOptions())
 						.addTo(map);
 
 					eventMarkersLayer.addLayer(marker);
@@ -219,7 +225,7 @@
 >
 	<div id="mapContainer" class="h-full w-full">
 		{#if showError}
-			<LoadError />
+			<LoadError/>
 		{/if}
 		{#if showLoading}
 			<Loading />
@@ -258,6 +264,6 @@
 			Host Match
 		</button>
 	{/if}
-	<JoinEventModal />
+	<JoinEventModal userId={userId}/>
 	<HostModal />
 </div>
