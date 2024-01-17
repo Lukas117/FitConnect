@@ -8,12 +8,10 @@
 	let chosenSports = [];
 	let sportList = [];
 	let isWarningVisible = false;
-	let userId;
-	let showError = false;
+	let userId = 0;
 	let showLoading = true;
 
 	onMount(async () => {
-		// handlePageStatus(sportList.length === 0);
 		await checkAuth(fetch)
 			.then((result) => {
 				userId = result;
@@ -67,7 +65,8 @@
 					body: JSON.stringify({ idList, userId })
 				});
 				if (response.status === 201) {
-					console.log('success');
+					navigate('/overview');
+					window.location.reload();
 				} else {
 					console.error('Error setting sports. Status:', response.status);
 				}
@@ -109,7 +108,9 @@
 							: 'bg-orange-300'}
                      text-white p-3 rounded mt-4"
 					>
-						<button class="w-full" on:click={() => chooseSport(sport)}>
+						<button class="w-full"
+								on:click={() => chooseSport(sport)}
+						>
 							<div class="pl-2 text-left">
 								{sport.sport_name}
 							</div>

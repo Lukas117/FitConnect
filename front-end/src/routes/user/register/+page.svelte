@@ -52,6 +52,7 @@
 				document.cookie = `token=${token}; path=/`;
 
 				navigate('/user/sport');
+				location.reload()
 			} else {
 				throw new Error('Email or username already exists');
 			}
@@ -70,7 +71,10 @@
 		<h1 class="text-4xl font-bold mb-4">Register</h1>
 	</div>
 
-	<form on:submit|preventDefault={handleRegister} class="max-w-md mx-auto p-10">
+	<form
+			on:submit|preventDefault={handleRegister}
+			class="max-w-md mx-auto p-10"
+	>
 		{#if errorMessage}
 			<p class="text-red-500 mb-4">{errorMessage}</p>
 		{/if}
@@ -136,7 +140,9 @@
 		{/if}
 
 		{#if password_hash.length > 0 && !/\d/.test(password_hash)}
-			<p class="text-red-500 mb-2">Password must contain at least one digit</p>
+			<p class="text-red-500 mb-2">
+				Password must contain at least one digit
+			</p>
 		{/if}
 
 		{#if password_hash.length > 0 && !/[!@#$%^&*]/.test(password_hash)}
