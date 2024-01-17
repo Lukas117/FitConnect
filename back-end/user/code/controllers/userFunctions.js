@@ -120,20 +120,16 @@ export async function getUserFromFieldAndValueAsync(name, valueMatch) {
  * @throws {Error} - If an error occurs during the operation.
  */
 export async function updateUserFromFieldMatch(name, valueMatch, updateValues) {
-  if (!name || !valueMatch || !updateValues) {
+  if (!name || !updateValues || !valueMatch) {
     throw new Error('Missing required fields');
   }
-  console.log('updateValues:', updateValues);
-
   try {
-    const { error } = await supabase.from('user').select(name,valueMatch).upsert(updateValues);
+    const { error } = await supabase.from('user').update(updateValues).eq(name, valueMatch);
 
     if (error) {
-      console.log('error:', error);
       throw new Error('Error occurred during upsert operation');
     }
   } catch (error) {
-    console.log('error:', error);
     throw new Error('Error occurred during user update');
   }
 }

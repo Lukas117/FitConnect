@@ -3,23 +3,23 @@
 	import TitleComponent from '$lib/Title/TitleComponent.svelte';
 	import NavBar from '$lib/NavBar/NavBar.svelte';
 	import { selectedEvent } from '../../store.js';
-	import {checkAuth} from "$lib/auth.js";
-	import {navigate} from "svelte-routing";
+	import { checkAuth } from '$lib/auth.js';
+	import { navigate } from 'svelte-routing';
 
 	let isPaused = false;
 	let userId = 0;
 
 	onMount(() => {
 		checkAuth(fetch)
-				.then(result => {
-					userId = result;
-					console.log('Authentication successful:', result);
-				})
-				.catch(error => {
-					console.error('Authentication error:', error);
-					navigate('/user/login');
-					window.location.reload();
-				});
+			.then((result) => {
+				userId = result;
+				console.log('Authentication successful:', result);
+			})
+			.catch((error) => {
+				console.error('Authentication error:', error);
+				navigate('/user/login');
+				window.location.reload();
+			});
 
 		setInterval(updateCountdown, 1000);
 	});
@@ -82,7 +82,6 @@
 	const togglePause = () => {
 		isPaused = !isPaused;
 	};
-
 </script>
 
 <title>Livescore</title>
