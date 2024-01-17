@@ -197,6 +197,12 @@
 			});
 			eventData = await response.json();
 
+			while (!map) {
+            	await new Promise(resolve => 
+					setTimeout(resolve, 5000)); // Wait for 5000ms
+			}
+
+
 			if (map) {
 				if (eventMarkersLayer) {
 					eventMarkersLayer.clearLayers();
@@ -265,5 +271,5 @@
 		</button>
 	{/if}
 	<JoinEventModal userId={userId}/>
-	<HostModal />
+	<HostModal userId={userId}/>
 </div>

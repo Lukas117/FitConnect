@@ -89,22 +89,25 @@
 	}
 
 	async function getEvent() {
-		const response = await 
-		fetch(`http://localhost:3012/events/${$joinEventId}`);
-    	const newEventData = await response.json();
+		if ($joinEventId !== 0) {
+			const response = await 
+			fetch(`http://localhost:3012/events/${$joinEventId}`);
+			const newEventData = await response.json();
 
-		if (JSON.stringify(newEventData) !== JSON.stringify(lastEventData)) {
-			eventData = newEventData;
-			lastEventData = newEventData;
+			if (JSON.stringify(newEventData) !== 
+			JSON.stringify(lastEventData)) {
+				eventData = newEventData;
+				lastEventData = newEventData;
 
-			facilityData = $facilities.find(
-				(facility) => facility.facility_id === eventData.facility_id
-			);
+				facilityData = $facilities.find(
+					(facility) => facility.facility_id === eventData.facility_id
+				);
 
-			formatedStartTime = formatDate(eventData.start_date);
-			playerListToNames(eventData.player_list).then((result) => {
-				players = result;
-			});
+				formatedStartTime = formatDate(eventData.start_date);
+				playerListToNames(eventData.player_list).then((result) => {
+					players = result;
+				});
+			}
 		}
 	}
 
