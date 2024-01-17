@@ -68,14 +68,14 @@
 
 <TitleComponent title="SIGN UP" enableSideBar={false} />
 
-<body
-	class="flex flex-col items-center pt-20 min-h-screen
-  bg-gradient-to-b from-gray-100 to-gray-300"
+<body class="flex flex-col
+min-h-screen bg-gradient-to-b
+from-gray-100 to-gray-300"
 >
 
 	<form
 			on:submit|preventDefault={handleRegister}
-			class="max-w-md mx-auto p-10"
+			class="flex-grow pt-28 p-10 flex flex-col"
 	>
 		{#if errorMessage}
 			<p class="text-red-500 mb-4">{errorMessage}</p>
@@ -153,14 +153,18 @@
 			</p>
 		{/if}
 
-		<div class="flex justify-center mt-48">
+		<div class="flex-grow"></div>
+
+		<div class="flex flex-col justify-end items-center mt-auto">
 			<button
 				type="submit"
-				class="cta-button text-2xl bg-primary text-white px-12 py-2
-        rounded-md mt-4"
+				class="text-2xl bg-primary text-white
+				px-10 py-2 rounded-md"
 			>
-				Create an account
+				Create account
 			</button>
 		</div>
 	</form>
 </body>
+
+
