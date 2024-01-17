@@ -1,5 +1,6 @@
 <script>
 	import { navigate } from 'svelte-routing';
+	import TitleComponent from "$lib/Title/TitleComponent.svelte";
 
 	let firstName = '';
 	let lastName = '';
@@ -57,6 +58,7 @@
 				document.cookie = `token=${token}; path=/`;
 
 				navigate('/user/sport');
+				location.reload()
 			} else {
 				throw new Error('Email or username already exists');
 			}
@@ -67,21 +69,24 @@
 	};
 </script>
 
-<main
-	class="flex flex-col items-center justify-center min-h-screen
-  bg-gradient-to-b from-gray-100 to-gray-300"
->
-	<div class="fixed top-2 w-full bg-white p-4 text-center">
-		<h1 class="text-4xl font-bold mb-4">Register</h1>
-	</div>
+<title>Signup</title>
 
-	<form on:submit|preventDefault={handleRegister} 
-	class="max-w-md mx-auto p-10">
+<TitleComponent title="SIGN UP" enableSideBar={false} />
+
+<body class="flex flex-col
+min-h-screen bg-gradient-to-b
+from-gray-100 to-gray-300"
+>
+
+	<form
+			on:submit|preventDefault={handleRegister}
+			class="flex-grow pt-28 p-10 flex flex-col"
+	>
 		{#if errorMessage}
 			<p class="text-red-500 mb-4">{errorMessage}</p>
 		{/if}
 
-		<label for="firstName" class=" mb-2">First Name:</label>
+		<label for="firstName" class="mb-2">First Name:</label>
 		<input
 			type="text"
 			id="firstName"
@@ -90,7 +95,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="lastName" class=" mb-2">Last Name:</label>
+		<label for="lastName" class="mb-2">Last Name:</label>
 		<input
 			type="text"
 			id="lastName"
@@ -99,7 +104,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="user_name" class=" mb-2">Username:</label>
+		<label for="user_name" class="mb-2">Username:</label>
 		<input
 			type="text"
 			id="user_name"
@@ -108,7 +113,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="Birthday" class=" mb-2">Birthday:</label>
+		<label for="Birthday" class="mb-2">Birthday:</label>
 		<input
 			type="date"
 			id="birth_date"
@@ -119,7 +124,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="email" class=" mb-2">Email:</label>
+		<label for="email" class="mb-2">Email:</label>
 		<input
 			type="email"
 			id="email"
@@ -128,7 +133,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="password" class=" mb-2">Password:</label>
+		<label for="password" class="mb-2">Password:</label>
 		<input
 			type="password_hash"
 			id="password_hash"
@@ -145,7 +150,8 @@
 
 		{#if password_hash.length > 0 && !/\d/.test(password_hash)}
 			<p class="text-red-500 mb-2">
-				Password must contain at least one digit</p>
+				Password must contain at least one digit
+			</p>
 		{/if}
 
 		{#if password_hash.length > 0 && !/[!@#$%^&*]/.test(password_hash)}
@@ -153,15 +159,19 @@
 				Password must contain at least one special character (!@#$%^&*)
 			</p>
 		{/if}
-		<div class="flex justify-center">
+
+		<div class="flex-grow"></div>
+
+		<div class="flex flex-col justify-end items-center mt-auto">
 			<button
 				type="submit"
-				class="cta-button text-2xl bg-primary text-white px-12 py-2
-        rounded-md transition duration-300 ease-in-out hover:bg-blue-700
-        focus:outline-none focus:ring focus:border-blue-300 mt-4"
+				class="text-2xl bg-primary text-white
+				px-10 py-2 rounded-md"
 			>
-				Register
+				Create account
 			</button>
 		</div>
 	</form>
-</main>
+</body>
+
+

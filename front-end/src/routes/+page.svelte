@@ -23,7 +23,7 @@
 
 <TitleComponent title="FITCONNECT" enableSideBar={false} />
 
-<body
+<div
 	class="flex flex-col items-center min-h-screen
     bg-gradient-to-b from-gray-100 to-gray-300"
 >
@@ -72,4 +72,4 @@
 			</button>
 		</section>
 	</div>
-</body>
+</div>

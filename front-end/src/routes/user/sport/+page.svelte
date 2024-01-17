@@ -1,17 +1,18 @@
 <script>
-	import { navigate } from 'svelte-routing';
-	import SideBar from '$lib/SideBar.svelte';
-	import logotenis from '$lib/assets/logotenis.png';
-	import logobaseball from '$lib/assets/logobaseball.png';
-	import logofootball from '$lib/assets/logofootball.png';
-	import logo from '$lib/assets/logo.png';
-	import { onMount } from 'svelte';
 	import { checkAuth } from '$lib/auth.js';
+	import TitleComponent from '$lib/Title/TitleComponent.svelte';
+	import { onMount } from 'svelte';
+	import { navigate } from 'svelte-routing';
+	import Loading from '$lib/Loading.svelte';
 
-	let userId;
-	console.log(userId);
-	onMount(() => {
-		checkAuth(fetch)
+	let chosenSports = [];
+	let sportList = [];
+	let isWarningVisible = false;
+	let userId = 0;
+	let showLoading = true;
+
+	onMount(async () => {
+		await checkAuth(fetch)
 			.then((result) => {
 				userId = result;
 				console.log('Authentication successful:', result);
@@ -21,118 +22,118 @@
 				navigate('/user/login');
 				window.location.reload();
 			});
+
+		await getSports();
 	});
 
-	const addSport = async () => {
-		const url = 'http://localhost:3010/addSports';
-		const email = localStorage.getItem('email');
-		const data = { email, selectedSports };
-
+	async function getSports() {
 		try {
-			const response = await fetch(url, {
-				method: 'POST',
+			const response = await fetch('http://localhost:3014/sports', {
+				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(data)
+				}
 			});
 
-			const result = await response.json();
-			console.log('Response:', result);
+			sportList = await response.json();
 		} catch (error) {
-			console.error('Error:', error);
+			console.error('Error fetching sports:', error);
 		}
-	};
+		handlePageStatus({ loaded: true });
+	}
 
-	let selectedSports = [];
-
-	const toggleSport = (sport) => {
-		if (selectedSports.includes(sport)) {
-			selectedSports = selectedSports.filter((item) => item !== sport);
+	function chooseSport(sport) {
+		if (!chosenSports.includes(sport)) {
+			chosenSports = [...chosenSports, sport];
 		} else {
-			selectedSports = [...selectedSports, sport];
+			chosenSports = chosenSports.filter((s) => s !== sport);
 		}
-	};
+	}
 
-	const confirmSelection = () => {
-		console.log(selectedSports);
-		addSport();
-	};
+	async function setSportToUser() {
+		if (chosenSports.length === 0) {
+			isWarningVisible = true;
+		} else {
+			try {
+				const idList = chosenSports.map((item) => item.sport_id);
+				const response = await fetch('http://localhost:3010/addSports', {
+					method: 'POST',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ idList, userId })
+				});
+				if (response.status === 201) {
+					navigate('/overview');
+					window.location.reload();
+				} else {
+					console.error('Error setting sports. Status:', response.status);
+				}
+			} catch (error) {
+				console.error('Error setting sports:', error);
+			}
+			isWarningVisible = false;
+		}
+	}
+
+	function handlePageStatus(status) {
+		if (status.loaded === true) {
+			// successfully loaded
+			showLoading = false;
+		}
+		if (status.loaded === false) {
+			// still loading
+			showLoading = true;
+		}
+	}
 </script>
 
-<SideBar />
+<title>Choose sports</title>
 
-<div
-	class="flex flex-col items-center justify-center
-   min-h-screen bg-gradient-to-b from-gray-100 to-gray-300"
->
-	<div class="fixed top-2 w-full bg-white p-4 text-center">
-		<h1 class="text-4xl font-bold">Choose a Sport</h1>
-		<!-- Reduce the margin here -->
-	</div>
+<TitleComponent title="CHOOSE SPORTS" enableSideBar={false} />
 
-	<button
-		on:click={toggleSport.bind(null, 'Basketball')}
-		class="sport-button flex items-center bg-orange-300 text-white
-    text-3xl w-60 h-16 rounded-md m-2 transition duration-400
-    ease-in-out hover:bg-accent"
-	>
-		{#if logo}
-			<img src={logo} alt="Logo" class="w-10 h-10 mr-4 ml-4" />
-			<!-- Logo inside the button -->
-		{/if}
-		Basketball
-	</button>
+<body class="flex flex-col flex-grow">
+	{#if showLoading}
+		<Loading />
+	{:else}
+		<div class="m-5 pt-24 text-2xl pb-20">
+			{#if sportList.length === 0}
+				<h1 class="text-center font-bold mt-4">No sports available</h1>
+			{:else}
+				{#each sportList as sport (sport.sport_id)}
+					<div
+						class="{chosenSports.includes(sport)
+							? 'bg-red-700'
+							: 'bg-orange-300'}
+                     text-white p-3 rounded mt-4"
+					>
+						<button class="w-full"
+								on:click={() => chooseSport(sport)}
+						>
+							<div class="pl-2 text-left">
+								{sport.sport_name}
+							</div>
+						</button>
+					</div>
+				{/each}
+			{/if}
+		</div>
 
-	<!-- Repeat the pattern for other buttons -->
-	<button
-		on:click={toggleSport.bind(null, 'Footbal')}
-		class="sport-button flex items-center bg-orange-300 text-white
-    text-3xl w-60 h-16 rounded-md m-2 transition duration-400
-    ease-in-out hover:bg-accent"
-	>
-		{#if logofootball}
-			<img src={logofootball} alt="Logo" class="w-10 h-10 mr-4 ml-4" />
-			<!-- Logo inside the button -->
-		{/if}
-		Football
-	</button>
-	<button
-		on:click={toggleSport.bind(null, 'Tennis')}
-		class="sport-button flex items-center bg-orange-300 text-white
-    text-3xl w-60 h-16 rounded-md m-2 transition duration-400
-    ease-in-out hover:bg-accent"
-	>
-		{#if logotenis}
-			<img src={logotenis} alt="Logo" class="w-10 h-10 mr-4 ml-4" />
-			<!-- Logo inside the button -->
-		{/if}
-		Tennis
-	</button>
-	<button
-		on:click={toggleSport.bind(null, 'Baseball')}
-		class="sport-button flex items-center bg-orange-300 text-white
-    text-3xl w-60 h-16 rounded-md m-2 transition duration-400
-    ease-in-out hover:bg-accent"
-	>
-		{#if logobaseball}
-			<img src={logobaseball} alt="Logo" class="w-10 h-10 mr-4 ml-4" />
-			<!-- Logo inside the button -->
-		{/if}
-		Baseball
-	</button>
+		<div class="flex flex-col items-center mt-auto mb-7">
+			{#if isWarningVisible}
+				<p class="text-red-500 mb-4 text-xl font-bold">
+					Please select at least one sport
+				</p>
+			{/if}
 
-	<div class="flex justify-center">
-		<a href="/map/">
 			<button
-				on:click={confirmSelection}
-				class="cta-button text-2xl 
-				bg-primary text-white px-12 py-2 mt-40
-        rounded-md transition duration-300 ease-in-out hover:bg-blue-700
-        focus:outline-none focus:ring focus:border-blue-300 mb-4"
+				on:click={setSportToUser}
+				class="text-2xl bg-primary
+                    text-white px-8 py-2 rounded-md mb-4"
 			>
-				Confirm
+				START EXERCISING
 			</button>
-		</a>
-	</div>
-</div>
+		</div>
+	{/if}
+</body>
