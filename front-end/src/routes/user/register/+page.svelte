@@ -1,5 +1,6 @@
 <script>
 	import { navigate } from 'svelte-routing';
+	import TitleComponent from "$lib/Title/TitleComponent.svelte";
 
 	let firstName = '';
 	let lastName = '';
@@ -63,13 +64,14 @@
 	};
 </script>
 
-<main
-	class="flex flex-col items-center justify-center min-h-screen
+<title>Signup</title>
+
+<TitleComponent title="SIGN UP" enableSideBar={false} />
+
+<body
+	class="flex flex-col items-center pt-20 min-h-screen
   bg-gradient-to-b from-gray-100 to-gray-300"
 >
-	<div class="fixed top-2 w-full bg-white p-4 text-center">
-		<h1 class="text-4xl font-bold mb-4">Register</h1>
-	</div>
 
 	<form
 			on:submit|preventDefault={handleRegister}
@@ -79,7 +81,7 @@
 			<p class="text-red-500 mb-4">{errorMessage}</p>
 		{/if}
 
-		<label for="firstName" class=" mb-2">First Name:</label>
+		<label for="firstName" class="mb-2">First Name:</label>
 		<input
 			type="text"
 			id="firstName"
@@ -88,7 +90,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="lastName" class=" mb-2">Last Name:</label>
+		<label for="lastName" class="mb-2">Last Name:</label>
 		<input
 			type="text"
 			id="lastName"
@@ -97,7 +99,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="user_name" class=" mb-2">Username:</label>
+		<label for="user_name" class="mb-2">Username:</label>
 		<input
 			type="text"
 			id="user_name"
@@ -106,7 +108,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="Birthday" class=" mb-2">Birthday:</label>
+		<label for="Birthday" class="mb-2">Birthday:</label>
 		<input
 			type="date"
 			id="birth_date"
@@ -115,7 +117,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="email" class=" mb-2">Email:</label>
+		<label for="email" class="mb-2">Email:</label>
 		<input
 			type="email"
 			id="email"
@@ -124,7 +126,7 @@
 			class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
 		/>
 
-		<label for="password" class=" mb-2">Password:</label>
+		<label for="password" class="mb-2">Password:</label>
 		<input
 			type="password_hash"
 			id="password_hash"
@@ -150,15 +152,15 @@
 				Password must contain at least one special character (!@#$%^&*)
 			</p>
 		{/if}
-		<div class="flex justify-center">
+
+		<div class="flex justify-center mt-48">
 			<button
 				type="submit"
 				class="cta-button text-2xl bg-primary text-white px-12 py-2
-        rounded-md transition duration-300 ease-in-out hover:bg-blue-700
-        focus:outline-none focus:ring focus:border-blue-300 mt-4"
+        rounded-md mt-4"
 			>
-				Register
+				Create an account
 			</button>
 		</div>
 	</form>
-</main>
+</body>

@@ -1,6 +1,7 @@
 <script>
 	// import { navigate } from 'svelte-routing';
 	import iconforlogin from '$lib/assets/iconforlogin.png';
+	import TitleComponent from "$lib/Title/TitleComponent.svelte";
 
 	let email = '';
 	let password = '';
@@ -35,14 +36,14 @@
 	}
 </script>
 
+<title>Login</title>
+
+<TitleComponent title="LOGIN" enableSideBar={false} />
+
 <div
 	class="flex flex-col items-center justify-center min-h-screen
   bg-gradient-to-b from-gray-100 to-gray-300"
 >
-	<div class="fixed top-2 w-full bg-white p-4 text-center">
-		<h1 class="text-4xl font-bold mb-4">Login</h1>
-	</div>
-
 	<section>
 		<img alt="The user" src={iconforlogin} class="w-40 h-40 mb-4" />
 	</section>
@@ -87,10 +88,10 @@
 		<div class="flex flex-col items-center w-full mt-12">
 			<button
 				type="submit"
-				class="cta-button text-2xl bg-primary text-white px-12 py-2
+				class="text-2xl bg-primary text-white px-10 py-2
          rounded-md mb-4"
 			>
-				Login
+				Log in
 			</button>
 			<button type="submit" class="p">
 				<a href="/user/register"> Create an account </a>
