@@ -8,7 +8,6 @@
 
 	let isPaused = false;
 	let userId = 0;
-  let isPaused = false;
 	let goalMessage = '';
 
 	onMount(() => {
