@@ -28,7 +28,7 @@
 		if (!endDate) {
 			return {
 				minutes: 0,
-				seconds: 0
+				seconds: 10
 			};
 		}
 

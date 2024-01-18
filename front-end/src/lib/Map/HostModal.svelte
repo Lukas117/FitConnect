@@ -11,6 +11,7 @@
 	let showSuccess = false;
 	let timeError = false;
 	let showFail = false;
+	let duration;
 
 	const currentDate = new Date();
 	const hours = String(currentDate.getHours()).padStart(2, '0');
@@ -60,6 +61,22 @@
 			return;
 		}
 
+		// Parse the selected time and duration into Date objects
+		selectedTime = new Date(`1970-01-01T${selectedTime}:00Z`);
+		duration = new Date(`1970-01-01T${duration}:00Z`);
+
+		// Add the duration to the selected time
+		selectedTime.setMinutes(selectedTime.getMinutes() + duration.getMinutes());
+
+		// Format the new time back into a string
+		let hours = selectedTime.getUTCHours().toString().padStart(2, '0');
+		let minutes = selectedTime.getUTCMinutes().toString().padStart(2, '0');
+		let newTime = `${hours}:${minutes}`;
+
+		console.log(newTime);
+		return;
+
+
 		const newEvent = {
 			eventName: `${eventName}`,
 			startDate: `${date}T${selectedTime}:00Z`,
@@ -67,8 +84,12 @@
 			maximumPlayers: 10,
 			hostId: userId,
 			playerList: [userId],
+			endDate: formattedEndDate,	
 			facilityId: selectedFacilityId
 		};
+
+		console.log(newEvent);
+		return;
 
 		try {
 			const response = await fetch('http://localhost:3012/events', {
@@ -237,6 +258,36 @@
 						/>
 					</div>
 				</div>
+
+				<div class="flex flex-col items-center mb-2 md:mb-4">
+					<div
+						class="flex items-center
+					bg-titles rounded-md p-2 w-4/5"
+					>
+						<p
+							class="text-xs text-white
+						md:text-sm mr-2 font-medium"
+						>
+							Duration (min):
+						</p>
+						<div class="relative">
+							<div class="flex">
+								<select 
+								bind:value={duration}
+								name="duration" 
+								class="p-2 border bg-titles
+								rounded text-white text-xs md:text-sm 
+								w-18 font-medium">
+								  <option value="00:05">5 : 00</option>
+								  <option value="00:10">10 : 00 </option>
+								  <option value="00:15">15 : 00</option>
+								  <option value="00:20">20 : 00</option>
+								</select>
+							  </div>
+						</div>
+					</div>
+				</div>
+
 				{#if timeError}
 								<p class="flex flex-col 
 								items-center text-red-500 text-xs font-medium">
