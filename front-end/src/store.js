@@ -50,5 +50,6 @@ export const event = writable({
 export const selectedEvent = writable({
 	start_date: '',
 	end_date: '',
-	host_id: 0
+	host_id: 0,
+	alreadyStarted: false
 });
