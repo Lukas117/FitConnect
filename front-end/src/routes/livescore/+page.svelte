@@ -21,23 +21,25 @@
 				navigate('/user/login');
 				window.location.reload();
 			});
-    
-    const ws = new WebSocket("ws://192.168.199.214:3000");
+		setInterval(updateCountdown, 1000);
+
+
+		const ws = new WebSocket("ws://192.168.199.214:3000");
   
 	  ws.onopen = () => {
-		console.log("WebSocket connection established.");
+			console.log("WebSocket connection established.");
 	  };
   
 	  ws.onmessage = (event) => {
-		const data = event.data.split(',');
-		const isGoal = data[0] === 'True';
+			const data = event.data.split(',');
+			const isGoal = data[0] === 'True';
   
-		if (isGoal) {
+			if (isGoal) {
 		  handleClick1(); // Increase number1 by 2 when a goal is received
-		}
+			}
   
-		const lightValue = data[1];
-		const highestLightValue = data[2];
+			const lightValue = data[1];
+			const highestLightValue = data[2];
   
 		// Update UI based on WebSocket data
 		// (you can modify this part based on your actual requirements)
@@ -45,17 +47,17 @@
 	  };
   
 	  ws.onclose = (event) => {
-		console.log("WebSocket connection closed:", event);
+			console.log("WebSocket connection closed:", event);
 	  };
   
 	  // Periodically update the countdown
 	  const countdownInterval = setInterval(updateCountdown, 1000);
   
 	  return () => {
-		clearInterval(countdownInterval);
-		ws.close();
+			clearInterval(countdownInterval);
+			ws.close();
 
-		setInterval(updateCountdown, 1000);
+	  }
 	});
 
 	const resetGoalMessage = () => {
@@ -64,10 +66,10 @@
   
 	function calculateDuration(currentDate, endDate) {
 	  if (!endDate) {
-		return {
+			return {
 		  minutes: 0,
 		  seconds: 0
-		};
+			};
 	  }
   
 	  const endTimestamp = endDate.getTime();
@@ -78,8 +80,8 @@
 	  const minutes = Math.floor(seconds / 60);
   
 	  return {
-		seconds: seconds % 60,
-		minutes: minutes
+			seconds: seconds % 60,
+			minutes: minutes
 	  };
 	}
   
@@ -90,16 +92,16 @@
   
 	const updateCountdown = () => {
 	  if (!isPaused) {
-		if (duration.minutes >= 0) {
+			if (duration.minutes >= 0) {
 		  if (duration.minutes !== 0 || duration.seconds !== 0) {
-			duration.seconds -= 1;
+					duration.seconds -= 1;
 		  }
-		}
+			}
   
-		if (duration.seconds < 0) {
+			if (duration.seconds < 0) {
 		  duration.minutes -= 1;
 		  duration.seconds = 59;
-		}
+			}
 	  }
 	};
   
