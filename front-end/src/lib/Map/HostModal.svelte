@@ -3,17 +3,25 @@
 	import Timepicker from 'svelty-picker';
 	import EditIcon from './EditIcon.svelte';
 	import { showHostModal, facilities, refreshEvents } from '../../store.js';
-	import SucessNotif from './SuccessNotification.svelte';
+	import SuccessNotif from './Notification.svelte';
 
 	let date = new Date().toISOString().slice(0, 10);
 	let eventName = 'Name of Event';
 	let selectedFacilityId;
 	let showSuccess = false;
+	let timeError = false;
+	let showFail = false;
 
-	let hours = new Date();
+	const currentDate = new Date();
+	const hours = String(currentDate.getHours()).padStart(2, '0');
+	const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    let minTime = `${hours}:${minutes}`;
 	let selectedTime;
+	
 
 	let eventNameInput;
+
+	export let userId = 0;
 
 	function focusEventNameInput(event) {
 		event.preventDefault();
@@ -23,6 +31,9 @@
 	// Close the modal
 	function closeModal() {
 		$showHostModal = false;
+		selectedTime = null;
+		eventName = 'Name of Event';
+		date = new Date().toISOString().slice(0, 10);
 	}
 
 	function showSuccessNotification() {
@@ -34,18 +45,28 @@
 		}, 2000);
 	}
 
-	async function createEventRequest() {
-		console.log('Form data:', { eventName, hours, selectedFacilityId, date });
+	function showFailNotification() {
+		showFail = true;
+		$refreshEvents = true;
+		setTimeout(() => {
+			$refreshEvents = false;
+			showFail = false;
+		}, 2000);
+	}
 
-		console.log(selectedTime);
+	async function createEventRequest() {
+		if(timeError) {
+			showFailNotification();
+			return;
+		}
 
 		const newEvent = {
 			eventName: `${eventName}`,
 			startDate: `${date}T${selectedTime}:00Z`,
-			eventState: 1,
+			eventState: 0,
 			maximumPlayers: 10,
-			hostId: 1,
-			playerList: [1],
+			hostId: userId,
+			playerList: [userId],
 			facilityId: selectedFacilityId
 		};
 
@@ -71,6 +92,10 @@
 			console.error('Error creating event:', error);
 		}
 	}
+
+	$: {
+		timeError = selectedTime < minTime;
+	}
 </script>
 
 {#if showSuccess}
@@ -78,7 +103,17 @@
 		class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
 		style="z-index: 1000"
 	>
-		<SucessNotif />
+		<SuccessNotif message="Event Created Successfully!" success={true} />
+	</div>
+{/if}
+
+{#if showFail}
+	<div
+		class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
+		style="z-index: 1000"
+	>
+		<SuccessNotif message="The selected time is 
+		before the current time." success={false} />
 	</div>
 {/if}
 
@@ -111,7 +146,7 @@
 					</button>
 				</div>
 
-				<div class="flex flex-col items-center mb-2 md:mb-4">
+				<!-- <div class="flex flex-col items-center mb-2 md:mb-4">
 					<button
 						class="bg-titles
 						text-white rounded-full
@@ -122,7 +157,7 @@
 					>
 						Invite friends
 					</button>
-				</div>
+				</div> -->
 
 				<!-- TIME PICKER -->
 
@@ -134,16 +169,17 @@
 						<div class="flex items-center">
 							<p
 								class="text-xs text-white
-							md:text-sm mr-2"
+							md:text-sm mr-2 font-medium"
 							>
 								Time:
 							</p>
-							<div class="relative ml-5">
+							<div class="relative ml-3">
 								<Timepicker
 									mode="time"
 									format="hh:i"
 									bind:value={selectedTime}
-									initialDate={hours}
+									startDate={date}
+									initialDate={currentDate}
 									inputClasses="
 									appearance-none bg-transparent 
 									border-none w-16 
@@ -151,6 +187,7 @@
 									leading-tight focus:outline-none"
 								/>
 							</div>
+
 						</div>
 					</div>
 				</div>
@@ -162,7 +199,7 @@
 					>
 						<p
 							class="text-xs text-white
-						md:text-sm mr-2"
+						md:text-sm mr-2 font-medium"
 						>
 							Facility:
 						</p>
@@ -172,11 +209,14 @@
 								id="facility"
 								name="facility"
 								class="p-2 border bg-titles
-								 rounded text-white text-xs md:text-sm w-32"
+								 rounded text-white text-xs md:text-sm 
+								 w-36 font-medium"
 							>
-								{#each $facilities as facility (facility.facility_id)}
-									<option value={facility.facility_id}
-										>facility: {facility.facility_id}
+								{#each $facilities as 
+								facility (facility.facility_id)}
+									<option class="font-medium"
+									value={facility.facility_id}
+										>{facility.facility_name}
 									</option>
 								{/each}
 							</select>
@@ -189,6 +229,7 @@
 						<input
 							type="date"
 							required
+							min={date}
 							class="w-full px-3 py-2 mb-2
 							md:mb-4 border border-gray-300
 							rounded-md text-xs md:text-sm"
@@ -196,20 +237,28 @@
 						/>
 					</div>
 				</div>
+				{#if timeError}
+								<p class="flex flex-col 
+								items-center text-red-500 text-xs font-medium">
+									Invalid time. Please select a future time.
+								</p>
+							{/if}
 
 				<div class="flex justify-between items-center mb-2 md:mb-4">
 					<button
 						type="button"
 						on:click={closeModal}
 						class="text-titles hover:text-gray-700
-						px-2 md:px-4 py-1 md:py-2 rounded text-xs md:text-sm"
+						px-2 md:px-4 py-1 md:py-2 rounded text-xs 
+						md:text-sm font-medium"
 						>Cancel
 					</button>
 					<button
 						type="submit"
 						on:click={createEventRequest}
 						class="bg-button text-white px-4
-						py-2 rounded hover:bg-primary text-xs md:text-sm"
+						py-2 rounded hover:bg-primary 
+						text-xs md:text-sm font-medium"
 						>Save
 					</button>
 				</div>
