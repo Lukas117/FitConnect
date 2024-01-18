@@ -70,7 +70,8 @@
 								<div class="flex flex-col">
 									{#each minutes as minute (minute)}
 										<button
-											on:click={() => selectMinute(minute)}
+											on:click={() => 
+												selectMinute(minute)}
 											class="text-xs md:text-sm"
 										>
 											{minute}

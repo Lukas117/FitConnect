@@ -9,7 +9,8 @@
 	<title>plus-circle</title>
 	<desc>Created with Sketch Beta.</desc>
 	<defs />
-	<g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+	<g id="Page-1" stroke="none" 
+	stroke-width="1" fill="none" fill-rule="evenodd">
 		<g
 			id="Icon-Set-Filled"
 			transform="translate(-466.000000, -1089.000000)"
