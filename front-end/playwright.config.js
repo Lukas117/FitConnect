@@ -5,7 +5,10 @@ const config = {
 		port: 4173
 	},
 	testDir: 'tests',
-	testMatch: /(.+\.)?(test|spec)\.[jt]s/
+	/* eslint-disable security/detect-unsafe-regex */
+	testMatch: /(.+\.)?(test|spec)\.[jt]s/,
+	/* eslint-enable security/detect-unsafe-regex */
+	outputDir: 'my-test-results'
 };
 
 export default config;

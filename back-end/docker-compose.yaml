@@ -1,0 +1,70 @@
+version: '3.8'
+services:
+  users:
+    container_name: users
+    build: ./user
+    volumes:
+      - ./user/code:/usr/src/app
+    networks:
+      - users
+    ports:
+      - '3010:3010'
+    working_dir: /usr/src/app
+    command: bash -c "npm install  && npm run dev"
+  gateway:
+    container_name: apigateway
+    build: ./apigateway
+    volumes:
+      - ./apigateway/code:/usr/src/app
+    networks:
+      - users
+    ports:
+      - '3011:3011'
+    working_dir: /usr/src/app
+    command: bash -c "npm install && npm run dev"
+  events:
+    container_name: events
+    build: ./event
+    volumes:
+      - ./event/code:/usr/src/app
+    networks:
+      - events
+    ports:
+      - '3012:3012'
+    working_dir: /usr/src/app
+    command: bash -c "npm install && npm run dev"
+  facilities:
+    container_name: facilities
+    build: ./facility
+    volumes:
+      - ./facility/code:/usr/src/app
+    networks:
+      - facilities
+    ports:
+      - '3013:3013'
+    working_dir: /usr/src/app
+    command: bash -c "npm install && npm run dev"
+  sports:
+    container_name: sports
+    build: ./sport
+    volumes:
+      - ./sport/code:/usr/src/app
+    networks:
+      - sports
+    ports:
+      - '3014:3014'
+    working_dir: /usr/src/app
+    command: bash -c "npm install && npm run dev"
+
+networks:
+  users:
+    driver: bridge
+
+  events:
+    driver: bridge
+
+  facilities:
+    driver: bridge
+
+  sports:
+    driver: bridge

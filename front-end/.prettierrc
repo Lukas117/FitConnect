@@ -3,7 +3,9 @@
 	"singleQuote": true,
 	"trailingComma": "none",
 	"printWidth": 80,
-	"plugins": ["prettier-plugin-svelte"],
-	"pluginSearchDirs": ["."],
-	"tabWidth": 2
+	"svelteSortOrder": "options-scripts-markup-styles",
+	"svelteStrictMode": false,
+	"svelteBracketNewLine": true,
+	"svelteAllowShorthand": true,
+	"plugins": ["prettier-plugin-svelte"]
 }
