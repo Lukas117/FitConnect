@@ -1,7 +1,7 @@
 <script>
 	// import { navigate } from 'svelte-routing';
 	import iconforlogin from '$lib/assets/iconforlogin.png';
-	import TitleComponent from "$lib/Title/TitleComponent.svelte";
+	import TitleComponent from '$lib/Title/TitleComponent.svelte';
 
 	let email = '';
 	let password = '';
@@ -67,9 +67,7 @@
 			<!--{#if errorMessage}-->
 			<!--	<p class="text-red-500 mb-4">{errorMessage}</p>-->
 			<!--{/if}-->
-			<label for="password" class="block text-gray-700 mb-1">
-				Password:
-			</label>
+			<label for="password" class="block text-gray-700 mb-1"> Password: </label>
 			<input
 				type="password"
 				id="password"
@@ -80,9 +78,7 @@
 		</div>
 
 		<div class="text-right mb-2">
-			<a href="/forgot-password" class="text-blue-500">
-				Forgot password?
-			</a>
+			<a href="/forgot-password" class="text-blue-500"> Forgot password? </a>
 		</div>
 
 		<div class="flex flex-col items-center w-full mt-12">

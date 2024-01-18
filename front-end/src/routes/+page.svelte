@@ -38,14 +38,12 @@
 	</section>
 
 	<section>
-		<img alt="The sports" 
-		src={LandingPageImage} class="w-50 h-60 mb-5 mt-14" />
+		<img alt="The sports" src={LandingPageImage} class="w-50 h-60 mb-5 mt-14" />
 	</section>
 
 	<section class="max-w-2xl p-5 text-center">
 		<p class="text-2xl">
-			Discover the incredible features 
-			of our platform such as locating sport
+			Discover the incredible features of our platform such as locating sport
 			events in your area. The more you engage, the more enjoyable your
 			experience will be.
 		</p>
