@@ -62,19 +62,17 @@
 		}
 
 		// Parse the selected time and duration into Date objects
-		selectedTime = new Date(`1970-01-01T${selectedTime}:00Z`);
-		duration = new Date(`1970-01-01T${duration}:00Z`);
+		let selectedTimeEnd = new Date(`1970-01-01T${selectedTime}:00Z`);
+		let durationEnd = new Date(`1970-01-01T${duration}:00Z`);
 
-		// Add the duration to the selected time
-		selectedTime.setMinutes(selectedTime.getMinutes() + duration.getMinutes());
+		// Add the durationEnd to the selected time
+		selectedTimeEnd.setMinutes(selectedTimeEnd.getMinutes() + 
+		durationEnd.getMinutes());
 
 		// Format the new time back into a string
-		let hours = selectedTime.getUTCHours().toString().padStart(2, '0');
-		let minutes = selectedTime.getUTCMinutes().toString().padStart(2, '0');
+		let hours = selectedTimeEnd.getUTCHours().toString().padStart(2, '0');
+		let minutes = selectedTimeEnd.getUTCMinutes().toString().padStart(2, '0');
 		let newTime = `${hours}:${minutes}`;
-
-		console.log(newTime);
-		return;
 
 
 		const newEvent = {
@@ -84,12 +82,9 @@
 			maximumPlayers: 10,
 			hostId: userId,
 			playerList: [userId],
-			endDate: formattedEndDate,	
+			endDate: `${date}T${newTime}:00Z`,	
 			facilityId: selectedFacilityId
 		};
-
-		console.log(newEvent);
-		return;
 
 		try {
 			const response = await fetch('http://localhost:3012/events', {
