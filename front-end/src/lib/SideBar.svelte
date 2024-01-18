@@ -17,6 +17,11 @@
 		location.reload();
 	};
 
+	function logout() {
+		navigate('/user/logout');
+		location.reload();
+	}
+
 	let isSidebarOpen = false;
 
 	const toggleSidebar = () => {
@@ -72,7 +77,7 @@
 			</button>
 			<button
 				class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-				on:click={closeSidebar}
+				on:click={logout}
 			>
 				Log out
 			</button>

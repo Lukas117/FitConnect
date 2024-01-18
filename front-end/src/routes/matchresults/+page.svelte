@@ -1,4 +1,10 @@
 <script>
+	import {navigate} from "svelte-routing";
+
+	function navigateToOverview() {
+		navigate('/overview');
+		location.reload();
+	}
 </script>
 
 <body>
@@ -32,7 +38,7 @@
 
 			<div class="mt-40">
 				<div class="mb-2 mt-4 flex justify-center">
-					<button
+					<button on:click={navigateToOverview}
 						class="bg-primary
 					text-white px-20 py-2 rounded mt-10">Continue</button
 					>
