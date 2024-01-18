@@ -9,7 +9,6 @@
 	import { checkAuth } from '$lib/auth.js';
 
 	let userId;
-	console.log(userId);
 	onMount(() => {
 		checkAuth(fetch)
 			.then((result) => {

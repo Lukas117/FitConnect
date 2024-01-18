@@ -6,7 +6,7 @@ services:
     volumes:
       - ./user/code:/usr/src/app
     networks:
-      - users
+      - app_network
     ports:
       - '3010:3010'
     working_dir: /usr/src/app
@@ -17,7 +17,7 @@ services:
     volumes:
       - ./apigateway/code:/usr/src/app
     networks:
-      - users
+      - app_network
     ports:
       - '3011:3011'
     working_dir: /usr/src/app
@@ -28,7 +28,7 @@ services:
     volumes:
       - ./event/code:/usr/src/app
     networks:
-      - events
+      - app_network
     ports:
       - '3012:3012'
     working_dir: /usr/src/app
@@ -39,7 +39,7 @@ services:
     volumes:
       - ./facility/code:/usr/src/app
     networks:
-      - facilities
+      - app_network
     ports:
       - '3013:3013'
     working_dir: /usr/src/app
@@ -50,21 +50,12 @@ services:
     volumes:
       - ./sport/code:/usr/src/app
     networks:
-      - sports
+      - app_network
     ports:
       - '3014:3014'
     working_dir: /usr/src/app
     command: bash -c "npm install && npm run dev"
-
+    
 networks:
-  users:
-    driver: bridge
-
-  events:
-    driver: bridge
-
-  facilities:
-    driver: bridge
-
-  sports:
+  app_network:
     driver: bridge
