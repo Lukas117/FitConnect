@@ -42,14 +42,10 @@
 					</svg>
 				</button>
 				<div id="answer1" class="mt-2" style="display: none">
-					First you have to register 
-					in the app. You will see the landing page,
-					go to the map, here you will 
-					see all the activities that are
-					happening, fill free to join a
-					 match, get some exercise in and meet
-					some friends. Later you can 
-					create your own match and invite your own
+					First you have to register in the app. You will see the landing page,
+					go to the map, here you will see all the activities that are
+					happening, fill free to join a match, get some exercise in and meet
+					some friends. Later you can create your own match and invite your own
 					team
 				</div>
 			</div>
@@ -78,14 +74,10 @@
 					</svg>
 				</button>
 				<div id="answer2" class="mt-2" style="display: none">
-					On the map, there's a button 
-					with text host match. After clicking it
-					you have to pick a time, a 
-					place and a date, you can also invite your
-					friends, althought its not 
-					necessary to create a match. After you
-					click save, the match will 
-					appear in the map on the choosen location.
+					On the map, there's a button with text host match. After clicking it
+					you have to pick a time, a place and a date, you can also invite your
+					friends, althought its not necessary to create a match. After you
+					click save, the match will appear in the map on the choosen location.
 				</div>
 			</div>
 
@@ -141,10 +133,8 @@
 					</svg>
 				</button>
 				<div id="answer4" class="mt-2" style="display: none">
-					The sensors will be available 
-					on the facility that the match will be
-					held. You just need to worry 
-					about connecting the sensors to your
+					The sensors will be available on the facility that the match will be
+					held. You just need to worry about connecting the sensors to your
 					device.
 				</div>
 			</div>
@@ -173,8 +163,7 @@
 					</svg>
 				</button>
 				<div id="answer5" class="mt-2" style="display: none">
-					When you create a match you 
-					will see a settings button, click and you
+					When you create a match you will see a settings button, click and you
 					will see the instuctions on how to connect the sensors.
 				</div>
 			</div>

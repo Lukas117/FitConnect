@@ -42,7 +42,7 @@
 
 // 	await refresh.click();
 
-// 	// check if the user marker is visible 
+// 	// check if the user marker is visible
 // 	const userMarker = await page.locator('#userIcon');
 // 	await expect(userMarker).toBeVisible({ timeout: 50000 });
 // });

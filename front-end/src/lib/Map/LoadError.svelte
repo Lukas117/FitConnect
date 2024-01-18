@@ -24,11 +24,9 @@
 			class="text-blue-500 hover:text-blue-300"
 			id="refresh">refreshing</button
 		>
-		the page or 
-		<a
-		href='/faq'
-		class="text-blue-500 hover:text-blue-300"
-		id="refresh">contact support</a
-	>
+		the page or
+		<a href="/faq" class="text-blue-500 hover:text-blue-300" id="refresh"
+			>contact support</a
+		>
 	</p>
 </div>

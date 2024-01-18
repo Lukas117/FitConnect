@@ -23,7 +23,7 @@
 </script>
 
 <div class="w-full h-full bg-background">
-	<Map userId={userId} />
+	<Map {userId} />
 
 	<div
 		class="absolute top-0 right-0 focus:outline-none outline-none"

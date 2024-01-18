@@ -1,12 +1,7 @@
 <script>
-  // Your Svelte component logic here
+	// Your Svelte component logic here
 </script>
 
 <style>
-  /* Your styles here */
+	/* Your styles here */
 </style>
-
-
-
-  
-  

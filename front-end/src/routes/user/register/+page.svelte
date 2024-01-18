@@ -1,6 +1,6 @@
 <script>
 	import { navigate } from 'svelte-routing';
-	import TitleComponent from "$lib/Title/TitleComponent.svelte";
+	import TitleComponent from '$lib/Title/TitleComponent.svelte';
 
 	let firstName = '';
 	let lastName = '';
@@ -12,8 +12,13 @@
 
 	// used to make the youngest user be at least 4 years old
 	let today = new Date();
-	let fourYearsAgo = new Date(today.getFullYear() - 
-	4, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+	let fourYearsAgo = new Date(
+		today.getFullYear() - 4,
+		today.getMonth(),
+		today.getDate()
+	)
+		.toISOString()
+		.split('T')[0];
 
 	const handleRegister = async () => {
 		const registrationData = {
@@ -58,7 +63,7 @@
 				document.cookie = `token=${token}; path=/`;
 
 				navigate('/user/sport');
-				location.reload()
+				location.reload();
 			} else {
 				throw new Error('Email or username already exists');
 			}
@@ -73,14 +78,14 @@
 
 <TitleComponent title="SIGN UP" enableSideBar={false} />
 
-<body class="flex flex-col
+<body
+	class="flex flex-col
 min-h-screen bg-gradient-to-b
 from-gray-100 to-gray-300"
 >
-
 	<form
-			on:submit|preventDefault={handleRegister}
-			class="flex-grow pt-28 p-10 flex flex-col"
+		on:submit|preventDefault={handleRegister}
+		class="flex-grow pt-28 p-10 flex flex-col"
 	>
 		{#if errorMessage}
 			<p class="text-red-500 mb-4">{errorMessage}</p>
@@ -149,9 +154,7 @@ from-gray-100 to-gray-300"
 		{/if}
 
 		{#if password_hash.length > 0 && !/\d/.test(password_hash)}
-			<p class="text-red-500 mb-2">
-				Password must contain at least one digit
-			</p>
+			<p class="text-red-500 mb-2">Password must contain at least one digit</p>
 		{/if}
 
 		{#if password_hash.length > 0 && !/[!@#$%^&*]/.test(password_hash)}
@@ -160,7 +163,7 @@ from-gray-100 to-gray-300"
 			</p>
 		{/if}
 
-		<div class="flex-grow"></div>
+		<div class="flex-grow" />
 
 		<div class="flex flex-col justify-end items-center mt-auto">
 			<button
@@ -173,5 +176,3 @@ from-gray-100 to-gray-300"
 		</div>
 	</form>
 </body>
-
-

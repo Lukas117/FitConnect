@@ -90,12 +90,12 @@
 
 	async function getEvent() {
 		if ($joinEventId !== 0) {
-			const response = await 
-			fetch(`http://localhost:3012/events/${$joinEventId}`);
+			const response = await fetch(
+				`http://localhost:3012/events/${$joinEventId}`
+			);
 			const newEventData = await response.json();
 
-			if (JSON.stringify(newEventData) !== 
-			JSON.stringify(lastEventData)) {
+			if (JSON.stringify(newEventData) !== JSON.stringify(lastEventData)) {
 				eventData = newEventData;
 				lastEventData = newEventData;
 
@@ -151,8 +151,7 @@
 			} else {
 				closeModal();
 				// Handle other status codes if needed
-				console.error('Error joining an event. Status:',
-				 response.status);
+				console.error('Error joining an event. Status:', response.status);
 			}
 		} catch (error) {
 			console.error('Error joining an event:', error);
@@ -165,23 +164,17 @@
 		class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
 		style="z-index: 1000"
 	>
-		<Notif 
-		message="Event Joined Successfully!"
-		success={true}
-		/>
+		<Notif message="Event Joined Successfully!" success={true} />
 	</div>
 {/if}
 
 {#if showfail}
-    <div
-            class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
-            style="z-index: 1000"
-    >
-        <Notif 
-		message="You are already in the event"
-		success={false}
-		/>
-    </div>
+	<div
+		class="fixed top-0 inset-x-0 z-50 flex items-center justify-center"
+		style="z-index: 1000"
+	>
+		<Notif message="You are already in the event" success={false} />
+	</div>
 {/if}
 
 {#if $showJoinModal}Z
@@ -212,8 +205,7 @@
 									bg-titles rounded
 									flex justify-between items-center"
 								>
-									<option value="friend1" 
-									class="text-white font-medium">
+									<option value="friend1" class="text-white font-medium">
 										{index + 1}.
 										{player.name.split(' ')[0]}
 										({player.user_name})

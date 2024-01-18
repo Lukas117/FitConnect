@@ -3,7 +3,7 @@
 
 	onMount(async () => {
 		try {
-			// Invalidate the cookie by 
+			// Invalidate the cookie by
 			// setting its expiration date to a past date
 			document.cookie =
 				'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
