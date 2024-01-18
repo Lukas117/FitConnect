@@ -8,6 +8,8 @@
 
 	let isPaused = false;
 	let userId = 0;
+  let isPaused = false;
+	let goalMessage = '';
 
 	onMount(() => {
 		checkAuth(fetch)
@@ -20,128 +22,159 @@
 				navigate('/user/login');
 				window.location.reload();
 			});
+    
+    const ws = new WebSocket("ws://192.168.199.214:3000");
+  
+	  ws.onopen = () => {
+		console.log("WebSocket connection established.");
+	  };
+  
+	  ws.onmessage = (event) => {
+		const data = event.data.split(',');
+		const isGoal = data[0] === 'True';
+  
+		if (isGoal) {
+		  handleClick1(); // Increase number1 by 2 when a goal is received
+		}
+  
+		const lightValue = data[1];
+		const highestLightValue = data[2];
+  
+		// Update UI based on WebSocket data
+		// (you can modify this part based on your actual requirements)
+		// For example, update the progress bar, title, etc.
+	  };
+  
+	  ws.onclose = (event) => {
+		console.log("WebSocket connection closed:", event);
+	  };
+  
+	  // Periodically update the countdown
+	  const countdownInterval = setInterval(updateCountdown, 1000);
+  
+	  return () => {
+		clearInterval(countdownInterval);
+		ws.close();
 
 		setInterval(updateCountdown, 1000);
 	});
 
+	const resetGoalMessage = () => {
+    	goalMessage = '';
+  	};
+  
 	function calculateDuration(currentDate, endDate) {
-		if (!endDate) {
-			return {
-				minutes: 0,
-				seconds: 10
-			};
-		}
-
-		const endTimestamp = endDate.getTime();
-
-		const difference = endTimestamp - currentDate;
-
-		const seconds = Math.floor(difference / 1000);
-		const minutes = Math.floor(seconds / 60);
-
+	  if (!endDate) {
 		return {
-			seconds: seconds % 60, // Remainder for seconds
-			minutes: minutes
+		  minutes: 0,
+		  seconds: 0
 		};
+	  }
+  
+	  const endTimestamp = endDate.getTime();
+  
+	  const difference = endTimestamp - currentDate;
+  
+	  const seconds = Math.floor(difference / 1000);
+	  const minutes = Math.floor(seconds / 60);
+  
+	  return {
+		seconds: seconds % 60,
+		minutes: minutes
+	  };
 	}
-
+  
 	const selectedEventEndDate = $selectedEvent.end_date
-		? new Date($selectedEvent.end_date)
-		: null;
+	  ? new Date($selectedEvent.end_date)
+	  : null;
 	const duration = calculateDuration(Date.now(), selectedEventEndDate);
-
+  
 	const updateCountdown = () => {
-		if (!isPaused) {
-			if (duration.minutes >= 0) {
-				if (duration.minutes !== 0 || duration.seconds !== 0) {
-					duration.seconds -= 1;
-				}
-			}
-
-			if (duration.seconds < 0) {
-				duration.minutes -= 1;
-				duration.seconds = 59;
-			}
+	  if (!isPaused) {
+		if (duration.minutes >= 0) {
+		  if (duration.minutes !== 0 || duration.seconds !== 0) {
+			duration.seconds -= 1;
+		  }
 		}
+  
+		if (duration.seconds < 0) {
+		  duration.minutes -= 1;
+		  duration.seconds = 59;
+		}
+	  }
 	};
-
+  
 	function formatCountdown(value) {
-		return value < 10 ? `0${value}` : value;
+	  return value < 10 ? `0${value}` : value;
 	}
-
+  
 	let number1 = 0;
 	let number2 = 0;
-
+  
 	const handleClick1 = () => {
+		goalMessage = 'GOALLLL';
 		number1 += 2;
+		setTimeout(resetGoalMessage, 1000);
 	};
 	const handleClick2 = () => {
-		number2 += 2;
+	  number2 += 2;
 	};
-
+  
 	const togglePause = () => {
-		isPaused = !isPaused;
-	};
+	  isPaused = !isPaused;
+	}; 
+
 </script>
 
 <title>Livescore</title>
 
 <body>
 	<TitleComponent title="LIVESCORE" />
-
-	<div>
-		<div
-			class="pt-24 text-xl
-		text-center justify-center"
-		>
+		
+	<div class="flex flex-col items-center justify-center text-center mt-4">
+		<div class="pt-24 text-xl">
 			Time remaining
 		</div>
 		<div class="flex flex-row text-center justify-center">
 			<div class="flex flex-col p-2 items-center">
-				<span class="font-bold text-5xl"
-					>{formatCountdown(duration.minutes)}</span
-				>MIN
+				<span class="font-bold text-5xl">{formatCountdown(duration.minutes)}</span> MIN
 			</div>
 			<div class="flex flex-col p-2 items-center">
-				<span class="font-bold text-5xl"
-					>{formatCountdown(duration.seconds)}</span
-				>SEC
+				<span class="font-bold text-5xl">{formatCountdown(duration.seconds)}</span> SEC
 			</div>
 		</div>
-	</div>
+		<div class="flex flex-col items-center justify-center text-center mt-4">
+			<!-- ... (unchanged) -->
+			{#if goalMessage !== ''}
+				<p class="text-6xl font-bold transition-transform duration-500 transform scale-10">{goalMessage}</p>
+			{/if}
+			<iframe class="mx-auto mt-4" id="iframeScore" src="http://192.168.199.214:3000" title="hardware" width="100%" height="100px" frameborder="0"></iframe>
+			<script>
+        		function reloadIFrame() {
+            		console.log('reloading..');
+            		document.getElementById('iframeScore').contentWindow.location.reload();
+        		}
 
-	<div class="flex pt-14 pb-24">
-		<div
-			class="flex flex-col text-2xl
-		font-bold items-center w-1/2 relative"
-		>
+				window.setInterval(reloadIFrame, 3000);
+			</script>
+		</div>
+	</div>
+	
+	<div class="flex pt-14 pb-24 items-center justify-center">
+		<div class="flex flex-col text-2xl font-bold items-center w-1/2 relative">
 			TEAM 1
 			<button on:click={handleClick1}>
-				<div
-					class="w-36 h-36 bg-primary
-				 rounded-full flex mt-10 text-white"
-				>
+				<div class="w-36 h-36 bg-primary rounded-full flex mt-10 text-white">
 					<span class="text-7xl pt-0 m-auto">{number1}</span>
 				</div>
 			</button>
 		</div>
-
-		<div
-			class="absolute left-1/2 top-1/2
-			transform -translate-x-1/2 -translate-y-1/2 w-0.5 h-[50vh] bg-black"
-			style="top: calc(50% + 23px);"
-		/>
-
-		<div
-			class="flex flex-col text-2xl font-bold
-		items-center w-1/2 relative"
-		>
+		
+		<div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0.5 h-[30vh] bg-black" style="top: calc(50% + 23px);"></div>
+		<div class="flex flex-col text-2xl font-bold items-center w-1/2 relative">
 			TEAM 2
 			<button on:click={handleClick2}>
-				<div
-					class="w-36 h-36 bg-red-700
-				rounded-full flex mt-10 text-white"
-				>
+				<div class="w-36 h-36 bg-red-700 rounded-full flex mt-10 text-white">
 					<span class="text-7xl pt-0 m-auto">{number2}</span>
 				</div>
 			</button>
