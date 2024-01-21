@@ -72,8 +72,8 @@
 		}
 
 		// Parse the selected time and duration into Date objects
-		let selectedTimeEnd = new Date(`1970-01-01T${selectedTime}:00Z`);
-		let durationEnd = new Date(`1970-01-01T${duration}:00Z`);
+		let selectedTimeEnd = new Date(`1970-01-01T${selectedTime}:00+01:00`);
+		let durationEnd = new Date(`1970-01-01T${duration}:00+01:00`);
 
 		// Add the durationEnd to the selected time
 		selectedTimeEnd.setMinutes(
@@ -87,12 +87,12 @@
 
 		const newEvent = {
 			eventName: `${eventName}`,
-			startDate: `${date}T${selectedTime}:00Z`,
+			startDate: `${date}T${selectedTime}:00+01:00`,
 			eventState: 0,
 			maximumPlayers: 10,
 			hostId: userId,
 			playerList: [userId],
-			endDate: `${date}T${newTime}:00Z`,
+			endDate: `${date}T${newTime}:00+01:00`,
 			facilityId: selectedFacilityId
 		};
 
@@ -240,8 +240,11 @@
 								 rounded text-white text-xs md:text-sm
 								 w-36 font-medium"
 							>
-								{#each $facilities as facility (facility.facility_id)}
-									<option class="font-medium" value={facility.facility_id}
+								{#each $facilities as facility 
+									(facility.facility_id)}
+									<option 
+									class="font-medium" 
+									value={facility.facility_id}
 										>{facility.facility_name}
 									</option>
 								{/each}
