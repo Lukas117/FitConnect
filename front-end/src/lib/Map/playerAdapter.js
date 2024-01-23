@@ -9,7 +9,8 @@ export default async function playerListToNames(playerlist) {
 			}
 		});
 		const user = await response.json();
-		names.push({ id: playerId, name: user.name, user_name: user.user_name });
+		names.push({ id: playerId, name: user.name, 
+			user_name: user.user_name });
 	}
 	return names;
 }
