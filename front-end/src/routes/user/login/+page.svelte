@@ -85,6 +85,7 @@
 
 		<div class="flex flex-col items-center w-full mt-12">
 			<button
+				id="submit"
 				type="submit"
 				class="text-2xl bg-primary text-white px-10 py-2
          rounded-md mb-4"
