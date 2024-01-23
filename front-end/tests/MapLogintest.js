@@ -1,9 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test.use({ video: 'on' });
-
 test('cant go to map without loggin in', async ({ page }) => {
-	page.on('console', msg => console.log(msg.text()));
 
 	// give geolocation to app
 	await page.context().grantPermissions(['geolocation']);
