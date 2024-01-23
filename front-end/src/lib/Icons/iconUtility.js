@@ -1,4 +1,4 @@
-import { size, icon } from '../store.js';
+import { size, icon } from '../../store.js';
 
 export function setIconOptions() {
 	const options = {

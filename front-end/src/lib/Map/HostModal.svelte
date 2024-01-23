@@ -1,7 +1,7 @@
 <script>
 	import logo from '$lib/assets/logo.png';
 	import Timepicker from 'svelty-picker';
-	import EditIcon from './EditIcon.svelte';
+	import EditIcon from '../Icons/EditIcon.svelte';
 	import {
 		selectedEvent,
 		showHostModal,

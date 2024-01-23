@@ -95,7 +95,8 @@
 			);
 			const newEventData = await response.json();
 
-			if (JSON.stringify(newEventData) !== JSON.stringify(lastEventData)) {
+			if (JSON.stringify(newEventData) !== 
+			JSON.stringify(lastEventData)) {
 				eventData = newEventData;
 				lastEventData = newEventData;
 
@@ -205,7 +206,8 @@
 									bg-titles rounded
 									flex justify-between items-center"
 								>
-									<option value="friend1" class="text-white font-medium">
+									<option value="friend1" 
+									class="text-white font-medium">
 										{index + 1}.
 										{player.name.split(' ')[0]}
 										({player.user_name})
