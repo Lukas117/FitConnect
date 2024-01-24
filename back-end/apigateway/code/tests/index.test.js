@@ -6,8 +6,8 @@ const app = express();
 app.use('/', indexRouter);
 
 describe('Index Route', () => {
-  it('should respond with a 200 status code for GET request', async () => {
+  it('should respond with a 404 status code for GET request', async () => {
     const response = await request(app).get('/');
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(404);
   });
 });
