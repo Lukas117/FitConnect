@@ -5,12 +5,15 @@
 		showJoinModal,
 		moreInformation,
 		joinEventId,
-		facilities
+		facilities,
+		selectedEvent
 	} from '../../store';
 	import playerListToNames from './playerAdapter.js';
 	import Notif from './Notification.svelte';
+	import {navigate} from "svelte-routing";
 
 	export let userId = 0;
+	export let onClose;
 
 	let showSuccess = false;
 	let showfail = false;
@@ -86,6 +89,7 @@
 	function closeModal() {
 		$showJoinModal = false;
 		$moreInformation = false;
+		onClose();
 	}
 
 	async function getEvent() {
@@ -147,6 +151,7 @@
 			if (response.status === 201) {
 				closeModal();
 				getEvent();
+
 				showSuccessNotification();
 			} else {
 				closeModal();
@@ -157,6 +162,11 @@
 			console.error('Error joining an event:', error);
 		}
 	}
+
+	function navigateToLivescore() {
+		navigate('/livescore');
+	}
+
 </script>
 
 {#if showSuccess}
@@ -177,7 +187,7 @@
 	</div>
 {/if}
 
-{#if $showJoinModal}Z
+{#if $showJoinModal}
 	<div
 		class="fixed inset-0 z-50 flex items-center justify-center"
 		style="z-index: 1000"
@@ -288,14 +298,22 @@
 					>
 						Cancel
 					</button>
-
-					{#if !$moreInformation}
+					{#if $selectedEvent.alreadyStarted}
 						<button
-							type="submit"
-							class="bg-button text-text px-4 py-2
+								class="bg-button text-white px-4
+						py-2 rounded hover:bg-primary
+						text-xs md:text-sm font-medium"
+								type="submit"
+								on:click={navigateToLivescore}
+						>Live score
+						</button>
+					{:else if (!$moreInformation)}
+						<button
+								type="submit"
+								class="bg-button text-text px-4 py-2
               				rounded hover:bg-blue-600
 							focus:outline-none font-medium"
-							on:click={joinEventRequest}
+								on:click={joinEventRequest}
 						>
 							Join
 						</button>

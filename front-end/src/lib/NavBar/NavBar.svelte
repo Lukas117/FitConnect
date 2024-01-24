@@ -9,6 +9,7 @@
 		activeTab = tab;
 	}
 
+	// TODO: FIX ESLINT
 	console.log(activeTab);
 </script>
 

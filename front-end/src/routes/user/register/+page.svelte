@@ -140,7 +140,7 @@ from-gray-100 to-gray-300"
 
 		<label for="password" class="mb-2">Password:</label>
 		<input
-			type="password_hash"
+			type="password"
 			id="password_hash"
 			bind:value={password_hash}
 			required

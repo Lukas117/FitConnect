@@ -1,21 +1,19 @@
 <script>
-	import { onMount } from 'svelte';
+	import {onMount} from 'svelte';
 	import NavBar from '$lib/NavBar/NavBar.svelte';
 	import TitleComponent from '$lib/Title/TitleComponent.svelte';
 	import HostModal from '$lib/Map/HostModal.svelte';
 	import JoinEventModal from '$lib/Map/JoinEventModal.svelte';
 	import {
-		// facilities,
-		moreInformation,
-		showHostModal,
-		showJoinModal,
-		selectedEvent,
+		facilities,
 		joinEventId,
-		facilities
+		moreInformation,
+		selectedEvent,
+		showHostModal,
+		showJoinModal
 	} from '../../store.js';
-	import { goto } from '$app/navigation';
-	import { checkAuth } from '$lib/auth.js';
-	import { navigate } from 'svelte-routing';
+	import {checkAuth} from '$lib/auth.js';
+	import {navigate} from 'svelte-routing';
 	import Loading from '$lib/Loading.svelte';
 
 	let showOtherEvents = true;
@@ -64,9 +62,7 @@
 					'Content-Type': 'application/json'
 				}
 			});
-			const facilityData = await response.json();
-
-			$facilities = facilityData;
+			$facilities = await response.json();
 		} catch (error) {
 			console.error('Error fetching facilities:', error);
 		}
@@ -142,18 +138,22 @@
 	}
 
 	function displayJoinModal(event) {
-		$showJoinModal = true;
+		$selectedEvent = event;
 		$moreInformation = false;
-		joinEventId.set(event.event_id);
+		$joinEventId = event.event_id;
+		$showJoinModal = true;
 	}
 
 	function displayJoinInfoModal(event) {
 		if (event.alreadyStarted) {
 			$selectedEvent = event;
-			goto('/livescore');
+			$showJoinModal = true;
+			$joinEventId = event.event_id;
 		} else {
+			$selectedEvent = event;
 			$showJoinModal = true;
 			$moreInformation = true;
+			$joinEventId = event.event_id;
 		}
 	}
 
@@ -297,6 +297,6 @@
 
 	<NavBar />
 
-	<JoinEventModal {userId} />
+	<JoinEventModal onClose={getEvents} userId={userId} />
 	<HostModal {userId} />
 </body>

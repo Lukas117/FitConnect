@@ -7,7 +7,7 @@
 		icon,
 		showHostModal,
 		facilities,
-		refreshEvents
+		refreshEvents, selectedEvent
 	} from '../store.js';
 	import { setIconOptions } from './iconUtility.js';
 	import LoadError from './Map/LoadError.svelte';
@@ -215,6 +215,7 @@
 	}
 
 	function displayHostModal() {
+		$selectedEvent.alreadyStarted = null;
 		$showHostModal = true;
 	}
 </script>

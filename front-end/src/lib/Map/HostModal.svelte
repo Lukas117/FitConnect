@@ -61,7 +61,6 @@
 	}
 
 	function navigateToLivescore() {
-		// $showHostModal = false;
 		navigate('/livescore');
 	}
 
@@ -92,7 +91,7 @@
 			maximumPlayers: 10,
 			hostId: userId,
 			playerList: [userId],
-			endDate: `${date}T${newTime}:00+01:00`,
+			endDate: `${date}T${newTime}:00+00:00`,
 			facilityId: selectedFacilityId
 		};
 

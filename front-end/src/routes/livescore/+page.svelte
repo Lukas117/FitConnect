@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import TitleComponent from '$lib/Title/TitleComponent.svelte';
 	import NavBar from '$lib/NavBar/NavBar.svelte';
-	import { selectedEvent } from '../../store.js';
+	import {selectedEvent, showHostModal, showJoinModal} from '../../store.js';
 	import { checkAuth } from '$lib/auth.js';
 	import { navigate } from 'svelte-routing';
 
@@ -11,6 +11,9 @@
 	let goalMessage = '';
 
 	onMount(() => {
+		$showHostModal = false;
+		$showJoinModal = false;
+
 		checkAuth(fetch)
 			.then((result) => {
 				userId = result;
@@ -23,7 +26,7 @@
 			});
 		setInterval(updateCountdown, 1000);
 
-		const ws = new WebSocket('ws://192.168.199.214:3000');
+		const ws = new WebSocket('ws://192.168.64.214:3000');
 
 		ws.onopen = () => {
 			console.log('WebSocket connection established.');
