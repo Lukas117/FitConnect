@@ -20,7 +20,7 @@ jobs:
         run: cd front-end; npm test
 
        - name: Run tests back-end
-        run: |
+        run:
           cd back-end/apigateway/code;
           npm install && npm run test;
           cd ../../event/code;
