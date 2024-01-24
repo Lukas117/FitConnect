@@ -19,7 +19,7 @@ jobs:
       - name: Run tests front-end
         run: cd front-end; npm test
 
-       - name: Run tests back-end
+      - name: Run tests back-end
         run:
           cd back-end/apigateway/code;
           npm install && npm run test;
