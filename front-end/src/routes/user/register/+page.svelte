@@ -154,7 +154,8 @@ from-gray-100 to-gray-300"
 		{/if}
 
 		{#if password_hash.length > 0 && !/\d/.test(password_hash)}
-			<p class="text-red-500 mb-2">Password must contain at least one digit</p>
+			<p class="text-red-500 mb-2">
+				Password must contain at least one digit</p>
 		{/if}
 
 		{#if password_hash.length > 0 && !/[!@#$%^&*]/.test(password_hash)}

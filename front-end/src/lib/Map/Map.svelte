@@ -7,17 +7,17 @@
 		icon,
 		showHostModal,
 		facilities,
-		refreshEvents, selectedEvent
-	} from '../store.js';
-	import { setIconOptions } from './iconUtility.js';
-	import LoadError from './Map/LoadError.svelte';
-	import { getPopupOptions, basketballIcon } from './MarkerIcon.js';
-	import NavigationIcon from './NavigationSVG.svelte';
-	import { importLeaflet } from './Map/leaflet-imports.js';
-	import Loading from './Loading.svelte';
-	import HostModal from './Map/HostModal.svelte';
-	import JoinEventModal from './Map/JoinEventModal.svelte';
-	import getPopupContent from './Map/popupContent.js';
+		refreshEvents
+	} from '../../store.js';
+	import { setIconOptions } from '../Icons/iconUtility.js';
+	import LoadError from './LoadError.svelte';
+	import { getPopupOptions, basketballIcon } from '../Icons/MarkerIcon.js';
+	import NavigationIcon from '../Icons/NavigationSVG.svelte';
+	import { importLeaflet } from './leaflet-imports.js';
+	import Loading from '../Loading.svelte';
+	import HostModal from './HostModal.svelte';
+	import JoinEventModal from './JoinEventModal.svelte';
+	import getPopupContent from './popupContent.js';
 
 	export let userId = 0;
 
@@ -151,14 +151,17 @@
 				// Find the corresponding facility for the current marker
 
 				const facility = facilityData.find(
-					(facility) => facility.facility_id == singleEvent.facility_id
+					(facility) => facility.facility_id == 
+					singleEvent.facility_id
 				);
 
 				if (facility) {
-					const marker = L.marker([facility.latitude, facility.longitude], {
+					const marker = L.marker([facility.latitude, 
+						facility.longitude], {
 						icon: markerIcon
 					})
-						.bindPopup(getPopupContent(singleEvent), getPopupOptions())
+						.bindPopup(getPopupContent(singleEvent), 
+							getPopupOptions())
 						.addTo(map);
 
 					eventMarkersLayer.addLayer(marker);
@@ -194,7 +197,8 @@
 			eventData = await response.json();
 
 			while (!map) {
-				await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for 5000ms
+				await new Promise((resolve) => 
+					setTimeout(resolve, 5000)); // Wait for 5000ms
 			}
 
 			if (map) {
@@ -215,7 +219,6 @@
 	}
 
 	function displayHostModal() {
-		$selectedEvent.alreadyStarted = null;
 		$showHostModal = true;
 	}
 </script>

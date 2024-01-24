@@ -40,7 +40,9 @@
 				handleClick1(); // Increase number1 by 2 when a goal is received
 			}
 
+			// eslint-disable-next-line no-unused-vars
 			const lightValue = data[1];
+			// eslint-disable-next-line no-unused-vars
 			const highestLightValue = data[2];
 		};
 
@@ -126,7 +128,8 @@
 
 	// function reloadIFrame() {
 	//   // console.log('reloading..');
-	//   // document.getElementById('iframeScore').contentWindow.location.reload();
+	//   // document.getElementById('iframeScore').
+	// contentWindow.location.reload();
 	// }
 	//
 	// // window.setInterval(reloadIFrame, 3000);
@@ -154,23 +157,28 @@
 	</div>
 
 	<div class="flex pt-14 pb-24 items-center justify-center">
-		<div class="flex flex-col text-2xl font-bold items-center w-1/2 relative">
+		<div class="flex flex-col text-2xl 
+		font-bold items-center w-1/2 relative">
 			TEAM 1
 			<button on:click={handleClick1}>
-				<div class="w-36 h-36 bg-primary rounded-full flex mt-10 text-white">
+				<div class="w-36 h-36 bg-primary 
+				rounded-full flex mt-10 text-white">
 					<span class="text-7xl pt-0 m-auto">{number1}</span>
 				</div>
 			</button>
 		</div>
 
 		<div
-			class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0.5 h-[30vh] bg-black"
+			class="absolute left-1/2 top-1/2 
+			transform -translate-x-1/2 -translate-y-1/2 w-0.5 h-[30vh] bg-black"
 			style="top: calc(50% + 23px);"
 		/>
-		<div class="flex flex-col text-2xl font-bold items-center w-1/2 relative">
+		<div class="flex flex-col text-2xl 
+		font-bold items-center w-1/2 relative">
 			TEAM 2
 			<button on:click={handleClick2}>
-				<div class="w-36 h-36 bg-red-700 rounded-full flex mt-10 text-white">
+				<div class="w-36 h-36 bg-red-700 
+				rounded-full flex mt-10 text-white">
 					<span class="text-7xl pt-0 m-auto">{number2}</span>
 				</div>
 			</button>
@@ -179,7 +187,8 @@
 	<div class="flex flex-col items-center justify-center text-center mt-4">
 		{#if goalMessage !== ''}
 			<p
-				class="text-6xl font-bold transition-transform duration-500 transform scale-10"
+				class="text-6xl font-bold 
+				transition-transform duration-500 transform scale-10"
 			>
 				{goalMessage}
 			</p>

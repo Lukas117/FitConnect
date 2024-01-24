@@ -1,8 +1,8 @@
 <script>
-	import SideBar from '$lib/SideBar.svelte';
+	import SideBar from '$lib/SideNav/SideBar.svelte';
 	import NavBar from '$lib/NavBar/NavBar.svelte';
-	import Map from '$lib/Map.svelte';
-	import Location from '$lib/Location.svelte';
+	import Map from '$lib/Map/Map.svelte';
+	import Location from '$lib/Map/Location.svelte';
 	import { checkAuth } from '$lib/auth.js';
 	import { onMount } from 'svelte';
 	import { navigate } from 'svelte-routing';

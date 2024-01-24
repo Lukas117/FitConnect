@@ -1,5 +1,5 @@
 <script>
-	import { userLocation } from '../store.js';
+	import { userLocation } from '../../store.js';
 	import { onMount } from 'svelte';
 
 	// options for geolocation api functioons
