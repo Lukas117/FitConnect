@@ -9,7 +9,7 @@
 
 	async function handleLogin() {
 		try {
-			const response = await fetch('http://localhost:3010/login', {
+			const response = await fetch('http://localhost:3011/user/login', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'

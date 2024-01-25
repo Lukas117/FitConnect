@@ -2,7 +2,7 @@ import { navigate } from 'svelte-routing';
 
 export async function checkAuth(fetch) {
 	try {
-		const response = await fetch('http://localhost:3010/check-auth', {
+		const response = await fetch('http://localhost:3011/user/check-auth', {
 			credentials: 'include'
 		});
 

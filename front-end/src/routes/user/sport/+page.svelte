@@ -28,7 +28,7 @@
 
 	async function getSports() {
 		try {
-			const response = await fetch('http://localhost:3014/sports', {
+			const response = await fetch('http://localhost:3011/sport/sports', {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json'
