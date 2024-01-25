@@ -1,5 +1,5 @@
 <script>
-	import SideBar from '$lib/SideBar.svelte';
+	import SideBar from '$lib/SideNav/SideBar.svelte';
 
 	export let title = '';
 	export let enableSideBar = true;

@@ -28,7 +28,7 @@
 
 	async function getSports() {
 		try {
-			const response = await fetch('http://localhost:3014/sports', {
+			const response = await fetch('http://localhost:3011/sport/sports', {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json'
@@ -108,7 +108,8 @@
 							: 'bg-orange-300'}
                      text-white p-3 rounded mt-4"
 					>
-						<button class="w-full" on:click={() => chooseSport(sport)}>
+						<button class="w-full" 
+						on:click={() => chooseSport(sport)}>
 							<div class="pl-2 text-left">
 								{sport.sport_name}
 							</div>

@@ -13,12 +13,10 @@ app.use(cors(
 	}
 ));
 
-// support json encoded and url-encoded bodies, mainly used for post and update
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/', indexRouter);
-
 app.use((req, res, next) => {
 	try {
 		res.status(404).send("Sorry can't find that!");
@@ -30,5 +28,5 @@ app.use(errorHandler);
 
 app.set('port', process.env.PORT);
 const server = app.listen(app.get('port'), () => {
-	console.log(`🏀 Express is running on PORT ${server.address().port}`);
+	console.log(`🏀 service is running on port ${server.address().port}`);
 });

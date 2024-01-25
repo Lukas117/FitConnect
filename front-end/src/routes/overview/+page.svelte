@@ -100,7 +100,8 @@
 			);
 
 			hostedEvent = eventData.filter(
-				(item) => item.host_id === myId && new Date(item.end_date) >= new Date()
+				(item) => item.host_id === myId && 
+				new Date(item.end_date) >= new Date()
 			);
 		} catch (error) {
 			console.error('Error fetching events:', error);
@@ -197,11 +198,13 @@
 		<div class="m-5 pt-32 text-2xl pb-20">
 			{#if showOtherEvents}
 				{#if eventList.length === 0}
-					<h1 class="text-center font-bold mt-4">No events available</h1>
+					<h1 class="text-center font-bold mt-4">
+						No events available</h1>
 				{:else}
 					{#each eventList as event (event.event_id)}
 						<div class="bg-orange-300 text-white p-3 rounded mt-4">
-							<button class="w-full" on:click={() => displayJoinModal(event)}>
+							<button class="w-full" 
+							on:click={() => displayJoinModal(event)}>
 								<div class="bg-red-700 rounded-md py-1">
 									<div class="pl-2 text-left">
 										{event.event_name}
@@ -218,7 +221,8 @@
 				  text-left text-xl text-black"
 								>
 									Players:
-									<b>{event.player_list.length}/{event.maximum_players}</b>
+									<b>{event.player_list.length}/
+										{event.maximum_players}</b>
 								</div>
 							</button>
 						</div>
@@ -233,7 +237,8 @@
 				{:else}
 					{#each hostedEvent as event (event.event_id)}
 						<div class="bg-orange-300 text-white p-3 rounded mt-4">
-							<button class="w-full" on:click={() => displayHostModal(event)}>
+							<button class="w-full" 
+							on:click={() => displayHostModal(event)}>
 								<div class="bg-red-700 rounded-md py-1">
 									<div class="pl-2 text-left">
 										{event.event_name}
@@ -250,7 +255,8 @@
 				  text-left text-xl text-black"
 								>
 									Players:
-									<b>{event.player_list.length}/{event.maximum_players}</b>
+									<b>{event.player_list.length}
+										/{event.maximum_players}</b>
 								</div>
 							</button>
 						</div>
@@ -285,7 +291,8 @@
 				  text-left text-xl text-black"
 								>
 									Players:
-									<b>{event.player_list.length}/{event.maximum_players}</b>
+									<b>{event.player_list.length}/
+										{event.maximum_players}</b>
 								</div>
 							</button>
 						</div>

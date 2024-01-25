@@ -19,8 +19,21 @@ jobs:
       - name: Run tests front-end
         run: cd front-end; npm test
 
+      - name: Run tests back-end
+        run:
+          cd back-end/apigateway/code;
+          npm install && npm run test;
+          cd ../../event/code;
+          npm install && npm run test;
+          cd ../../user/code;
+          npm install && npm run test;
+          cd ../../facility/code;
+          npm install && npm run test;
+          cd ../../sport/code;
+          npm install && npm run test
+
       - name: Run ESLint
-        run: cd front-end; npx eslint --debug .
+        run: cd front-end; npm run code:style; npx eslint --debug .
 
       - name: Set up JDK 11 for SonarCloud
         uses: actions/setup-java@v2

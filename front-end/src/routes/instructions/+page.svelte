@@ -19,7 +19,8 @@
 			/>
 		</div>
 		<div class="quadrant2 overflow-hidden rounded-lg">
-			<img alt="Find Hoop" src={findhoop} class="w-full h-full object-cover" />
+			<img alt="Find Hoop" 
+			src={findhoop} class="w-full h-full object-cover" />
 		</div>
 		<div class="quadrant3 overflow-hidden rounded-lg">
 			<img
